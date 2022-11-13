@@ -13,11 +13,11 @@ import javax.swing.JOptionPane;
  * @author Carlos Torrejón
  */
 public class Login extends javax.swing.JFrame {
-    
+
     public static String token;
-    
+
     AuthController autenticar = new AuthController();
-    
+
     DashboardAdmin dAdmin = new DashboardAdmin();
     DashboardUser dUser = new DashboardUser();
 
@@ -106,44 +106,55 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        
+
         String mail = txtMail.getText();
 
         String password = new String(txtPass.getPassword());
-        
+
         String urlAdmin = "http://192.168.2.108:8080/login/admin/" + mail + "/" + password;
-        
+
         String url = "http://192.168.2.108:8080/login/" + mail + "/" + password;
-        
-        
-        if(chAdmin.isSelected()){
-            try {
-                token=autenticar.userLogin(urlAdmin);
-                if("ERROR".equals(token)){
-                    //System.out.println(token); 
-                    int salir = JOptionPane.showConfirmDialog(this, "Usuario y/o contraseña incorrectos, quiere volver ha intentarlo ?", "Advertencia", JOptionPane.YES_NO_OPTION);
-                    if(salir == JOptionPane.NO_OPTION) System.exit(0);
-                }else{
-                    
-                    dAdmin.setVisible(true);
-                    this.setVisible(false);
+
+        if (mail.isEmpty() || password.isEmpty()) {
+            
+            int salir = JOptionPane.showConfirmDialog(this, "Faltan datos por insertar, quiere volver ha intentarlo ?", "Advertencia", JOptionPane.YES_NO_OPTION);
+                        if (salir == JOptionPane.NO_OPTION) {
+                            System.exit(0);                       }
+
+        } else {
+            if (chAdmin.isSelected()) {
+                try {
+                    token = autenticar.userLogin(urlAdmin);
+                    if ("ERROR".equals(token)) {
+                        //System.out.println(token); 
+                        int salir = JOptionPane.showConfirmDialog(this, "Usuario y/o contraseña incorrectos, quiere volver ha intentarlo ?", "Advertencia", JOptionPane.YES_NO_OPTION);
+                        if (salir == JOptionPane.NO_OPTION) {
+                            System.exit(0);
+                        }
+                    } else {
+
+                        dAdmin.setVisible(true);
+                        this.setVisible(false);
+                    }
+                } catch (IOException | InterruptedException ex) {
+                    ex.getMessage();
                 }
-            } catch (IOException | InterruptedException ex) {
-                ex.getMessage();
-            }
-        }else{
-            try {
-                token=autenticar.userLogin(url);
-                if("ERROR".equals(token)){
-                    int salir = JOptionPane.showConfirmDialog(this, "Usuario y/o contraseña incorrectos, quiere volver ha intentarlo ?", "Advertencia", JOptionPane.YES_NO_OPTION);
-                    if(salir == JOptionPane.NO_OPTION) System.exit(0);
-                    
-                }else{
-                    dUser.setVisible(true);
-                    this.setVisible(false);
+            } else {
+                try {
+                    token = autenticar.userLogin(url);
+                    if ("ERROR".equals(token)) {
+                        int salir = JOptionPane.showConfirmDialog(this, "Usuario y/o contraseña incorrectos, quiere volver ha intentarlo ?", "Advertencia", JOptionPane.YES_NO_OPTION);
+                        if (salir == JOptionPane.NO_OPTION) {
+                            System.exit(0);
+                        }
+
+                    } else {
+                        dUser.setVisible(true);
+                        this.setVisible(false);
+                    }
+                } catch (IOException | InterruptedException ex) {
+                    ex.getMessage();
                 }
-            } catch (IOException | InterruptedException ex) {
-                ex.getMessage();
             }
         }
     }//GEN-LAST:event_jButton1ActionPerformed

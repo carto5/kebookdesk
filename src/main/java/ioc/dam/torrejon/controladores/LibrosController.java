@@ -14,6 +14,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.logging.Level;
 import javax.swing.JTable;
@@ -176,6 +177,25 @@ public class LibrosController {
         modelo.addRow(new Object[]{libro.getIsbn(), libro.getTitulo(), libro.getAutor(), libro.getSinopsis(), libro.getGenero(), libro.isDisponible()});
         
         tabla.setModel(modelo);
+    }
+    
+    public void guardarLibro(Libro libro) throws IOException, InterruptedException{
+        
+        var objectMapper = new ObjectMapper();
+        String requestBody = objectMapper
+                .writeValueAsString(libro);
+
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://192.168.2.108:8080/libro"))
+                .header("token", Login.token)
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .build();
+
+        HttpResponse<String> response = cliente.send(request, HttpResponse.BodyHandlers.ofString());
+
+        System.out.println(response.body());
     }
     
 }

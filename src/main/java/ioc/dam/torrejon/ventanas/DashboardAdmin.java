@@ -9,6 +9,9 @@ package ioc.dam.torrejon.ventanas;
  * @author carlostorrejongaragallo
  */
 public class DashboardAdmin extends javax.swing.JFrame {
+    
+    OpcionesUsuario ou = new OpcionesUsuario();
+    LibrosAdmin la = new LibrosAdmin();
 
     /**
      * Creates new form DashboardAdmin
@@ -53,18 +56,28 @@ public class DashboardAdmin extends javax.swing.JFrame {
 
         jMenu1.setText("Menú");
 
-        jMenuItem1.setText("jMenuItem1");
+        jMenuItem1.setText("Usuarios");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem1);
 
-        jMenuItem2.setText("jMenuItem2");
+        jMenuItem2.setText("Libros");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem2);
 
-        jMenuItem3.setText("jMenuItem3");
+        jMenuItem3.setText("Prestamos/Devoluciones");
         jMenu1.add(jMenuItem3);
 
         jMenuBar1.add(jMenu1);
 
-        jMenu2.setText("Edit");
+        jMenu2.setText("Perfil");
         jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
@@ -82,6 +95,17 @@ public class DashboardAdmin extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+      
+        jDesktopPane1.add(ou);  
+        ou.show();
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        jDesktopPane1.add(la);  
+        la.show();
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     /**
      * @param args the command line arguments

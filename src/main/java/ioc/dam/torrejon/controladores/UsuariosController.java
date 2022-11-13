@@ -25,58 +25,27 @@ import javax.swing.table.DefaultTableModel;
  * @author Carlos Torrejón
  */
 public class UsuariosController {
-    
-     final HttpClient cliente = HttpClient.newHttpClient();
-    /**
-     * Método que sirve para autenticarse
-     *
-     * @param  url con la dirección y datos del usuario para logearse en el servidor. 
-     * @return el token de autenticación.
-     * @throws IOException
-     * @throws InterruptedException
-     */
 
-    /**
-     * Método para almacenar usuarios en la base de datos.
-     * @param values LinkedHasMap que guarda los valores de los usuarios.
-     * @throws IOException
-     * @throws InterruptedException 
-     */
-    public void registrarUsuario(LinkedHashMap<String, String> values) throws IOException, InterruptedException {
+    final HttpClient cliente = HttpClient.newHttpClient();
 
-        var objectMapper = new ObjectMapper();
-        String requestBody = objectMapper
-                .writeValueAsString(values);
+    private final Object[] columnas = new Object[]{"Id", "Nombre", "Correo", "Contraseña", "Fecha de creación", "Administrador"};
 
+    private final DefaultTableModel modelo = new DefaultTableModel(columnas, 0);
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8080/usuario"))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                .build();
-
-        HttpResponse<String> response = cliente.send(request, HttpResponse.BodyHandlers.ofString());
-        System.out.println();
-
-    }
-
-    private final Object[] columnas = new Object[]{"Id","Nombre","Correo","Contraseña","Fecha de creación","Administrador"};
-    
-    private final DefaultTableModel modelo = new DefaultTableModel(columnas,0);
-    
     /**
      * Método para mapear los datos en formato json.
-     * @param json  String con los datos en formato json.
-     * @param referencia  TypeReference para referenciar al objeto.
+     *
+     * @param json String con los datos en formato json.
+     * @param referencia TypeReference para referenciar al objeto.
      * @return los datos json mapeados a objetos.
      */
-    public <T> T transObjeto (final String json, final TypeReference<T> referencia){
-        
+    public <T> T transObjeto(final String json, final TypeReference<T> referencia) {
+
         try {
-            
+
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(json, referencia);
-            
+
         } catch (IOException ex) {
             ex.getMessage();
         }
@@ -85,6 +54,7 @@ public class UsuariosController {
 
     /**
      * Método para listar los usuarios de la base de datos en una jTable.
+     *
      * @param tabla se añade el nombre de la variable de jTable
      */
     public void listarUsuarios(JTable tabla) {
@@ -104,9 +74,8 @@ public class UsuariosController {
             });
 
             user.stream().forEach(item -> {
-                modelo.addRow(new Object[]{item.getId() ,item.getNombre(), item.getCorreo(), item.getContrasena(), item.getFecha_creacion(), item.isAdmin()});
+                modelo.addRow(new Object[]{item.getId(), item.getNombre(), item.getCorreo(), item.getContrasena(), item.getFecha_creacion(), item.isAdmin()});
             });
-            
 
             tabla.setModel(modelo);
 
@@ -115,43 +84,53 @@ public class UsuariosController {
         }
 
     }
-    
-    public void obtenerUsuarioPorId (JTable tabla, int id) throws IOException, InterruptedException{
-        
-        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://192.168.2.108:8080/usuario/"+id))
+
+    public void obtenerUsuarioPorId(JTable tabla, int id) throws IOException, InterruptedException {
+
+        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://192.168.2.108:8080/usuario/" + id))
                 .header("token", Login.token)
                 .GET()
                 .build();
-        
+
         HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
-        
-        Usuario user = transObjeto(respuesta.body(), new TypeReference<Usuario>(){});
-        
+
+        Usuario user = transObjeto(respuesta.body(), new TypeReference<Usuario>() {
+        });
+
         modelo.addRow(new Object[]{user.getId(), user.getNombre(), user.getCorreo(), user.getFecha_creacion(), user.isAdmin()});
-        
+
         tabla.setModel(modelo);
         //System.out.println(user.getId());
-        
-        
+
     }
-    
-    public void obtenerUsuarioPorCorreo (JTable tabla, String correo) throws IOException, InterruptedException{
-        
-        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://192.168.2.108:8080/usuario/query?correo="+ correo))
+
+    public void obtenerUsuarioPorCorreo(JTable tabla, String correo) throws IOException, InterruptedException {
+
+        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://192.168.2.108:8080/usuario/correo?correo=" + correo))
                 .header("token", Login.token)
                 .GET()
                 .build();
-        
+
         HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
-        
-        Usuario user = transObjeto(respuesta.body(), new TypeReference<Usuario>(){});
-        
-        modelo.addRow(new Object[]{user.getId(), user.getNombre(), user.getCorreo(),user.getContrasena(), user.getFecha_creacion(), user.isAdmin()});
-        
+
+        Usuario user = transObjeto(respuesta.body(), new TypeReference<Usuario>() {
+        });
+
+        modelo.addRow(new Object[]{user.getId(), user.getNombre(), user.getCorreo(), user.getContrasena(), user.getFecha_creacion(), user.isAdmin()});
+
         tabla.setModel(modelo);
         //System.out.println(user.getId());
-        
-        
+
     }
-    
+
+    public void eliminarUsuario(int id) throws IOException, InterruptedException {
+
+        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://192.168.2.108:8080/usuario/" + id))
+                .header("token", Login.token)
+                .DELETE()
+                .build();
+        
+        HttpResponse respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
+    }
+
 }

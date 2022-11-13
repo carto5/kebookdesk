@@ -4,13 +4,14 @@
  */
 package ioc.dam.torrejon.modelos;
 
+import java.io.Serializable;
 import java.sql.Date;
 
 /**
  *
  * @author Carlos Torrejón
  */
-public class Reserva {
+public class Reserva implements Serializable{
     
     int id;
     Usuario usuario;

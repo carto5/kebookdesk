@@ -35,6 +35,7 @@ public class DashboardUser extends javax.swing.JFrame {
         jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Usuario");
         setPreferredSize(new java.awt.Dimension(1200, 700));
         setResizable(false);
         setSize(new java.awt.Dimension(1200, 700));
@@ -52,18 +53,18 @@ public class DashboardUser extends javax.swing.JFrame {
 
         jMenu1.setText("menu");
 
-        jMenuItem1.setText("jMenuItem1");
+        jMenuItem1.setText("Libros");
         jMenu1.add(jMenuItem1);
 
-        jMenuItem2.setText("jMenuItem2");
+        jMenuItem2.setText("Cambiar contraseña");
         jMenu1.add(jMenuItem2);
 
-        jMenuItem3.setText("jMenuItem3");
+        jMenuItem3.setText("Eliminar cuenta");
         jMenu1.add(jMenuItem3);
 
         jMenuBar1.add(jMenu1);
 
-        jMenu2.setText("Edit");
+        jMenu2.setText("Perfil");
         jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);

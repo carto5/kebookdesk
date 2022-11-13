@@ -4,11 +4,13 @@
  */
 package ioc.dam.torrejon.modelos;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Carlos Torrejón
  */
-public class Escritor {
+public class Escritor implements Serializable{
     
     private int id;
     private String nombre;
