@@ -6,12 +6,10 @@ package ioc.dam.torrejon.ventanas;
 
 import ioc.dam.torrejon.controladores.EscritorController;
 import ioc.dam.torrejon.controladores.LibrosController;
+import ioc.dam.torrejon.controladores.OptionPane;
 import ioc.dam.torrejon.modelos.Escritor;
 import ioc.dam.torrejon.modelos.Libro;
 import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -19,16 +17,23 @@ import javax.swing.table.DefaultTableModel;
  * @author carlostorrejongaragallo
  */
 public class LibrosAdmin extends javax.swing.JInternalFrame {
-    
-    EscritorController em = new EscritorController();
-    
+
+    EscritorController escritores = new EscritorController();
+
     LibrosController libros = new LibrosController();
-    
+
     Libro libro = new Libro();
-    
+
     Escritor escritor = new Escritor();
-    
+
     DefaultTableModel clean = new DefaultTableModel();
+
+    String isbn, titulo, autor, genero, sinopsis, idAuto;
+    int idAutor;
+
+    String book = "Faltan datos por rellenar, desea continuar?";
+    String autorG = "Falta el nombre del autor, desea continuar?";
+    String eliminar = "Se necesita id del autor para poder eliminarlo, desea continuar?";
 
     /**
      * Creates new form LibrosAdmin
@@ -64,11 +69,15 @@ public class LibrosAdmin extends javax.swing.JInternalFrame {
         txtGenero = new javax.swing.JTextField();
         bGuardar = new javax.swing.JButton();
         bEliminar = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
+        txtIdAutor = new javax.swing.JTextField();
+        jSeparator1 = new javax.swing.JSeparator();
+        bGAutor = new javax.swing.JButton();
+        bAutores = new javax.swing.JButton();
 
         setClosable(true);
         setTitle("Libros\n");
-        setPreferredSize(new java.awt.Dimension(1200, 650));
-        setSize(new java.awt.Dimension(1200, 650));
+        setPreferredSize(new java.awt.Dimension(1190, 640));
 
         jPanel1.setBackground(new java.awt.Color(51, 153, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -95,13 +104,13 @@ public class LibrosAdmin extends javax.swing.JInternalFrame {
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 140, 620, 340));
 
         bLibros.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        bLibros.setText("Listar libro");
+        bLibros.setText("Listar libros");
         bLibros.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bLibrosActionPerformed(evt);
             }
         });
-        jPanel1.add(bLibros, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 540, 180, -1));
+        jPanel1.add(bLibros, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 550, 180, -1));
 
         jPanel2.setBackground(new java.awt.Color(51, 204, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Añadir/Eliminar libro", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 24))); // NOI18N
@@ -109,43 +118,72 @@ public class LibrosAdmin extends javax.swing.JInternalFrame {
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel2.setText("Isbn");
-        jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 100, 70, 20));
+        jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 270, 70, 20));
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel3.setText("Título");
-        jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 150, -1, -1));
+        jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 310, -1, -1));
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel4.setText("Autor");
-        jPanel2.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 200, -1, -1));
+        jPanel2.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 60, -1, -1));
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel5.setText("Genero");
-        jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 250, -1, -1));
+        jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 350, -1, -1));
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel6.setText("Sinopsis");
-        jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 300, -1, -1));
-        jPanel2.add(txtSinop, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 300, 200, 100));
-        jPanel2.add(txtIsbn, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 100, 200, -1));
-        jPanel2.add(txtTitulo, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 150, 200, -1));
-        jPanel2.add(txtAutor, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 200, 200, -1));
-        jPanel2.add(txtGenero, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 250, 200, -1));
+        jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 400, -1, -1));
+        jPanel2.add(txtSinop, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 400, 200, 100));
+        jPanel2.add(txtIsbn, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 270, 200, -1));
+        jPanel2.add(txtTitulo, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 310, 200, -1));
+        jPanel2.add(txtAutor, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 60, 200, -1));
+        jPanel2.add(txtGenero, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 350, 200, -1));
 
         bGuardar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        bGuardar.setText("Guardar");
+        bGuardar.setText("Guardar libro");
         bGuardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bGuardarActionPerformed(evt);
             }
         });
-        jPanel2.add(bGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 460, -1, -1));
+        jPanel2.add(bGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 520, -1, -1));
 
         bEliminar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        bEliminar.setText("Eliminar");
-        jPanel2.add(bEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 460, -1, -1));
+        bEliminar.setText("Eliminar autor");
+        bEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bEliminarActionPerformed(evt);
+            }
+        });
+        jPanel2.add(bEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 130, -1, 30));
 
-        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 460, 540));
+        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel7.setText("Id autor");
+        jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 230, -1, -1));
+        jPanel2.add(txtIdAutor, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 230, 200, -1));
+        jPanel2.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 200, 380, 10));
+
+        bGAutor.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        bGAutor.setText("Guardar autor");
+        bGAutor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bGAutorActionPerformed(evt);
+            }
+        });
+        jPanel2.add(bGAutor, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 130, -1, 30));
+
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 460, 580));
+
+        bAutores.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        bAutores.setText("Listar autores");
+        bAutores.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bAutoresActionPerformed(evt);
+            }
+        });
+        jPanel1.add(bAutores, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 550, 170, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -162,60 +200,103 @@ public class LibrosAdmin extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void bLibrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bLibrosActionPerformed
-       
+
         clean = (DefaultTableModel) librosTable.getModel();
-        while(clean.getRowCount()>0){
+        while (clean.getRowCount() > 0) {
             clean.removeRow(0);
         }
         libros.ListarLibros(librosTable);
-        
+
     }//GEN-LAST:event_bLibrosActionPerformed
 
     private void bGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bGuardarActionPerformed
-        
+
         try {
-            //String isbn = txtIsbn.getText();
-            //String titulo = txtTitulo.getText();
-            String autor = txtAutor.getText();
-            //escritor.setNombre(txtAutor.getText());
-            //String genero = txtGenero.getText();
-            //String sinopsis = txtSinop.getText();
-            escritor.setId(4);
-            escritor.setNombre(txtAutor.getText());
-            
-            //em.guardarEscritor(escritor);
-            
-            
-            libro.setIsbn(txtIsbn.getText());
-            libro.setTitulo(txtTitulo.getText());
-            libro.setAutor(escritor);
-            libro.setGenero(txtGenero.getText());
-            libro.setSinopsis(txtSinop.getText());
-            libro.setDisponible(true);
-            libros.guardarLibro(libro);
-            
-            
-            
-            /*LinkedHashMap<String, Libro> values = new LinkedHashMap<String, Libro>() {
-                {
-                    put("isbn", isbn);
-                    put("titulo", titulo);
-                    put("id_autor", autor);                   
-                    put("sinopsis", sinopsis);
-                    put("genero", genero);
-                }
-            };*/
-            
-            libros.guardarLibro(libro);
-            
+
+            isbn = txtIsbn.getText();
+            titulo = txtTitulo.getText();
+            autor = txtAutor.getText();
+            genero = txtGenero.getText();
+            sinopsis = txtSinop.getText();
+            idAuto = txtIdAutor.getText();
+            idAutor = Integer.parseInt(idAuto);
+
+            escritor.setId(idAutor);
+            //escritor.setNombre(autor);
+
+            if (isbn.isEmpty() || titulo.isEmpty() /*|| autor.isEmpty() */|| genero.isEmpty() || sinopsis.isEmpty() || idAuto.isEmpty()) {
+
+                OptionPane.OptionPane(book, this);
+
+            } else {
+
+                libro.setIsbn(isbn);
+                libro.setTitulo(titulo);
+                libro.setAutor(escritor);
+                libro.setGenero(genero);
+                libro.setSinopsis(sinopsis);
+                libro.setDisponible(true);
+
+                libros.guardarLibro(libro);
+            }
         } catch (IOException | InterruptedException ex) {
             ex.getMessage();
         }
     }//GEN-LAST:event_bGuardarActionPerformed
 
+    private void bGAutorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bGAutorActionPerformed
+
+        try {
+
+            autor = txtAutor.getText();
+
+            if (autor.isEmpty()) {
+                OptionPane.OptionPane(autorG, this);
+            } else {
+                escritor.setNombre(autor);
+
+                escritores.guardarEscritor(escritor);
+            }
+        } catch (IOException | InterruptedException ex) {
+            ex.getMessage();
+        }
+
+    }//GEN-LAST:event_bGAutorActionPerformed
+
+    private void bAutoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bAutoresActionPerformed
+
+        clean = (DefaultTableModel) librosTable.getModel();
+        while (clean.getRowCount() > 0) {
+            clean.removeRow(0);
+        }
+
+        escritores.listarEscritores(librosTable);
+
+    }//GEN-LAST:event_bAutoresActionPerformed
+
+    private void bEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEliminarActionPerformed
+
+        idAuto = txtIdAutor.getText();
+        if (idAuto.isEmpty()) {
+            OptionPane.OptionPane(eliminar, this);
+
+        } else {
+            idAutor = Integer.parseInt(idAuto);
+
+            try {
+                escritores.eliminarEscritor(idAutor);
+            } catch (IOException | InterruptedException ex) {
+                ex.getMessage();
+            }
+        }
+
+    }//GEN-LAST:event_bEliminarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton bAutores;
     private javax.swing.JButton bEliminar;
+    private javax.swing.JButton bGAutor;
     private javax.swing.JButton bGuardar;
     private javax.swing.JButton bLibros;
     private javax.swing.JLabel jLabel1;
@@ -224,12 +305,15 @@ public class LibrosAdmin extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTable librosTable;
     private javax.swing.JTextField txtAutor;
     private javax.swing.JTextField txtGenero;
+    private javax.swing.JTextField txtIdAutor;
     private javax.swing.JTextField txtIsbn;
     private javax.swing.JTextField txtSinop;
     private javax.swing.JTextField txtTitulo;

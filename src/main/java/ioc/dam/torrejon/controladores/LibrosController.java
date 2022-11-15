@@ -9,14 +9,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ioc.dam.torrejon.modelos.Libro;
 import ioc.dam.torrejon.ventanas.Login;
 import java.io.IOException;
-import java.lang.System.Logger;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.logging.Level;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -33,7 +30,14 @@ public class LibrosController {
     
     private final DefaultTableModel modelo = new DefaultTableModel(columnas,0);
     
-    
+    /**
+     * Método para mapear los datos en formato json.
+     *
+     * @param <T>
+     * @param json String con los datos en formato json.
+     * @param referencia TypeReference para referenciar al objeto.
+     * @return los datos json mapeados a objetos.
+     */
     public <T> T transObjeto (final String json, final TypeReference<T> referencia){
         
         try {
@@ -47,7 +51,10 @@ public class LibrosController {
         return null;
     }
     
-    
+    /**
+     * Método para listar libros
+     * @param tabla donde se listaran los libros
+     */
     public void ListarLibros (JTable tabla){
         
         HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://192.168.2.108:8080/libro"))
@@ -61,15 +68,17 @@ public class LibrosController {
              * Usamos una List para almacenar la información de los usuarios que
              * nos envia el servidor
              */
-            List<Libro> user = transObjeto(respuesta.body(), new TypeReference< List<Libro>>() {
+            List<Libro> libro = transObjeto(respuesta.body(), new TypeReference< List<Libro>>() {
             });
 
-            user.stream().forEach(item -> {
-                modelo.addRow(new Object[]{item.getIsbn() ,item.getTitulo(), item.getAutor(), item.getSinopsis(), item.getGenero(), item.isDisponible()});
+            libro.stream().forEach(item -> {
+                modelo.addRow(new Object[]{item.getIsbn() ,item.getTitulo(), item.getAutor().getId(), item.getSinopsis(), item.getGenero(), item.isDisponible()});
             });
             
 
             tabla.setModel(modelo);
+            
+            respuesta.statusCode();
 
         } catch (IOException | InterruptedException e) {
             e.getMessage();
@@ -77,6 +86,13 @@ public class LibrosController {
         
     }
     
+    /**
+     * Método para buscar libros por su isbn. 
+     * @param tabla donde se listara la busqueda.
+     * @param isbn String con el isbn del libro.
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public void ObtenerLibroIsbn (JTable tabla, String isbn) throws IOException, InterruptedException{
         
         HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://192.168.2.108:8080/libro/"+isbn))
@@ -85,15 +101,24 @@ public class LibrosController {
                 .build();
         
         HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
-        
+        System.out.println(respuesta.statusCode());
         Libro libro = transObjeto(respuesta.body(), new TypeReference<Libro>(){});
         
         modelo.addRow(new Object[]{libro.getIsbn(), libro.getTitulo(), libro.getAutor(), libro.getSinopsis(), libro.getGenero(), libro.isDisponible()});
         
         tabla.setModel(modelo);
         
+        
+        
     }
     
+    /**
+     * Método para buscar libros por su título.
+     * @param tabla donde se listara la busqueda.
+     * @param titulo String con el título del libro.
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public void ObtenerLibroTitulo (JTable tabla, String titulo) throws IOException, InterruptedException{
         
         HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://192.168.2.108:8080/libro/titulo?titulo="+ titulo))
@@ -111,6 +136,13 @@ public class LibrosController {
         
     }
     
+    /**
+     * Método para buscar libros por su autor.
+     * @param tabla donde se listara la busqueda.
+     * @param autor String con el nombre del autor.
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public void ObtenerLibroEscritor (JTable tabla, String autor) throws IOException, InterruptedException{
         
         HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://192.168.2.108:8080/libro/autor?autor="+ autor))
@@ -128,6 +160,13 @@ public class LibrosController {
         
     } 
     
+    /**
+     * Método para buscar libros por genero.
+     * @param tabla donde se listara la busqueda.
+     * @param genero String con el genero al que pertenece el libro.
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public void ObtenerLibroGenero (JTable tabla, String genero) throws IOException, InterruptedException{
         
         HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://192.168.2.108:8080/libro/genero?genero="+ genero))
@@ -145,6 +184,12 @@ public class LibrosController {
         
     }
     
+    /**
+     * Método para buscar libros que están disponibles.
+     * @param tabla donde se listara la busqueda.
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public void ObtenerLibroDisponible (JTable tabla) throws IOException, InterruptedException{
         
         HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://192.168.2.108:8080/libro/disponibles"))
@@ -162,6 +207,13 @@ public class LibrosController {
         
     }
     
+    /**
+     * Método para buscar libros por su isbn y si están disponibles.
+     * @param tabla donde se listara la busqueda.
+     * @param isbn String con el isbn del libro.
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public void ObtenerLibroDispIsbn (JTable tabla, String isbn) throws IOException, InterruptedException{
         
         
@@ -179,6 +231,12 @@ public class LibrosController {
         tabla.setModel(modelo);
     }
     
+    /**
+     * Método para guardar libros en la base de datos.
+     * @param libro objeto de la clase libro.
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public void guardarLibro(Libro libro) throws IOException, InterruptedException{
         
         var objectMapper = new ObjectMapper();

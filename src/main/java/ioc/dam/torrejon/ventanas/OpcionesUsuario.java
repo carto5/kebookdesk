@@ -4,6 +4,7 @@
  */
 package ioc.dam.torrejon.ventanas;
 
+import ioc.dam.torrejon.controladores.OptionPane;
 import ioc.dam.torrejon.controladores.UsuariosController;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -17,8 +18,13 @@ import javax.swing.table.DefaultTableModel;
 public class OpcionesUsuario extends javax.swing.JInternalFrame {
 
     UsuariosController usuario = new UsuariosController();
-    
+
     DefaultTableModel clean = new DefaultTableModel();
+
+    Integer id;
+    String idDelete, mail;
+    String deleteUser = "Se necesita añadir id de usuario para poder eliminarlo, desea continuar?";
+
     /**
      * Creates new form OpcionesUsuario
      */
@@ -39,17 +45,16 @@ public class OpcionesUsuario extends javax.swing.JInternalFrame {
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         userTable = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
+        bListarUsuarios = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jButton3 = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
+        txtId = new javax.swing.JTextField();
+        bEliminarUsuario = new javax.swing.JButton();
+        bBuscarUsuario = new javax.swing.JButton();
 
         setClosable(true);
         setTitle("Libros\n");
         setPreferredSize(new java.awt.Dimension(1200, 650));
-        setSize(new java.awt.Dimension(1200, 650));
 
         jPanel1.setBackground(new java.awt.Color(51, 153, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -75,14 +80,14 @@ public class OpcionesUsuario extends javax.swing.JInternalFrame {
 
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(482, 140, 650, 290));
 
-        jButton1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jButton1.setText("Listar usuarios");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        bListarUsuarios.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        bListarUsuarios.setText("Listar usuarios");
+        bListarUsuarios.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                bListarUsuariosActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 530, 180, 30));
+        jPanel1.add(bListarUsuarios, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 530, 180, 30));
 
         jPanel2.setBackground(new java.awt.Color(51, 204, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Eliminar usuario", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 24))); // NOI18N
@@ -90,20 +95,28 @@ public class OpcionesUsuario extends javax.swing.JInternalFrame {
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel2.setText("Introducir id del usuario a eliminar");
-        jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 90, 250, 20));
-        jPanel2.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 150, 50, -1));
+        jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 90, 270, 20));
+        jPanel2.add(txtId, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 150, 170, -1));
 
-        jButton3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jButton3.setText("Eliminar");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        bEliminarUsuario.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        bEliminarUsuario.setText("Eliminar");
+        bEliminarUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                bEliminarUsuarioActionPerformed(evt);
             }
         });
-        jPanel2.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 240, 170, -1));
+        jPanel2.add(bEliminarUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 240, 170, -1));
+
+        bBuscarUsuario.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        bBuscarUsuario.setText("Buscar usuario");
+        bBuscarUsuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bBuscarUsuarioActionPerformed(evt);
+            }
+        });
+        jPanel2.add(bBuscarUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 200, 170, -1));
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 410, 310));
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 310, 420, 310));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -119,37 +132,66 @@ public class OpcionesUsuario extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        
+    private void bListarUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bListarUsuariosActionPerformed
+
         clean = (DefaultTableModel) userTable.getModel();
-        while(clean.getRowCount()>0){
+        while (clean.getRowCount() > 0) {
             clean.removeRow(0);
         }
         usuario.listarUsuarios(userTable);
-        
-    }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        
-        Integer id = Integer.valueOf(jTextField1.getText());
-        try {
-            usuario.eliminarUsuario(id);
-        } catch (IOException | InterruptedException ex) {
-            ex.getMessage();
+    }//GEN-LAST:event_bListarUsuariosActionPerformed
+
+    private void bEliminarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEliminarUsuarioActionPerformed
+
+        idDelete = txtId.getText();
+
+        if (idDelete.isEmpty()) {
+            OptionPane.OptionPane(deleteUser, this);
+        } else {
+            id = Integer.valueOf(idDelete);
+            try {
+                usuario.eliminarUsuario(id);
+            } catch (IOException | InterruptedException ex) {
+                ex.getMessage();
+            }
         }
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_bEliminarUsuarioActionPerformed
+
+    private void bBuscarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bBuscarUsuarioActionPerformed
+
+        mail = txtId.getText();
+        
+        
+
+        clean = (DefaultTableModel) userTable.getModel();
+        while (clean.getRowCount() > 0) {
+            clean.removeRow(0);
+        }
+        if (mail.isEmpty()) {
+            OptionPane.OptionPane(deleteUser, this);
+        } else {
+            //id = Integer.valueOf(idDelete);
+            try {
+                usuario.obtenerUsuarioPorCorreo(userTable, mail);
+                //usuario.obtenerUsuarioPorId(userTable, id);
+            } catch (IOException | InterruptedException ex) {
+                ex.getMessage();
+            }
+        }
+    }//GEN-LAST:event_bBuscarUsuarioActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton bBuscarUsuario;
+    private javax.swing.JButton bEliminarUsuario;
+    private javax.swing.JButton bListarUsuarios;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField txtId;
     private javax.swing.JTable userTable;
     // End of variables declaration//GEN-END:variables
 }

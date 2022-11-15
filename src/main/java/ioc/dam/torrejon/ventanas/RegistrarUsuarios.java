@@ -17,9 +17,11 @@ public class RegistrarUsuarios extends javax.swing.JFrame {
 
     AuthController registro = new AuthController();
     Login login = new Login();
+    
+    String nombre, mail, contrasena, contrasenaRe, fecha;
 
-    final String empty = "Faltan datos por rellenar, quiere continuar?";
-    final String passIguales = "Las contraseñas no son iguales, quiere continuar?";
+    final String empty = "Faltan datos por rellenar, desea continuar?";
+    final String passIguales = "Las contraseñas no son iguales, desea continuar?";
 
     /**
      * Creates new form RegistrarUsuarios
@@ -76,7 +78,7 @@ public class RegistrarUsuarios extends javax.swing.JFrame {
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel4.setText("Contraseña");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 270, 80, 20));
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 270, 110, 20));
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel5.setText("Repetir contraseña");
@@ -117,12 +119,12 @@ public class RegistrarUsuarios extends javax.swing.JFrame {
 
     private void bRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bRegistrarActionPerformed
 
-        String nombre = txtNombre.getText();
-        String mail = txtMail.getText();
-        String contrasena = new String(txtPass.getPassword());
-        String contrasenaRe = new String(txtRePass.getPassword());
+        nombre = txtNombre.getText();
+        mail = txtMail.getText();
+        contrasena = new String(txtPass.getPassword());
+        contrasenaRe = new String(txtRePass.getPassword());
         //Date data = (Date) txtDate.getValue();
-        String fecha = txtFecha.getText();
+        fecha = txtFecha.getText();
         //String date = txtDate.getText();
 
         if (nombre.isEmpty() || mail.isEmpty() || contrasena.isEmpty() || contrasenaRe.isEmpty() || fecha.isEmpty()) {

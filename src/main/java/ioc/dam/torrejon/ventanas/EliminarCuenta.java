@@ -4,11 +4,28 @@
  */
 package ioc.dam.torrejon.ventanas;
 
+import ioc.dam.torrejon.controladores.OptionPane;
+import ioc.dam.torrejon.controladores.UsuariosController;
+import java.io.IOException;
+import javax.swing.JOptionPane;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  *
  * @author carlostorrejongaragallo
  */
 public class EliminarCuenta extends javax.swing.JInternalFrame {
+
+    UsuariosController usuario = new UsuariosController();
+
+    JSONObject perfil = new JSONObject();
+
+    OptionPane infoUser = new OptionPane();
+
+    String mensaje = "Si acepta la cuenta sera eliminada y se cerrara la aplicación, quiere aceptar?";
+
+    int id;
 
     /**
      * Creates new form EliminarCuenta
@@ -26,21 +43,116 @@ public class EliminarCuenta extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        bEliminar = new javax.swing.JButton();
+        bDatosUsuario = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        lblId = new javax.swing.JLabel();
+        lblMail = new javax.swing.JLabel();
+
+        setClosable(true);
+
+        jPanel1.setBackground(new java.awt.Color(51, 204, 255));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Eliminar mi cuenta", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 24))); // NOI18N
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("Datos de la cuenta");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 90, 240, -1));
+
+        bEliminar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        bEliminar.setText("Eliminar");
+        bEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bEliminarActionPerformed(evt);
+            }
+        });
+        jPanel1.add(bEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 300, 140, -1));
+
+        bDatosUsuario.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        bDatosUsuario.setText("Mostrar datos");
+        bDatosUsuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bDatosUsuarioActionPerformed(evt);
+            }
+        });
+        jPanel1.add(bDatosUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 230, 140, -1));
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel2.setText("Correo :");
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 170, 80, -1));
+
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel3.setText("Id :");
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 130, 80, -1));
+
+        lblId.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jPanel1.add(lblId, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 130, 130, 20));
+
+        lblMail.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jPanel1.add(lblMail, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 170, 220, 20));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 394, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 457, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 274, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 407, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void bEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEliminarActionPerformed
+
+        int salir = JOptionPane.showConfirmDialog(this, mensaje, "Advertencia", JOptionPane.YES_NO_OPTION);
+        if (salir == JOptionPane.YES_OPTION) {
+
+            try {
+                id = perfil.getInt("jti");
+
+                usuario.eliminarUsuario(id);
+
+                System.exit(0);
+
+            } catch (JSONException | IOException | InterruptedException ex) {
+                ex.getMessage();
+            }
+        }
+
+
+    }//GEN-LAST:event_bEliminarActionPerformed
+
+    private void bDatosUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bDatosUsuarioActionPerformed
+        try {
+            perfil = infoUser.DatosUsuario(Login.token);
+
+            id = perfil.getInt("jti");
+            String idUser = String.valueOf(id);
+            lblMail.setText(perfil.getString("sub"));
+            lblId.setText(idUser);
+        } catch (JSONException ex) {
+            ex.getMessage();
+        }
+    }//GEN-LAST:event_bDatosUsuarioActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton bDatosUsuario;
+    private javax.swing.JButton bEliminar;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel lblId;
+    private javax.swing.JLabel lblMail;
     // End of variables declaration//GEN-END:variables
 }

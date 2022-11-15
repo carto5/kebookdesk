@@ -21,7 +21,7 @@ public class AuthController {
     final HttpClient cliente = HttpClient.newHttpClient();
     
     /**
-     * Método que sirve para autenticarse
+     * Método para autenticarse
      *
      * @param  url con la dirección y datos del usuario para logearse en el servidor. 
      * @return el token de autenticación.
@@ -45,7 +45,7 @@ public class AuthController {
     }
     
     /**
-     * Método para almacenar usuarios en la base de datos.
+     * Método para insertar usuarios en la base de datos.
      * @param values LinkedHasMap que guarda los valores de los usuarios.
      * @throws IOException
      * @throws InterruptedException 

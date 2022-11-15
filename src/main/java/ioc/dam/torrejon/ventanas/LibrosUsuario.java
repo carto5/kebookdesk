@@ -4,11 +4,23 @@
  */
 package ioc.dam.torrejon.ventanas;
 
+import ioc.dam.torrejon.controladores.LibrosController;
+import ioc.dam.torrejon.controladores.OptionPane;
+import java.io.IOException;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author carlostorrejongaragallo
  */
 public class LibrosUsuario extends javax.swing.JInternalFrame {
+
+    LibrosController libros = new LibrosController();
+    DefaultTableModel clean = new DefaultTableModel();
+    String autor, genero, isbn;
+    String mensaje = "Para realizar una busqueda es necesario rellenar alguno de los campos, desea continuar?";
+    String mensaje2 = "busquedas disponibles por : Isbn, autor, género, disponibilidad o isbn + disponibilidad, desea continuar?";
+    boolean disponible;
 
     /**
      * Creates new form LibrosUsuario
@@ -29,7 +41,7 @@ public class LibrosUsuario extends javax.swing.JInternalFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tListarLibros = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -39,13 +51,12 @@ public class LibrosUsuario extends javax.swing.JInternalFrame {
         txtIsbn = new javax.swing.JTextField();
         txtAutor = new javax.swing.JTextField();
         txtGenero = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        bReseva = new javax.swing.JButton();
+        bListarLibros = new javax.swing.JButton();
 
         setClosable(true);
         setTitle("Libros");
         setPreferredSize(new java.awt.Dimension(1200, 650));
-        setSize(new java.awt.Dimension(1200, 650));
 
         jPanel1.setBackground(new java.awt.Color(51, 153, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -55,8 +66,8 @@ public class LibrosUsuario extends javax.swing.JInternalFrame {
         jLabel1.setText("Libros");
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 30, 460, 70));
 
-        jTable1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tListarLibros.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        tListarLibros.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -67,7 +78,7 @@ public class LibrosUsuario extends javax.swing.JInternalFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tListarLibros);
 
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 140, 610, 340));
 
@@ -93,20 +104,35 @@ public class LibrosUsuario extends javax.swing.JInternalFrame {
 
         bBuscar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         bBuscar.setText("Buscar");
+        bBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bBuscarActionPerformed(evt);
+            }
+        });
         jPanel2.add(bBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 350, 170, -1));
         jPanel2.add(txtIsbn, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 100, 150, -1));
         jPanel2.add(txtAutor, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 150, 150, -1));
         jPanel2.add(txtGenero, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 200, 150, -1));
 
-        jButton1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jButton1.setText("Reservar");
-        jPanel2.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 420, 170, -1));
+        bReseva.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        bReseva.setText("Reservar");
+        bReseva.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bResevaActionPerformed(evt);
+            }
+        });
+        jPanel2.add(bReseva, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 420, 170, -1));
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 450, 510));
 
-        jButton2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jButton2.setText("Listar libros");
-        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 540, 190, -1));
+        bListarLibros.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        bListarLibros.setText("Listar libros");
+        bListarLibros.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bListarLibrosActionPerformed(evt);
+            }
+        });
+        jPanel1.add(bListarLibros, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 540, 190, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -122,12 +148,70 @@ public class LibrosUsuario extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void bListarLibrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bListarLibrosActionPerformed
+        clean = (DefaultTableModel) tListarLibros.getModel();
+        while (clean.getRowCount() > 0) {
+            clean.removeRow(0);
+        }
+        libros.ListarLibros(tListarLibros);
+    }//GEN-LAST:event_bListarLibrosActionPerformed
+
+    private void bBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bBuscarActionPerformed
+
+        autor = txtAutor.getText();
+        genero = txtGenero.getText();
+        isbn = txtIsbn.getText();
+        try {
+            if (autor.isEmpty() && genero.isEmpty() && isbn.isEmpty() && !chDisponible.isSelected()) {
+                OptionPane.OptionPane(mensaje, this);
+            } else if (!autor.isEmpty() && genero.isEmpty() && isbn.isEmpty() && !chDisponible.isSelected()) {
+                clean = (DefaultTableModel) tListarLibros.getModel();
+                while (clean.getRowCount() > 0) {
+                    clean.removeRow(0);
+                }
+                libros.ObtenerLibroEscritor(tListarLibros, autor);
+            } else if (!genero.isEmpty() && autor.isEmpty() && isbn.isEmpty() && !chDisponible.isSelected()) {
+                clean = (DefaultTableModel) tListarLibros.getModel();
+                while (clean.getRowCount() > 0) {
+                    clean.removeRow(0);
+                }
+                libros.ObtenerLibroGenero(tListarLibros, genero);
+            } else if (!isbn.isEmpty() && genero.isEmpty() && autor.isEmpty() && chDisponible.isSelected()) {
+                clean = (DefaultTableModel) tListarLibros.getModel();
+                while (clean.getRowCount() > 0) {
+                    clean.removeRow(0);
+                }
+                libros.ObtenerLibroDispIsbn(tListarLibros, isbn);
+            } else if (isbn.isEmpty() && genero.isEmpty() && autor.isEmpty() && chDisponible.isSelected()) {
+                clean = (DefaultTableModel) tListarLibros.getModel();
+                while (clean.getRowCount() > 0) {
+                    clean.removeRow(0);
+                }
+                libros.ObtenerLibroDisponible(tListarLibros);
+            } else if (!isbn.isEmpty() && genero.isEmpty() && autor.isEmpty() && !chDisponible.isSelected()) {
+                clean = (DefaultTableModel) tListarLibros.getModel();
+                while (clean.getRowCount() > 0) {
+                    clean.removeRow(0);
+                }
+                libros.ObtenerLibroIsbn(tListarLibros, isbn);
+            } else {
+                OptionPane.OptionPane(mensaje2, this);
+            }
+        } catch (IOException | InterruptedException ex) {
+            ex.getMessage();
+        }
+    }//GEN-LAST:event_bBuscarActionPerformed
+
+    private void bResevaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bResevaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_bResevaActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bBuscar;
+    private javax.swing.JButton bListarLibros;
+    private javax.swing.JButton bReseva;
     private javax.swing.JCheckBox chDisponible;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -135,7 +219,7 @@ public class LibrosUsuario extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tListarLibros;
     private javax.swing.JTextField txtAutor;
     private javax.swing.JTextField txtGenero;
     private javax.swing.JTextField txtIsbn;
