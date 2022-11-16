@@ -71,9 +71,9 @@ public class EscritorController {
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
 
-        HttpResponse<String> response = cliente.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> respuesta = cliente.send(request, HttpResponse.BodyHandlers.ofString());
 
-        System.out.println(response.body());
+        respuesta.statusCode();
 
     }
     
@@ -94,7 +94,7 @@ public class EscritorController {
 
         HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
 
-        System.out.println(respuesta.body());
+        respuesta.statusCode();;
 
     }
 
@@ -125,6 +125,7 @@ public class EscritorController {
             });
 
             tabla.setModel(modelo);
+            respuesta.statusCode();
 
         } catch (IOException | InterruptedException e) {
             e.getMessage();
@@ -148,7 +149,7 @@ public class EscritorController {
                 .build();
 
         HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
-        System.out.println(respuesta.body());
+        respuesta.statusCode();
 
     }
 }

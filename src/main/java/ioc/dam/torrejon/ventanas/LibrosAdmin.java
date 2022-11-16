@@ -78,6 +78,11 @@ public class LibrosAdmin extends javax.swing.JInternalFrame {
         setClosable(true);
         setTitle("Libros\n");
         setPreferredSize(new java.awt.Dimension(1190, 640));
+        try {
+            setSelected(true);
+        } catch (java.beans.PropertyVetoException e1) {
+            e1.printStackTrace();
+        }
 
         jPanel1.setBackground(new java.awt.Color(51, 153, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());

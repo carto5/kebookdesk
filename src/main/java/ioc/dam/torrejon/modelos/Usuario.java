@@ -5,6 +5,8 @@
 package ioc.dam.torrejon.modelos;
 
 import java.io.Serializable;
+import java.util.Date;
+
 
 /**
  *
@@ -16,8 +18,8 @@ public class Usuario implements Serializable{
     private String nombre;
     private String correo;
     private String contrasena;
-    //private Date fecha_creacion;
-    private String fecha_creacion;
+    private Date fecha_creacion;
+    //private String fecha_creacion;
     private boolean admin;
 
     public Long getId() {
@@ -52,13 +54,14 @@ public class Usuario implements Serializable{
         this.contrasena = contrasena;
     }
 
-    public String getFecha_creacion() {
+    public Date getFecha_creacion() {
         return fecha_creacion;
     }
 
-    public void setFecha_creacion(String fecha_creacion) {
+    public void setFecha_creacion(Date fecha_creacion) {
         this.fecha_creacion = fecha_creacion;
     }
+
 
     public boolean isAdmin() {
         return admin;

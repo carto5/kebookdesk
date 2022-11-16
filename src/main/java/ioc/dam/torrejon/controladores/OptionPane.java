@@ -17,7 +17,7 @@ import org.json.JSONObject;
 
 /**
  *
- * @author carlostorrejongaragallo
+ * @author Carlos Torrejón
  */
 public class OptionPane {
     
@@ -54,6 +54,11 @@ public class OptionPane {
         int salir = JOptionPane.showConfirmDialog(componente, mensaje, "Advertencia", JOptionPane.YES_NO_OPTION);
         if (salir == JOptionPane.NO_OPTION) {
                             System.exit(0);                       }
+    }
+    
+    public static void OptionPaneInfo (String mensaje, Component componente){
+        JOptionPane.showConfirmDialog(componente, mensaje, "Advertencia", JOptionPane.INFORMATION_MESSAGE);
+        
     }
     
     /**

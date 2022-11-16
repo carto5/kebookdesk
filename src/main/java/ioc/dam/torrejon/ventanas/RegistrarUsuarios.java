@@ -6,8 +6,13 @@ package ioc.dam.torrejon.ventanas;
 
 import ioc.dam.torrejon.controladores.AuthController;
 import ioc.dam.torrejon.controladores.OptionPane;
+import ioc.dam.torrejon.modelos.Usuario;
 import java.io.IOException;
-import java.util.LinkedHashMap;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -16,12 +21,15 @@ import java.util.LinkedHashMap;
 public class RegistrarUsuarios extends javax.swing.JFrame {
 
     AuthController registro = new AuthController();
+    Usuario usuario = new Usuario();
     Login login = new Login();
-    
-    String nombre, mail, contrasena, contrasenaRe, fecha;
+    SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+    Date fechaRegistro;
+
+    String nombre, mail, contrasena, contrasenaRe, date;
 
     final String empty = "Faltan datos por rellenar, desea continuar?";
-    final String passIguales = "Las contraseñas no son iguales, desea continuar?";
+    final String passIguales = "Las contraseñas deben ser coincidir, desea continuar?";
 
     /**
      * Creates new form RegistrarUsuarios
@@ -123,26 +131,26 @@ public class RegistrarUsuarios extends javax.swing.JFrame {
         mail = txtMail.getText();
         contrasena = new String(txtPass.getPassword());
         contrasenaRe = new String(txtRePass.getPassword());
-        //Date data = (Date) txtDate.getValue();
-        fecha = txtFecha.getText();
-        //String date = txtDate.getText();
+        date = txtFecha.getText();
 
-        if (nombre.isEmpty() || mail.isEmpty() || contrasena.isEmpty() || contrasenaRe.isEmpty() || fecha.isEmpty()) {
+        if (nombre.isEmpty() || mail.isEmpty() || contrasena.isEmpty() || contrasenaRe.isEmpty() || date.isEmpty()) {
             OptionPane.OptionPane(empty, this);
         } else {
             if (contrasena.equals(contrasenaRe)) {
 
-                LinkedHashMap<String, String> values = new LinkedHashMap<String, String>() {
-                    {
-                        put("nombre", nombre);
-                        put("correo", mail);
-                        put("contrasena", contrasena);
-                        put("fecha_creacion", fecha);
-                    }
-                };
+                try {
+
+                    fechaRegistro = formato.parse(date);
+                } catch (ParseException ex) {
+                    Logger.getLogger(RegistrarUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                usuario.setNombre(nombre);
+                usuario.setCorreo(mail);
+                usuario.setContrasena(contrasena);
+                usuario.setFecha_creacion(fechaRegistro);
 
                 try {
-                    registro.registrarUsuario(values);
+                    registro.registrarUsuario(usuario);
 
                     this.setVisible(false);
                     login.setVisible(true);

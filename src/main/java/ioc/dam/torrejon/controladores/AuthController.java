@@ -5,12 +5,12 @@
 package ioc.dam.torrejon.controladores;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import ioc.dam.torrejon.modelos.Usuario;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.LinkedHashMap;
 
 /**
  *
@@ -46,15 +46,15 @@ public class AuthController {
     
     /**
      * Método para insertar usuarios en la base de datos.
-     * @param values LinkedHasMap que guarda los valores de los usuarios.
+     * @param usuario objeto de la clase usuario.
      * @throws IOException
      * @throws InterruptedException 
      */
-    public void registrarUsuario(LinkedHashMap<String, String> values) throws IOException, InterruptedException {
+    public void registrarUsuario(Usuario usuario) throws IOException, InterruptedException {
 
         var objectMapper = new ObjectMapper();
         String requestBody = objectMapper
-                .writeValueAsString(values);
+                .writeValueAsString(usuario);
 
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -63,7 +63,9 @@ public class AuthController {
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
 
-        HttpResponse<String> response = cliente.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> respuesta = cliente.send(request, HttpResponse.BodyHandlers.ofString());
+        
+        respuesta.statusCode();
 
     }
     

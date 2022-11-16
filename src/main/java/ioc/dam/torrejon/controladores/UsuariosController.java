@@ -76,10 +76,13 @@ public class UsuariosController {
             });
 
             tabla.setModel(modelo);
+            
+            respuesta.statusCode();
 
         } catch (IOException | InterruptedException e) {
             e.getMessage();
         }
+        
 
     }
     
@@ -106,6 +109,7 @@ public class UsuariosController {
         modelo.addRow(new Object[]{user.getId(), user.getNombre(), user.getCorreo(), user.getFecha_creacion(), user.isAdmin()});
 
         tabla.setModel(modelo);
+        respuesta.statusCode();
         //System.out.println(user.getId());
 
     }
@@ -133,6 +137,7 @@ public class UsuariosController {
         modelo.addRow(new Object[]{user.getId(), user.getNombre(), user.getCorreo(), user.getFecha_creacion(), user.isAdmin()});
 
         tabla.setModel(modelo);
+        respuesta.statusCode();
         //System.out.println(user.getId());
 
     }
@@ -152,6 +157,7 @@ public class UsuariosController {
                 .build();
         
         HttpResponse respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
+        respuesta.statusCode();
     }
     
     /**
@@ -172,6 +178,8 @@ public class UsuariosController {
                 .build();
 
         HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
+        
+        respuesta.statusCode();
         
         
         
