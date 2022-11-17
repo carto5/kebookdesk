@@ -6,10 +6,12 @@ package ioc.dam.torrejon.ventanas;
 
 import ioc.dam.torrejon.controladores.EscritorController;
 import ioc.dam.torrejon.controladores.LibrosController;
-import ioc.dam.torrejon.controladores.OptionPane;
+import ioc.dam.torrejon.controladores.Utils;
 import ioc.dam.torrejon.modelos.Escritor;
 import ioc.dam.torrejon.modelos.Libro;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -210,7 +212,11 @@ public class LibrosAdmin extends javax.swing.JInternalFrame {
         while (clean.getRowCount() > 0) {
             clean.removeRow(0);
         }
-        libros.ListarLibros(librosTable);
+        try {
+            libros.ListarLibros(librosTable);
+        } catch (IOException | InterruptedException ex) {
+            ex.getMessage();
+        }
 
     }//GEN-LAST:event_bLibrosActionPerformed
 
@@ -231,7 +237,7 @@ public class LibrosAdmin extends javax.swing.JInternalFrame {
 
             if (isbn.isEmpty() || titulo.isEmpty() /*|| autor.isEmpty() */|| genero.isEmpty() || sinopsis.isEmpty() || idAuto.isEmpty()) {
 
-                OptionPane.OptionPane(book, this);
+                Utils.OptionPane(book, this);
 
             } else {
 
@@ -256,7 +262,7 @@ public class LibrosAdmin extends javax.swing.JInternalFrame {
             autor = txtAutor.getText();
 
             if (autor.isEmpty()) {
-                OptionPane.OptionPane(autorG, this);
+                Utils.OptionPane(autorG, this);
             } else {
                 escritor.setNombre(autor);
 
@@ -283,7 +289,7 @@ public class LibrosAdmin extends javax.swing.JInternalFrame {
 
         idAuto = txtIdAutor.getText();
         if (idAuto.isEmpty()) {
-            OptionPane.OptionPane(eliminar, this);
+            Utils.OptionPane(eliminar, this);
 
         } else {
             idAutor = Integer.parseInt(idAuto);

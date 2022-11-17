@@ -11,6 +11,8 @@ import ioc.dam.torrejon.ventanas.Login;
 import java.awt.Component;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.Calendar;
+import java.util.Date;
 import javax.swing.JOptionPane;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,7 +21,7 @@ import org.json.JSONObject;
  *
  * @author Carlos Torrejón
  */
-public class OptionPane {
+public class Utils {
     
     Usuario usuario = new Usuario();
     
@@ -61,6 +63,12 @@ public class OptionPane {
         
     }
     
+    public static void OptionPaneSalir (String mensaje, Component componente){
+        int salir = JOptionPane.showConfirmDialog(componente, mensaje, "Advertencia", JOptionPane.YES_NO_OPTION);
+        if (salir == JOptionPane.YES_OPTION) {
+                            System.exit(0);                       }
+    }
+    
     /**
      * Método para desencriptar el token.
      * @param token String que contiene el token de la sesión.
@@ -76,6 +84,15 @@ public class OptionPane {
         JSONObject info = new JSONObject(payload);
 
         return info;
+    }
+    
+    public Date SumarDias(Date fecha, int dias){
+        
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(fecha);
+        calendar.add(Calendar.DAY_OF_YEAR, dias);
+        
+        return calendar.getTime();
     }
     
 }

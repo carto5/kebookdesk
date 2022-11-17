@@ -8,16 +8,13 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ioc.dam.torrejon.modelos.Libro;
 import ioc.dam.torrejon.ventanas.Login;
-import java.awt.Component;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -59,15 +56,18 @@ public class LibrosController {
     /**
      * Método para listar libros
      * @param tabla donde se listaran los libros
+     * @return codigo de la conexion
+     * @throws java.io.IOException
+     * @throws java.lang.InterruptedException
      */
-    public void ListarLibros(JTable tabla) {
+    public int ListarLibros(JTable tabla) throws IOException, InterruptedException {
 
-        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://192.168.2.108:8080/libro"))
+        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/libro"))
                 .header("token", Login.token)
                 .GET()
                 .build();
 
-        try {
+        //try {
             HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
 
             /**
@@ -83,11 +83,13 @@ public class LibrosController {
 
             tabla.setModel(modelo);
 
-            respuesta.statusCode();
+            return respuesta.statusCode();
 
-        } catch (IOException | InterruptedException e) {
+        /*} catch (IOException | InterruptedException e) {
             e.getMessage();
         }
+        
+        return 401;*/
 
     }
 
@@ -101,7 +103,7 @@ public class LibrosController {
      */
     public void ObtenerLibroIsbn(JTable tabla, String isbn) throws IOException, InterruptedException {
 
-        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://192.168.2.108:8080/libro/" + isbn))
+        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/libro/" + isbn))
                 .header("token", Login.token)
                 .GET()
                 .build();
@@ -128,7 +130,7 @@ public class LibrosController {
      */
     public void ObtenerLibroTitulo(JTable tabla, String titulo) throws IOException, InterruptedException {
 
-        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://192.168.2.108:8080/libro/titulo?titulo=" + titulo))
+        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://1localhost:8080/libro/titulo?titulo=" + titulo))
                 .header("token", Login.token)
                 .GET()
                 .build();
@@ -155,7 +157,7 @@ public class LibrosController {
      */
     public void ObtenerLibroEscritor(JTable tabla, String autor) throws IOException, InterruptedException {
 
-        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://192.168.2.108:8080/libro/autor?autor=" + URLEncoder.encode(autor,"UTF-8")))
+        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/libro/autor?autor=" + URLEncoder.encode(autor,"UTF-8")))
                 .header("token", Login.token)
                 .GET()
                 .build();
@@ -184,7 +186,7 @@ public class LibrosController {
      */
     public void ObtenerLibroGenero(JTable tabla, String genero) throws IOException, InterruptedException {
 
-        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://192.168.2.108:8080/libro/genero?genero=" + genero))
+        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/libro/genero?genero=" + genero))
                 .header("token", Login.token)
                 .GET()
                 .build();
@@ -212,7 +214,7 @@ public class LibrosController {
      */
     public void ObtenerLibroDisponible(JTable tabla) throws IOException, InterruptedException {
 
-        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://192.168.2.108:8080/libro/disponibles"))
+        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/libro/disponibles"))
                 .header("token", Login.token)
                 .GET()
                 .build();
@@ -241,7 +243,7 @@ public class LibrosController {
      */
     public void ObtenerLibroDispIsbn(JTable tabla, String isbn) throws IOException, InterruptedException {
 
-        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://192.168.2.108:8080/libro/disponible/" + URLEncoder.encode(isbn,"UTF-8")))
+        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/libro/disponible/" + URLEncoder.encode(isbn,"UTF-8")))
                 .header("token", Login.token)
                 .GET()
                 .build();
@@ -271,7 +273,7 @@ public class LibrosController {
                 .writeValueAsString(libro);
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://192.168.2.108:8080/libro"))
+                .uri(URI.create("http://localhost:8080/libro"))
                 .header("token", Login.token)
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))

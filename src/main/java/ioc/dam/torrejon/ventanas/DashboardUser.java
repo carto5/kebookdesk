@@ -4,15 +4,19 @@
  */
 package ioc.dam.torrejon.ventanas;
 
+import ioc.dam.torrejon.controladores.Utils;
+
 /**
  *
- * @author carlostorrejongaragallo
+ * @author Carlos Torrejón
  */
 public class DashboardUser extends javax.swing.JFrame {
     
     CambiarContrasena cambio = new CambiarContrasena();
     EliminarCuenta eliminar = new EliminarCuenta();
     LibrosUsuario libros = new LibrosUsuario();
+    
+    String mensaje = "Seguro que quiere abandonar la aplicación?";
     
 
     /**
@@ -31,13 +35,18 @@ public class DashboardUser extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jMenuItem1 = new javax.swing.JMenuItem();
         jDesktopPane1 = new javax.swing.JDesktopPane();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
-        jMenuItem3 = new javax.swing.JMenuItem();
+        mLibros = new javax.swing.JMenuItem();
+        mPass = new javax.swing.JMenuItem();
+        mEliminar = new javax.swing.JMenuItem();
+        mResena = new javax.swing.JMenuItem();
+        msalir = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
+
+        jMenuItem1.setText("jMenuItem1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Usuario");
@@ -58,29 +67,40 @@ public class DashboardUser extends javax.swing.JFrame {
 
         jMenu1.setText("menu");
 
-        jMenuItem1.setText("Libros");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        mLibros.setText("Libros");
+        mLibros.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                mLibrosActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem1);
+        jMenu1.add(mLibros);
 
-        jMenuItem2.setText("Cambiar contraseña");
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+        mPass.setText("Cambiar contraseña");
+        mPass.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem2ActionPerformed(evt);
+                mPassActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem2);
+        jMenu1.add(mPass);
 
-        jMenuItem3.setText("Eliminar cuenta");
-        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+        mEliminar.setText("Eliminar cuenta");
+        mEliminar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem3ActionPerformed(evt);
+                mEliminarActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem3);
+        jMenu1.add(mEliminar);
+
+        mResena.setText("Reseñas");
+        jMenu1.add(mResena);
+
+        msalir.setText("Salir");
+        msalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                msalirActionPerformed(evt);
+            }
+        });
+        jMenu1.add(msalir);
 
         jMenuBar1.add(jMenu1);
 
@@ -103,20 +123,24 @@ public class DashboardUser extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+    private void mPassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mPassActionPerformed
         jDesktopPane1.add(cambio);  
         cambio.show();
-    }//GEN-LAST:event_jMenuItem2ActionPerformed
+    }//GEN-LAST:event_mPassActionPerformed
 
-    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+    private void mEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mEliminarActionPerformed
         jDesktopPane1.add(eliminar);  
         eliminar.show();
-    }//GEN-LAST:event_jMenuItem3ActionPerformed
+    }//GEN-LAST:event_mEliminarActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void mLibrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mLibrosActionPerformed
         jDesktopPane1.add(libros);  
         libros.show();
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_mLibrosActionPerformed
+
+    private void msalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_msalirActionPerformed
+        Utils.OptionPaneSalir(mensaje, this);
+    }//GEN-LAST:event_msalirActionPerformed
 
     /**
      * @param args the command line arguments
@@ -159,7 +183,10 @@ public class DashboardUser extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem mEliminar;
+    private javax.swing.JMenuItem mLibros;
+    private javax.swing.JMenuItem mPass;
+    private javax.swing.JMenuItem mResena;
+    private javax.swing.JMenuItem msalir;
     // End of variables declaration//GEN-END:variables
 }

@@ -4,14 +4,18 @@
  */
 package ioc.dam.torrejon.ventanas;
 
+import ioc.dam.torrejon.controladores.Utils;
+
 /**
  *
- * @author carlostorrejongaragallo
+ * @author Carlos Torrejón
  */
 public class DashboardAdmin extends javax.swing.JFrame {
     
     OpcionesUsuario ou = new OpcionesUsuario();
     LibrosAdmin la = new LibrosAdmin();
+
+    String mensaje = "Seguro que quiere abandonar la aplicación?";
 
     /**
      * Creates new form DashboardAdmin
@@ -29,13 +33,17 @@ public class DashboardAdmin extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jMenuItem4 = new javax.swing.JMenuItem();
         jDesktopPane1 = new javax.swing.JDesktopPane();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
-        jMenuItem3 = new javax.swing.JMenuItem();
+        mUsuarios = new javax.swing.JMenuItem();
+        mLibros = new javax.swing.JMenuItem();
+        mPrestamos = new javax.swing.JMenuItem();
+        Salir = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
+
+        jMenuItem4.setText("jMenuItem4");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Administrador");
@@ -56,24 +64,32 @@ public class DashboardAdmin extends javax.swing.JFrame {
 
         jMenu1.setText("Menú");
 
-        jMenuItem1.setText("Gestión usuarios");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        mUsuarios.setText("Gestión usuarios");
+        mUsuarios.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                mUsuariosActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem1);
+        jMenu1.add(mUsuarios);
 
-        jMenuItem2.setText("Gestión libros");
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+        mLibros.setText("Gestión libros");
+        mLibros.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem2ActionPerformed(evt);
+                mLibrosActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem2);
+        jMenu1.add(mLibros);
 
-        jMenuItem3.setText("Prestamos/Devoluciones");
-        jMenu1.add(jMenuItem3);
+        mPrestamos.setText("Prestamos/Devoluciones");
+        jMenu1.add(mPrestamos);
+
+        Salir.setText("Salir");
+        Salir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SalirActionPerformed(evt);
+            }
+        });
+        jMenu1.add(Salir);
 
         jMenuBar1.add(jMenu1);
 
@@ -96,16 +112,20 @@ public class DashboardAdmin extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void mUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mUsuariosActionPerformed
       
         jDesktopPane1.add(ou);  
         ou.show();
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_mUsuariosActionPerformed
 
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+    private void mLibrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mLibrosActionPerformed
         jDesktopPane1.add(la);  
         la.show();
-    }//GEN-LAST:event_jMenuItem2ActionPerformed
+    }//GEN-LAST:event_mLibrosActionPerformed
+
+    private void SalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SalirActionPerformed
+        Utils.OptionPaneSalir(mensaje, this);
+    }//GEN-LAST:event_SalirActionPerformed
 
     /**
      * @param args the command line arguments
@@ -143,12 +163,14 @@ public class DashboardAdmin extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem Salir;
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem mLibros;
+    private javax.swing.JMenuItem mPrestamos;
+    private javax.swing.JMenuItem mUsuarios;
     // End of variables declaration//GEN-END:variables
 }

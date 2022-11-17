@@ -5,10 +5,19 @@
 package ioc.dam.torrejon.ventanas;
 
 import ioc.dam.torrejon.controladores.LibrosController;
-import ioc.dam.torrejon.controladores.OptionPane;
+import ioc.dam.torrejon.controladores.ReservasController;
+import ioc.dam.torrejon.controladores.Utils;
+import ioc.dam.torrejon.modelos.Libro;
+import ioc.dam.torrejon.modelos.Reserva;
 import ioc.dam.torrejon.modelos.Usuario;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -16,16 +25,26 @@ import org.json.JSONObject;
  * @author Carlos Torrejón
  */
 public class LibrosUsuario extends javax.swing.JInternalFrame {
-    
+
     JSONObject perfil = new JSONObject();
-    OptionPane infoUser = new OptionPane();
+    Utils util = new Utils();
+    ReservasController guardarReserva = new ReservasController();
 
     Usuario usuario = new Usuario();
+    Libro libro = new Libro();
+    Reserva reserva = new Reserva();
     LibrosController libros = new LibrosController();
     DefaultTableModel clean = new DefaultTableModel();
+    ZoneId zonaHoraria = ZoneId.systemDefault();
+
     String autor, genero, isbn, titulo;
     String mensaje = "Para realizar una busqueda es necesario rellenar alguno de los campos, desea continuar?";
     String mensaje2 = "busquedas disponibles por : Isbn, autor, género, disponibilidad o isbn + disponibilidad, desea continuar?";
+    Long id;
+    int code;
+    int dias = 10;
+    Date fecha;
+    LocalDate localDate;
     boolean disponible;
 
     /**
@@ -204,7 +223,13 @@ public class LibrosUsuario extends javax.swing.JInternalFrame {
         while (clean.getRowCount() > 0) {
             clean.removeRow(0);
         }
-        libros.ListarLibros(tListarLibros);
+        try {
+            code = libros.ListarLibros(tListarLibros);
+            System.out.println(code);
+        } catch (IOException | InterruptedException ex) {
+            ex.getMessage();
+        }
+        
     }//GEN-LAST:event_bListarLibrosActionPerformed
 
     private void bBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bBuscarActionPerformed
@@ -215,7 +240,7 @@ public class LibrosUsuario extends javax.swing.JInternalFrame {
         titulo = txtTitulo.getText();
         try {
             if (autor.isEmpty() && genero.isEmpty() && titulo.isEmpty() && isbn.isEmpty() && !chDisponible.isSelected()) {
-                OptionPane.OptionPane(mensaje, this);
+                Utils.OptionPane(mensaje, this);
             } else if (!autor.isEmpty() && genero.isEmpty() && titulo.isEmpty() && isbn.isEmpty() && !chDisponible.isSelected()) {
                 clean = (DefaultTableModel) tListarLibros.getModel();
                 while (clean.getRowCount() > 0) {
@@ -246,14 +271,14 @@ public class LibrosUsuario extends javax.swing.JInternalFrame {
                     clean.removeRow(0);
                 }
                 libros.ObtenerLibroIsbn(tListarLibros, isbn);
-            }else if (autor.isEmpty() && !titulo.isEmpty() && genero.isEmpty() && isbn.isEmpty() && !chDisponible.isSelected()) {
+            } else if (autor.isEmpty() && !titulo.isEmpty() && genero.isEmpty() && isbn.isEmpty() && !chDisponible.isSelected()) {
                 clean = (DefaultTableModel) tListarLibros.getModel();
                 while (clean.getRowCount() > 0) {
                     clean.removeRow(0);
                 }
                 libros.ObtenerLibroTitulo(tListarLibros, titulo);
             } else {
-                OptionPane.OptionPane(mensaje2, this);
+                Utils.OptionPane(mensaje2, this);
             }
         } catch (IOException | InterruptedException ex) {
             ex.getMessage();
@@ -261,7 +286,25 @@ public class LibrosUsuario extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_bBuscarActionPerformed
 
     private void bResevaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bResevaActionPerformed
-        // TODO add your handling code here:
+
+        try {
+            localDate = LocalDate.now();
+            fecha = Date.from(localDate.atStartOfDay(zonaHoraria).toInstant());
+            perfil = util.DatosUsuario(Login.token);
+            id = perfil.getLong("jti");
+            
+            usuario.setId(id);
+            libro.setIsbn(lblIsbn.getText());
+            reserva.setUsuario(usuario);
+            reserva.setLibro(libro);
+            reserva.setFecha_inicio(fecha);
+            reserva.setFecha_fin(util.SumarDias(fecha, dias));
+            
+            guardarReserva.guardarReserva(reserva);
+
+        } catch (JSONException | IOException | InterruptedException ex) {
+            ex.getMessage();
+        }
     }//GEN-LAST:event_bResevaActionPerformed
 
     private void chDisponibleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chDisponibleActionPerformed
@@ -269,7 +312,7 @@ public class LibrosUsuario extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_chDisponibleActionPerformed
 
     private void tListarLibrosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tListarLibrosMouseClicked
-        
+
         int fila = tListarLibros.rowAtPoint(evt.getPoint());
         lblIsbn.setText(String.valueOf(tListarLibros.getValueAt(fila, 0)));
         lblTitulo.setText(String.valueOf(tListarLibros.getValueAt(fila, 1)));

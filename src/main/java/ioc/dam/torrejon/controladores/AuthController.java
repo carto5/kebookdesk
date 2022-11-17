@@ -58,7 +58,7 @@ public class AuthController {
 
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://192.168.2.108:8080/usuario"))
+                .uri(URI.create("http://localhost:8080/usuario"))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();

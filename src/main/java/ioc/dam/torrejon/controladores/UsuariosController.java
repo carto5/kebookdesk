@@ -57,7 +57,7 @@ public class UsuariosController {
      */
     public void listarUsuarios(JTable tabla) {
 
-        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://192.168.2.108:8080/usuario"))
+        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/usuario"))
                 .header("token", Login.token)
                 .GET()
                 .build();
@@ -96,7 +96,7 @@ public class UsuariosController {
 
     public void obtenerUsuarioPorId(JTable tabla, int id) throws IOException, InterruptedException {
 
-        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://192.168.2.108:8080/usuario/" + id))
+        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/usuario/" + id))
                 .header("token", Login.token)
                 .GET()
                 .build();
@@ -124,7 +124,7 @@ public class UsuariosController {
 
     public void obtenerUsuarioPorCorreo(JTable tabla, String correo) throws IOException, InterruptedException {
 
-        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://192.168.2.108:8080/usuario/correo?correo=" + correo))
+        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/usuario/correo?correo=" + correo))
                 .header("token", Login.token)
                 .GET()
                 .build();
@@ -151,7 +151,7 @@ public class UsuariosController {
      */
     public void eliminarUsuario(int id) throws IOException, InterruptedException {
 
-        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://192.168.2.108:8080/usuario/" + id))
+        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/usuario/" + id))
                 .header("token", Login.token)
                 .DELETE()
                 .build();
@@ -171,7 +171,7 @@ public class UsuariosController {
     
     public void cambiarContrasena (String contrasena, String ncontrasena, int id) throws IOException, InterruptedException{
         
-        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://192.168.2.108:8080/usuario/contrasena/cambiar?id=" + id+"&contrasenaAntigua="+contrasena+"&contrasenaNueva="+ncontrasena))
+        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/usuario/contrasena/cambiar?id=" + id+"&contrasenaAntigua="+contrasena+"&contrasenaNueva="+ncontrasena))
                 .header("token", Login.token)
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.noBody())

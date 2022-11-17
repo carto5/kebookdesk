@@ -5,7 +5,7 @@
 package ioc.dam.torrejon.ventanas;
 
 import ioc.dam.torrejon.controladores.AuthController;
-import ioc.dam.torrejon.controladores.OptionPane;
+import ioc.dam.torrejon.controladores.Utils;
 import ioc.dam.torrejon.modelos.Usuario;
 import java.io.IOException;
 import java.text.ParseException;
@@ -134,7 +134,7 @@ public class RegistrarUsuarios extends javax.swing.JFrame {
         date = txtFecha.getText();
 
         if (nombre.isEmpty() || mail.isEmpty() || contrasena.isEmpty() || contrasenaRe.isEmpty() || date.isEmpty()) {
-            OptionPane.OptionPane(empty, this);
+            Utils.OptionPane(empty, this);
         } else {
             if (contrasena.equals(contrasenaRe)) {
 
@@ -159,7 +159,7 @@ public class RegistrarUsuarios extends javax.swing.JFrame {
                     e.getMessage();
                 }
             } else {
-                OptionPane.OptionPane(passIguales, this);
+                Utils.OptionPane(passIguales, this);
             }
         }
     }//GEN-LAST:event_bRegistrarActionPerformed

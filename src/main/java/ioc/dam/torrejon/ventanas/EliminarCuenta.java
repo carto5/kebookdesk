@@ -4,7 +4,7 @@
  */
 package ioc.dam.torrejon.ventanas;
 
-import ioc.dam.torrejon.controladores.OptionPane;
+import ioc.dam.torrejon.controladores.Utils;
 import ioc.dam.torrejon.controladores.UsuariosController;
 import java.io.IOException;
 import javax.swing.JOptionPane;
@@ -21,7 +21,7 @@ public class EliminarCuenta extends javax.swing.JInternalFrame {
 
     JSONObject perfil = new JSONObject();
 
-    OptionPane infoUser = new OptionPane();
+    Utils infoUser = new Utils();
 
     String mensaje = "Si acepta la cuenta sera eliminada y se cerrara la aplicación, quiere aceptar?";
 

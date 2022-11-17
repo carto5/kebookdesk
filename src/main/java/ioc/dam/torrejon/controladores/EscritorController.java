@@ -65,7 +65,7 @@ public class EscritorController {
                 .writeValueAsString(escritor);
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://192.168.2.108:8080/escritor"))
+                .uri(URI.create("http://localhost:8080/escritor"))
                 .header("token", Login.token)
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
@@ -86,7 +86,7 @@ public class EscritorController {
 
     public void obtenerEscritorNombre(String nombre) throws IOException, InterruptedException {
 
-        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://192.168.2.108:8080/escritor/nombre?nombre=" + nombre))
+        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/escritor/nombre?nombre=" + nombre))
                 .header("token", Login.token)
                 .header("Content-Type", "application/json")
                 .GET()
@@ -105,7 +105,7 @@ public class EscritorController {
      */
     public void listarEscritores(JTable tabla) {
 
-        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://192.168.2.108:8080/escritor"))
+        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/escritor"))
                 .header("token", Login.token)
                 .header("Content-Type", "application/json")
                 .GET()
@@ -142,7 +142,7 @@ public class EscritorController {
 
     public void eliminarEscritor(int id) throws IOException, InterruptedException {
 
-        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://192.168.2.108:8080/escritor/" + id))
+        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/escritor/" + id))
                 .header("token", Login.token)
                 .header("Content-Type", "application/json")
                 .DELETE()

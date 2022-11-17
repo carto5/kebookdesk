@@ -4,7 +4,7 @@
  */
 package ioc.dam.torrejon.ventanas;
 
-import ioc.dam.torrejon.controladores.OptionPane;
+import ioc.dam.torrejon.controladores.Utils;
 import ioc.dam.torrejon.controladores.UsuariosController;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -147,7 +147,7 @@ public class OpcionesUsuario extends javax.swing.JInternalFrame {
         idDelete = txtId.getText();
 
         if (idDelete.isEmpty()) {
-            OptionPane.OptionPane(deleteUser, this);
+            Utils.OptionPane(deleteUser, this);
         } else {
             id = Integer.valueOf(idDelete);
             try {
@@ -169,7 +169,7 @@ public class OpcionesUsuario extends javax.swing.JInternalFrame {
             clean.removeRow(0);
         }
         if (mail.isEmpty()) {
-            OptionPane.OptionPane(deleteUser, this);
+            Utils.OptionPane(deleteUser, this);
         } else {
             //id = Integer.valueOf(idDelete);
             try {

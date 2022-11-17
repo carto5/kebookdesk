@@ -5,7 +5,7 @@
 package ioc.dam.torrejon.ventanas;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import ioc.dam.torrejon.controladores.OptionPane;
+import ioc.dam.torrejon.controladores.Utils;
 import ioc.dam.torrejon.controladores.UsuariosController;
 import ioc.dam.torrejon.modelos.Usuario;
 import java.io.IOException;
@@ -25,7 +25,7 @@ public class CambiarContrasena extends javax.swing.JInternalFrame {
 
     JSONObject perfil = new JSONObject();
 
-    OptionPane infoUser = new OptionPane();
+    Utils infoUser = new Utils();
 
     String mensaje = "Es necesario rellenar las dos casillas, quiere continuar?";
 
@@ -137,13 +137,16 @@ public class CambiarContrasena extends javax.swing.JInternalFrame {
         newPass = new String(txtNewPass.getPassword());
 
         if (pass.isEmpty() || newPass.isEmpty()) {
-            OptionPane.OptionPane(mensaje, this);
+            Utils.OptionPane(mensaje, this);
         } else {
 
             try {
+                id = perfil.getInt("jti");
                 user.cambiarContrasena(pass, newPass, id);
             } catch (IOException | InterruptedException ex) {
                 ex.getMessage();
+            } catch (JSONException ex) {
+                Logger.getLogger(CambiarContrasena.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_bCambiarPassActionPerformed

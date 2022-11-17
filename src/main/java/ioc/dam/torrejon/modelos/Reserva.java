@@ -15,12 +15,21 @@ import java.util.Date;
  */
 public class Reserva implements Serializable{
     
-    int id;
-    Usuario usuario;
-    Libro libro;
-    Date fecha_inicio;
-    boolean recogida;
-    boolean devuelto;
+    private int id;
+    private Usuario usuario;
+    private Libro libro;
+    private Date fecha_inicio;
+    private Date fecha_fin;
+    private boolean recogida;
+    private boolean devuelto;
+
+    public Date getFecha_fin() {
+        return fecha_fin;
+    }
+
+    public void setFecha_fin(Date fecha_fin) {
+        this.fecha_fin = fecha_fin;
+    }
 
     public int getId() {
         return id;
