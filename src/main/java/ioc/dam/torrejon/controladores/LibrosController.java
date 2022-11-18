@@ -30,7 +30,6 @@ public class LibrosController {
 
     private final DefaultTableModel modelo = new DefaultTableModel(columnas, 0);
 
-    String mensaje = "Error en al conexión";
 
     /**
      * Método para mapear los datos en formato json.
@@ -55,6 +54,7 @@ public class LibrosController {
 
     /**
      * Método para listar libros
+     *
      * @param tabla donde se listaran los libros
      * @return codigo de la conexion
      * @throws java.io.IOException
@@ -68,29 +68,28 @@ public class LibrosController {
                 .build();
 
         //try {
-            HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
+        System.out.println(respuesta.body());
+        /**
+         * Usamos una List para almacenar la información de los usuarios que nos
+         * envia el servidor
+         */
+        List<Libro> libro = transObjeto(respuesta.body(), new TypeReference< List<Libro>>() {
+        });
 
-            /**
-             * Usamos una List para almacenar la información de los usuarios que
-             * nos envia el servidor
-             */
-            List<Libro> libro = transObjeto(respuesta.body(), new TypeReference< List<Libro>>() {
-            });
+        libro.stream().forEach(item -> {
+            modelo.addRow(new Object[]{item.getIsbn(), item.getTitulo(), item.getAutor().getNombre(), item.getSinopsis(), item.getGenero(), item.isDisponible()});
+        });
 
-            libro.stream().forEach(item -> {
-                modelo.addRow(new Object[]{item.getIsbn(), item.getTitulo(), item.getAutor().getNombre(), item.getSinopsis(), item.getGenero(), item.isDisponible()});
-            });
+        tabla.setModel(modelo);
 
-            tabla.setModel(modelo);
-
-            return respuesta.statusCode();
+        return respuesta.statusCode();
 
         /*} catch (IOException | InterruptedException e) {
             e.getMessage();
         }
         
         return 401;*/
-
     }
 
     /**
@@ -110,14 +109,18 @@ public class LibrosController {
 
         HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
         System.out.println(respuesta.statusCode());
-        Libro libro = transObjeto(respuesta.body(), new TypeReference<Libro>() {
-        });
+        if (respuesta.statusCode() != 200) {
+            modelo.addRow(new Object[]{"Este libro actualmente no esta registrado"});
+            tabla.setModel(modelo);
+        } else {
+            Libro libro = transObjeto(respuesta.body(), new TypeReference<Libro>() {
+            });
 
-        modelo.addRow(new Object[]{libro.getIsbn(), libro.getTitulo(), libro.getAutor().getNombre(), libro.getSinopsis(), libro.getGenero(), libro.isDisponible()});
+            modelo.addRow(new Object[]{libro.getIsbn(), libro.getTitulo(), libro.getAutor().getNombre(), libro.getSinopsis(), libro.getGenero(), libro.isDisponible()});
 
-        tabla.setModel(modelo);
-        respuesta.statusCode();
-
+            tabla.setModel(modelo);
+            respuesta.statusCode();
+        }
     }
 
     /**
@@ -130,21 +133,25 @@ public class LibrosController {
      */
     public void ObtenerLibroTitulo(JTable tabla, String titulo) throws IOException, InterruptedException {
 
-        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://1localhost:8080/libro/titulo?titulo=" + titulo))
+        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/libro/titulo?titulo=" + titulo))
                 .header("token", Login.token)
                 .GET()
                 .build();
 
         HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
+        System.out.println(respuesta.statusCode());
+        if (respuesta.statusCode() != 200) {
+            modelo.addRow(new Object[]{"Este libro actualmente no esta registrado"});
+            tabla.setModel(modelo);
+        } else {
+            Libro libro = transObjeto(respuesta.body(), new TypeReference<Libro>() {
+            });
 
-        Libro libro = transObjeto(respuesta.body(), new TypeReference<Libro>() {
-        });
+            modelo.addRow(new Object[]{libro.getIsbn(), libro.getTitulo(), libro.getAutor().getNombre(), libro.getSinopsis(), libro.getGenero(), libro.isDisponible()});
 
-        modelo.addRow(new Object[]{libro.getIsbn(), libro.getTitulo(), libro.getAutor().getNombre(), libro.getSinopsis(), libro.getGenero(), libro.isDisponible()});
-
-        tabla.setModel(modelo);
-        respuesta.statusCode();
-
+            tabla.setModel(modelo);
+            respuesta.statusCode();
+        }
     }
 
     /**
@@ -157,23 +164,27 @@ public class LibrosController {
      */
     public void ObtenerLibroEscritor(JTable tabla, String autor) throws IOException, InterruptedException {
 
-        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/libro/autor?autor=" + URLEncoder.encode(autor,"UTF-8")))
+        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/libro/autor?autor=" + URLEncoder.encode(autor, "UTF-8")))
                 .header("token", Login.token)
                 .GET()
                 .build();
 
         HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
 
-        List<Libro> libro = transObjeto(respuesta.body(), new TypeReference< List<Libro>>() {
-        });
+        if (respuesta.statusCode() != 200) {
+            modelo.addRow(new Object[]{"Este libro actualmente no esta registrado"});
+            tabla.setModel(modelo);
+        } else {
+            List<Libro> libro = transObjeto(respuesta.body(), new TypeReference< List<Libro>>() {
+            });
 
-        libro.stream().forEach(item -> {
-            modelo.addRow(new Object[]{item.getIsbn(), item.getTitulo(), item.getAutor().getNombre(), item.getSinopsis(), item.getGenero(), item.isDisponible()});
-        });
+            libro.stream().forEach(item -> {
+                modelo.addRow(new Object[]{item.getIsbn(), item.getTitulo(), item.getAutor().getNombre(), item.getSinopsis(), item.getGenero(), item.isDisponible()});
+            });
 
-        tabla.setModel(modelo);
-        respuesta.statusCode();
-
+            tabla.setModel(modelo);
+            respuesta.statusCode();
+        }
     }
 
     /**
@@ -192,17 +203,20 @@ public class LibrosController {
                 .build();
 
         HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
+        if (respuesta.statusCode() != 200) {
+            modelo.addRow(new Object[]{"Este genero no esta disponible."});
+            tabla.setModel(modelo);
+        } else {
+            List<Libro> libro = transObjeto(respuesta.body(), new TypeReference< List<Libro>>() {
+            });
 
-        List<Libro> libro = transObjeto(respuesta.body(), new TypeReference< List<Libro>>() {
-        });
+            libro.stream().forEach(item -> {
+                modelo.addRow(new Object[]{item.getIsbn(), item.getTitulo(), item.getAutor().getNombre(), item.getSinopsis(), item.getGenero(), item.isDisponible()});
+            });
 
-        libro.stream().forEach(item -> {
-            modelo.addRow(new Object[]{item.getIsbn(), item.getTitulo(), item.getAutor().getNombre(), item.getSinopsis(), item.getGenero(), item.isDisponible()});
-        });
-
-        tabla.setModel(modelo);
-        respuesta.statusCode();
-
+            tabla.setModel(modelo);
+            respuesta.statusCode();
+        }
     }
 
     /**
@@ -243,7 +257,7 @@ public class LibrosController {
      */
     public void ObtenerLibroDispIsbn(JTable tabla, String isbn) throws IOException, InterruptedException {
 
-        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/libro/disponible/" + URLEncoder.encode(isbn,"UTF-8")))
+        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/libro/disponible/" + URLEncoder.encode(isbn, "UTF-8")))
                 .header("token", Login.token)
                 .GET()
                 .build();
@@ -280,7 +294,7 @@ public class LibrosController {
                 .build();
 
         HttpResponse<String> respuesta = cliente.send(request, HttpResponse.BodyHandlers.ofString());
-        
+
         respuesta.statusCode();
 
     }

@@ -14,6 +14,7 @@ public class DashboardAdmin extends javax.swing.JFrame {
     
     OpcionesUsuario ou = new OpcionesUsuario();
     LibrosAdmin la = new LibrosAdmin();
+    Recogida devo = new Recogida();
 
     String mensaje = "Seguro que quiere abandonar la aplicación?";
 
@@ -39,16 +40,14 @@ public class DashboardAdmin extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
         mUsuarios = new javax.swing.JMenuItem();
         mLibros = new javax.swing.JMenuItem();
-        mPrestamos = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
         Salir = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
 
         jMenuItem4.setText("jMenuItem4");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Administrador");
         setPreferredSize(new java.awt.Dimension(1200, 700));
-        setResizable(false);
         setSize(new java.awt.Dimension(1200, 700));
 
         javax.swing.GroupLayout jDesktopPane1Layout = new javax.swing.GroupLayout(jDesktopPane1);
@@ -59,7 +58,7 @@ public class DashboardAdmin extends javax.swing.JFrame {
         );
         jDesktopPane1Layout.setVerticalGroup(
             jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 876, Short.MAX_VALUE)
+            .addGap(0, 668, Short.MAX_VALUE)
         );
 
         jMenu1.setText("Menú");
@@ -80,8 +79,14 @@ public class DashboardAdmin extends javax.swing.JFrame {
         });
         jMenu1.add(mLibros);
 
-        mPrestamos.setText("Prestamos/Devoluciones");
-        jMenu1.add(mPrestamos);
+        jMenuItem3.setText("Recogidas/Devoluciones");
+        jMenuItem3.setPreferredSize(new java.awt.Dimension(120, 22));
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem3);
 
         Salir.setText("Salir");
         Salir.addActionListener(new java.awt.event.ActionListener() {
@@ -92,9 +97,6 @@ public class DashboardAdmin extends javax.swing.JFrame {
         jMenu1.add(Salir);
 
         jMenuBar1.add(jMenu1);
-
-        jMenu2.setText("Perfil");
-        jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
 
@@ -112,20 +114,25 @@ public class DashboardAdmin extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void mUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mUsuariosActionPerformed
-      
-        jDesktopPane1.add(ou);  
-        ou.show();
-    }//GEN-LAST:event_mUsuariosActionPerformed
-
-    private void mLibrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mLibrosActionPerformed
-        jDesktopPane1.add(la);  
-        la.show();
-    }//GEN-LAST:event_mLibrosActionPerformed
-
     private void SalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SalirActionPerformed
         Utils.OptionPaneSalir(mensaje, this);
     }//GEN-LAST:event_SalirActionPerformed
+
+    private void mLibrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mLibrosActionPerformed
+        jDesktopPane1.add(la);
+        la.show();
+    }//GEN-LAST:event_mLibrosActionPerformed
+
+    private void mUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mUsuariosActionPerformed
+
+        jDesktopPane1.add(ou);
+        ou.show();
+    }//GEN-LAST:event_mUsuariosActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        jDesktopPane1.add(devo);
+        devo.show();
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -166,11 +173,10 @@ public class DashboardAdmin extends javax.swing.JFrame {
     private javax.swing.JMenuItem Salir;
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem mLibros;
-    private javax.swing.JMenuItem mPrestamos;
     private javax.swing.JMenuItem mUsuarios;
     // End of variables declaration//GEN-END:variables
 }

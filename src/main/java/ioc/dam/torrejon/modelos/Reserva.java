@@ -20,7 +20,7 @@ public class Reserva implements Serializable{
     private Libro libro;
     private Date fecha_inicio;
     private Date fecha_fin;
-    private boolean recogida;
+    private boolean recogido;
     private boolean devuelto;
 
     public Date getFecha_fin() {
@@ -63,12 +63,12 @@ public class Reserva implements Serializable{
         this.fecha_inicio = fecha_inicio;
     }
 
-    public boolean isRecogida() {
-        return recogida;
+    public boolean isRecogido() {
+        return recogido;
     }
 
-    public void setRecogida(boolean recogida) {
-        this.recogida = recogida;
+    public void setRecogido(boolean recogido) {
+        this.recogido = recogido;
     }
 
     public boolean isDevuelto() {
