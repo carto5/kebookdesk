@@ -11,13 +11,13 @@ import ioc.dam.torrejon.controladores.Utils;
  * @author Carlos Torrejón
  */
 public class DashboardUser extends javax.swing.JFrame {
-    
+
     CambiarContrasena cambio = new CambiarContrasena();
     EliminarCuenta eliminar = new EliminarCuenta();
     LibrosUsuario libros = new LibrosUsuario();
-    
+    ResenasUsuario resenas = new ResenasUsuario();
+
     String mensaje = "Seguro que quiere abandonar la aplicación?";
-    
 
     /**
      * Creates new form DashboardUser
@@ -44,14 +44,12 @@ public class DashboardUser extends javax.swing.JFrame {
         mEliminar = new javax.swing.JMenuItem();
         mResena = new javax.swing.JMenuItem();
         msalir = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
 
         jMenuItem1.setText("jMenuItem1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Usuario");
         setPreferredSize(new java.awt.Dimension(1200, 700));
-        setResizable(false);
         setSize(new java.awt.Dimension(1200, 700));
 
         javax.swing.GroupLayout jDesktopPane1Layout = new javax.swing.GroupLayout(jDesktopPane1);
@@ -92,6 +90,11 @@ public class DashboardUser extends javax.swing.JFrame {
         jMenu1.add(mEliminar);
 
         mResena.setText("Reseñas");
+        mResena.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mResenaActionPerformed(evt);
+            }
+        });
         jMenu1.add(mResena);
 
         msalir.setText("Salir");
@@ -103,9 +106,6 @@ public class DashboardUser extends javax.swing.JFrame {
         jMenu1.add(msalir);
 
         jMenuBar1.add(jMenu1);
-
-        jMenu2.setText("Perfil");
-        jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
 
@@ -121,26 +121,31 @@ public class DashboardUser extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void mPassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mPassActionPerformed
-        jDesktopPane1.add(cambio);  
+        jDesktopPane1.add(cambio);
         cambio.show();
     }//GEN-LAST:event_mPassActionPerformed
 
     private void mEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mEliminarActionPerformed
-        jDesktopPane1.add(eliminar);  
+        jDesktopPane1.add(eliminar);
         eliminar.show();
     }//GEN-LAST:event_mEliminarActionPerformed
 
     private void mLibrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mLibrosActionPerformed
-        jDesktopPane1.add(libros);  
+        jDesktopPane1.add(libros);
         libros.show();
     }//GEN-LAST:event_mLibrosActionPerformed
 
     private void msalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_msalirActionPerformed
         Utils.OptionPaneSalir(mensaje, this);
     }//GEN-LAST:event_msalirActionPerformed
+
+    private void mResenaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mResenaActionPerformed
+        jDesktopPane1.add(resenas);
+        resenas.show();    }//GEN-LAST:event_mResenaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -180,7 +185,6 @@ public class DashboardUser extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem mEliminar;

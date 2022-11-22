@@ -6,19 +6,15 @@ package ioc.dam.torrejon.controladores;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import ioc.dam.torrejon.modelos.Libro;
 import ioc.dam.torrejon.modelos.Reserva;
 import ioc.dam.torrejon.ventanas.Login;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -34,7 +30,9 @@ public class ReservasController {
 
     private final DefaultTableModel modelo = new DefaultTableModel(columnas, 0);
 
-    String mensaje = "Error en al conexión";
+    private final Object[] columnError = new Object[]{"Error"};
+
+    private final DefaultTableModel modeloError = new DefaultTableModel(columnError, 0);
 
     /**
      * Método para mapear los datos en formato json.
@@ -61,8 +59,6 @@ public class ReservasController {
      * Método para listar libros
      *
      * @param tabla donde se listaran los libros
-     * @throws java.io.IOException
-     * @throws java.lang.InterruptedException
      */
     public void ListarReservas(JTable tabla) {
 
@@ -74,21 +70,24 @@ public class ReservasController {
         try {
             HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
             System.out.println(respuesta.body());
-            /**
-             * Usamos una List para almacenar la información de las reservas que
-             * nos envia el servidor
-             */
-            ArrayList<Reserva> reserva = transObjeto(respuesta.body(), new TypeReference< ArrayList<Reserva>>() {
-            });
+            if (respuesta.statusCode() != 200) {
+                modeloError.addRow(new Object[]{"Error al recibir las reservas"});
+                tabla.setModel(modeloError);
+            } else {
+                /**
+                 * Usamos una List para almacenar la información de las reservas
+                 * que nos envia el servidor
+                 */
+                ArrayList<Reserva> reserva = transObjeto(respuesta.body(), new TypeReference< ArrayList<Reserva>>() {
+                });
 
+                reserva.stream().forEach(item -> {
+                    modelo.addRow(new Object[]{item.getId(), item.getUsuario().getId(), item.getLibro().getIsbn(), item.getFecha_inicio(), item.getFecha_fin(), item.isRecogido(), item.isDevuelto()});
+                });
 
-            reserva.stream().forEach(item -> {
-                modelo.addRow(new Object[]{item.getId(), item.getUsuario().getId(), item.getLibro().getIsbn(), item.getFecha_inicio(), item.getFecha_fin(), item.isRecogido(), item.isDevuelto()});
-            });
-
-            tabla.setModel(modelo);
-            System.out.println(respuesta.statusCode());
-
+                tabla.setModel(modelo);
+                System.out.println(respuesta.statusCode());
+            }
             //return respuesta.statusCode();
         } catch (IOException | InterruptedException e) {
             e.getMessage();
@@ -104,24 +103,29 @@ public class ReservasController {
      * @throws IOException
      * @throws InterruptedException
      */
-    public void ObtenerReservaUsuario(JTable tabla, int usuario) throws IOException, InterruptedException {
+    public int ObtenerReservaUsuario(JTable tabla, int usuario) throws IOException, InterruptedException {
 
-        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/reserva/usuario?iDusuario=" + usuario))
+        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/reserva/usuario?idUsuario=" + usuario))
                 .header("token", Login.token)
                 .GET()
                 .build();
 
         HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
         System.out.println(respuesta.body());
-        ArrayList<Reserva> reserva = transObjeto(respuesta.body(), new TypeReference< ArrayList<Reserva>>() {
-        });
+        if (respuesta.statusCode() != 200) {
+            modeloError.addRow(new Object[]{"Este usuario no tiene reserva"});
+            tabla.setModel(modeloError);
+        } else {
+            ArrayList<Reserva> reserva = transObjeto(respuesta.body(), new TypeReference< ArrayList<Reserva>>() {
+            });
 
-        reserva.stream().forEach(item -> {
-            modelo.addRow(new Object[]{item.getId(), item.getUsuario().getId(), item.getLibro().getIsbn(), item.getFecha_inicio(), item.getFecha_fin(), item.isRecogido(), item.isDevuelto()});
-        });
-        tabla.setModel(modelo);
-        respuesta.statusCode();
-
+            reserva.stream().forEach(item -> {
+                modelo.addRow(new Object[]{item.getId(), item.getUsuario().getId(), item.getLibro().getIsbn(), item.getFecha_inicio(), item.getFecha_fin(), item.isRecogido(), item.isDevuelto()});
+            });
+            tabla.setModel(modelo);
+            return respuesta.statusCode();
+        }
+        return respuesta.statusCode();
     }
 
     /**
@@ -133,7 +137,7 @@ public class ReservasController {
      * @throws IOException
      * @throws InterruptedException
      */
-    public void ObtenerReservadeLibroPorUsuario(JTable tabla, String isbn, int usuario) throws IOException, InterruptedException {
+    public int ObtenerReservadeLibroPorUsuario(JTable tabla, String isbn, int usuario) throws IOException, InterruptedException {
 
         HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/reserva/" + isbn + "/usuario?idUsuario=" + usuario))
                 .header("token", Login.token)
@@ -141,18 +145,23 @@ public class ReservasController {
                 .build();
 
         HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
-        
+
         System.out.println(respuesta.body());
+        if (respuesta.statusCode() != 200) {
+            modeloError.addRow(new Object[]{"Error al recibir las reseñas"});
+            tabla.setModel(modeloError);
+        } else {
 
-        List<Reserva> reserva = transObjeto(respuesta.body(), new TypeReference< List<Reserva>>() {
-        });
+            List<Reserva> reserva = transObjeto(respuesta.body(), new TypeReference< List<Reserva>>() {
+            });
 
-        reserva.stream().forEach(item -> {
-            modelo.addRow(new Object[]{item.getId(), item.getUsuario().getId(), item.getLibro().getIsbn(), item.getFecha_inicio(), item.getFecha_fin(), item.isRecogido(), item.isDevuelto()});
-        });
-        tabla.setModel(modelo);
-        respuesta.statusCode();
-        System.out.println(respuesta.statusCode());
+            reserva.stream().forEach(item -> {
+                modelo.addRow(new Object[]{item.getId(), item.getUsuario().getId(), item.getLibro().getIsbn(), item.getFecha_inicio(), item.getFecha_fin(), item.isRecogido(), item.isDevuelto()});
+            });
+            tabla.setModel(modelo);
+            return respuesta.statusCode();
+        }
+        return respuesta.statusCode();
     }
 
     /**
@@ -163,16 +172,18 @@ public class ReservasController {
      * @throws IOException
      * @throws InterruptedException
      */
-    public boolean comprobarReservaRecogida(int reserva) throws IOException, InterruptedException {
+    public int comprobarReservaRecogida(int reserva) throws IOException, InterruptedException {
 
-        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/recogido?idReserva=" + reserva))
+        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/reserva/recogido?idReserva=" + reserva))
                 .header("token", Login.token)
                 .GET()
                 .build();
 
         HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
 
-        return "true".equals(respuesta.body());
+        System.out.println(respuesta.body());
+        
+        return respuesta.statusCode();
     }
 
     /**
@@ -183,28 +194,31 @@ public class ReservasController {
      * @throws IOException
      * @throws InterruptedException
      */
-    public boolean comprobarReservaDevuelta(int reserva) throws IOException, InterruptedException {
+    public int comprobarReservaDevuelta(int reserva) throws IOException, InterruptedException {
 
-        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/devuelto?idReserva=" + reserva))
+        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/reserva/devuelto?idReserva=" + reserva))
                 .header("token", Login.token)
                 .GET()
                 .build();
 
         HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
+        System.out.println(respuesta.body());
 
-        return "true".equals(respuesta.body());
+        return respuesta.statusCode();
+
     }
 
     /**
      * Método para confirmar recogida
      *
      * @param reserva número de reserva.
+     * @return codigo de conexión
      * @throws IOException
      * @throws InterruptedException
      */
-    public void confirmarRecogida(int reserva) throws IOException, InterruptedException {
+    public int confirmarRecogida(int reserva) throws IOException, InterruptedException {
 
-        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/" + reserva + "/recogido"))
+        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/reserva/" + reserva + "/recogido"))
                 .header("token", Login.token)
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.noBody())
@@ -212,19 +226,21 @@ public class ReservasController {
 
         HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
 
-        System.out.println(respuesta.statusCode());
+        System.out.println(respuesta.body());
+        return respuesta.statusCode();
     }
 
     /**
      * Método para confirmar devolución.
      *
      * @param reserva número de reserva.
+     * @return codigo de conexión
      * @throws IOException
      * @throws InterruptedException
      */
-    public void confirmarDevolucion(int reserva) throws IOException, InterruptedException {
+    public int confirmarDevolucion(int reserva) throws IOException, InterruptedException {
 
-        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/" + reserva + "/devuelto"))
+        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/reserva/" + reserva + "/devuelto"))
                 .header("token", Login.token)
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.noBody())
@@ -232,9 +248,10 @@ public class ReservasController {
 
         HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
         System.out.println(respuesta.statusCode());
+        return respuesta.statusCode();
     }
 
-    public void guardarReserva(Reserva reserva) throws IOException, InterruptedException {
+    public int guardarReserva(Reserva reserva) throws IOException, InterruptedException {
 
         var objectMapper = new ObjectMapper();
         String requestBody = objectMapper
@@ -249,7 +266,7 @@ public class ReservasController {
 
         HttpResponse<String> respuesta = cliente.send(request, HttpResponse.BodyHandlers.ofString());
 
-        respuesta.statusCode();
+        return respuesta.statusCode();
 
     }
 

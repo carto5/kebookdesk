@@ -5,6 +5,7 @@
 package ioc.dam.torrejon.ventanas;
 
 import ioc.dam.torrejon.controladores.LibrosController;
+import ioc.dam.torrejon.controladores.ResenaController;
 import ioc.dam.torrejon.controladores.ReservasController;
 import ioc.dam.torrejon.controladores.Utils;
 import ioc.dam.torrejon.modelos.Libro;
@@ -29,6 +30,7 @@ public class LibrosUsuario extends javax.swing.JInternalFrame {
     JSONObject perfil = new JSONObject();
     Utils util = new Utils();
     ReservasController guardarReserva = new ReservasController();
+    ResenaController resenas = new ResenaController();
 
     Usuario usuario = new Usuario();
     Libro libro = new Libro();
@@ -86,8 +88,11 @@ public class LibrosUsuario extends javax.swing.JInternalFrame {
         lblTitulo = new javax.swing.JLabel();
         lblIsbn = new javax.swing.JLabel();
         bListarLibros = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setClosable(true);
+        setMaximizable(true);
+        setResizable(true);
         setTitle("Libros");
         setPreferredSize(new java.awt.Dimension(1190, 640));
         try {
@@ -116,6 +121,7 @@ public class LibrosUsuario extends javax.swing.JInternalFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tListarLibros.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         tListarLibros.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tListarLibrosMouseClicked(evt);
@@ -141,6 +147,7 @@ public class LibrosUsuario extends javax.swing.JInternalFrame {
         jLabel4.setText("Genero");
         jPanel2.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 170, 70, -1));
 
+        chDisponible.setBackground(new java.awt.Color(51, 204, 255));
         chDisponible.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         chDisponible.setText("Disponible");
         chDisponible.addActionListener(new java.awt.event.ActionListener() {
@@ -202,7 +209,16 @@ public class LibrosUsuario extends javax.swing.JInternalFrame {
                 bListarLibrosActionPerformed(evt);
             }
         });
-        jPanel1.add(bListarLibros, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 540, 190, -1));
+        jPanel1.add(bListarLibros, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 540, 190, -1));
+
+        jButton1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jButton1.setText("Reseñas del libro");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 540, 170, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -229,7 +245,7 @@ public class LibrosUsuario extends javax.swing.JInternalFrame {
         } catch (IOException | InterruptedException ex) {
             ex.getMessage();
         }
-        
+
     }//GEN-LAST:event_bListarLibrosActionPerformed
 
     private void bBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bBuscarActionPerformed
@@ -253,13 +269,13 @@ public class LibrosUsuario extends javax.swing.JInternalFrame {
                     clean.removeRow(0);
                 }
                 libros.ObtenerLibroGenero(tListarLibros, genero);
-            } else if (!isbn.isEmpty() && genero.isEmpty() && titulo.isEmpty() && autor.isEmpty() && chDisponible.isSelected()) {
+            } /*else if (!isbn.isEmpty() && genero.isEmpty() && titulo.isEmpty() && autor.isEmpty() && chDisponible.isSelected()) {
                 clean = (DefaultTableModel) tListarLibros.getModel();
                 while (clean.getRowCount() > 0) {
                     clean.removeRow(0);
                 }
                 libros.ObtenerLibroDispIsbn(tListarLibros, isbn);
-            } else if (isbn.isEmpty() && titulo.isEmpty() && genero.isEmpty() && autor.isEmpty() && chDisponible.isSelected()) {
+            }*/ else if (isbn.isEmpty() && titulo.isEmpty() && genero.isEmpty() && autor.isEmpty() && chDisponible.isSelected()) {
                 clean = (DefaultTableModel) tListarLibros.getModel();
                 while (clean.getRowCount() > 0) {
                     clean.removeRow(0);
@@ -292,15 +308,18 @@ public class LibrosUsuario extends javax.swing.JInternalFrame {
             fecha = Date.from(localDate.atStartOfDay(zonaHoraria).toInstant());
             perfil = util.DatosUsuario(Login.token);
             id = perfil.getLong("jti");
-            
+
             usuario.setId(id);
             libro.setIsbn(lblIsbn.getText());
             reserva.setUsuario(usuario);
             reserva.setLibro(libro);
             reserva.setFecha_inicio(fecha);
             reserva.setFecha_fin(util.SumarDias(fecha, dias));
-            
-            guardarReserva.guardarReserva(reserva);
+
+            code = guardarReserva.guardarReserva(reserva);
+            if(code!=200){
+                Utils.OptionPaneInfo("Falta seleccionr libro", rootPane);
+            }
 
         } catch (JSONException | IOException | InterruptedException ex) {
             ex.getMessage();
@@ -318,12 +337,28 @@ public class LibrosUsuario extends javax.swing.JInternalFrame {
         lblTitulo.setText(String.valueOf(tListarLibros.getValueAt(fila, 1)));
     }//GEN-LAST:event_tListarLibrosMouseClicked
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        clean = (DefaultTableModel) tListarLibros.getModel();
+        while (clean.getRowCount() > 0) {
+            clean.removeRow(0);
+        }
+
+        isbn = lblIsbn.getText();
+
+        try {
+            resenas.obtenerResenaPorLibro(tListarLibros, isbn);
+        } catch (IOException | InterruptedException ex) {
+            ex.getMessage();
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bBuscar;
     private javax.swing.JButton bListarLibros;
     private javax.swing.JButton bReseva;
     private javax.swing.JCheckBox chDisponible;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

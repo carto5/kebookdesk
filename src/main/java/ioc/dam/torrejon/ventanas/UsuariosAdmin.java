@@ -15,20 +15,20 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author carlostorrejongaragallo
  */
-public class OpcionesUsuario extends javax.swing.JInternalFrame {
+public class UsuariosAdmin extends javax.swing.JInternalFrame {
 
     UsuariosController usuario = new UsuariosController();
 
     DefaultTableModel clean = new DefaultTableModel();
 
-    Integer id;
+    Integer id, code;
     String idDelete, mail;
     String deleteUser = "Se necesita añadir id de usuario para poder eliminarlo, desea continuar?";
 
     /**
      * Creates new form OpcionesUsuario
      */
-    public OpcionesUsuario() {
+    public UsuariosAdmin() {
         initComponents();
     }
 
@@ -138,7 +138,11 @@ public class OpcionesUsuario extends javax.swing.JInternalFrame {
         while (clean.getRowCount() > 0) {
             clean.removeRow(0);
         }
-        usuario.listarUsuarios(userTable);
+        try {
+            usuario.listarUsuarios(userTable);
+        } catch (IOException | InterruptedException ex) {
+            ex.getMessage();
+        }
 
     }//GEN-LAST:event_bListarUsuariosActionPerformed
 
@@ -151,7 +155,10 @@ public class OpcionesUsuario extends javax.swing.JInternalFrame {
         } else {
             id = Integer.valueOf(idDelete);
             try {
-                usuario.eliminarUsuario(id);
+                code = usuario.eliminarUsuario(id);
+                if(code!=200){
+                Utils.OptionPaneInfo("El usuario no pudo ser eliminado", rootPane);
+            }
             } catch (IOException | InterruptedException ex) {
                 ex.getMessage();
             }

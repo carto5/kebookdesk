@@ -11,10 +11,11 @@ import ioc.dam.torrejon.controladores.Utils;
  * @author Carlos Torrejón
  */
 public class DashboardAdmin extends javax.swing.JFrame {
-    
-    OpcionesUsuario ou = new OpcionesUsuario();
+
+    UsuariosAdmin ou = new UsuariosAdmin();
     LibrosAdmin la = new LibrosAdmin();
-    Recogida devo = new Recogida();
+    ReservasAdmin devo = new ReservasAdmin();
+    ResenasAdmin readmin = new ResenasAdmin();
 
     String mensaje = "Seguro que quiere abandonar la aplicación?";
 
@@ -41,6 +42,7 @@ public class DashboardAdmin extends javax.swing.JFrame {
         mUsuarios = new javax.swing.JMenuItem();
         mLibros = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
+        jCheckBoxMenuItem1 = new javax.swing.JCheckBoxMenuItem();
         Salir = new javax.swing.JMenuItem();
 
         jMenuItem4.setText("jMenuItem4");
@@ -62,6 +64,7 @@ public class DashboardAdmin extends javax.swing.JFrame {
         );
 
         jMenu1.setText("Menú");
+        jMenu1.setAutoscrolls(true);
 
         mUsuarios.setText("Gestión usuarios");
         mUsuarios.addActionListener(new java.awt.event.ActionListener() {
@@ -79,14 +82,22 @@ public class DashboardAdmin extends javax.swing.JFrame {
         });
         jMenu1.add(mLibros);
 
-        jMenuItem3.setText("Recogidas/Devoluciones");
-        jMenuItem3.setPreferredSize(new java.awt.Dimension(120, 22));
+        jMenuItem3.setText("Gestión Recogidas/Devoluciones");
+        jMenuItem3.setPreferredSize(new java.awt.Dimension(220, 22));
         jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem3ActionPerformed(evt);
             }
         });
         jMenu1.add(jMenuItem3);
+
+        jCheckBoxMenuItem1.setText("Gestión reservas");
+        jCheckBoxMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jCheckBoxMenuItem1);
 
         Salir.setText("Salir");
         Salir.addActionListener(new java.awt.event.ActionListener() {
@@ -112,6 +123,7 @@ public class DashboardAdmin extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void SalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SalirActionPerformed
@@ -124,7 +136,6 @@ public class DashboardAdmin extends javax.swing.JFrame {
     }//GEN-LAST:event_mLibrosActionPerformed
 
     private void mUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mUsuariosActionPerformed
-
         jDesktopPane1.add(ou);
         ou.show();
     }//GEN-LAST:event_mUsuariosActionPerformed
@@ -133,6 +144,11 @@ public class DashboardAdmin extends javax.swing.JFrame {
         jDesktopPane1.add(devo);
         devo.show();
     }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void jCheckBoxMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItem1ActionPerformed
+        jDesktopPane1.add(readmin);
+        readmin.show();
+    }//GEN-LAST:event_jCheckBoxMenuItem1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -171,6 +187,7 @@ public class DashboardAdmin extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem Salir;
+    private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;

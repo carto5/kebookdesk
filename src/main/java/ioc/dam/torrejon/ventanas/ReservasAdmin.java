@@ -6,31 +6,29 @@ package ioc.dam.torrejon.ventanas;
 
 import ioc.dam.torrejon.controladores.ReservasController;
 import ioc.dam.torrejon.controladores.UsuariosController;
+import ioc.dam.torrejon.controladores.Utils;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
-
-
 
 /**
  *
  * @author carlostorrejongaragallo
  */
-public class Recogida extends javax.swing.JInternalFrame {
-    
+public class ReservasAdmin extends javax.swing.JInternalFrame {
+
     UsuariosController usuarios = new UsuariosController();
     ReservasController reservas = new ReservasController();
-    
+
     DefaultTableModel clean = new DefaultTableModel();
-    
-    int idReserva, idUsuario;
+    Utils util = new Utils();
+
+    int idReserva, idUsuario, code;
     String isbn;
 
     /**
      * Creates new form PrestamosDevoluciones
      */
-    public Recogida() {
+    public ReservasAdmin() {
         initComponents();
     }
 
@@ -56,13 +54,8 @@ public class Recogida extends javax.swing.JInternalFrame {
         txtIsbn = new javax.swing.JTextField();
         BuscarIsbn = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JSeparator();
-        jLabel5 = new javax.swing.JLabel();
-        txtIdReservaCom = new javax.swing.JTextField();
-        jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         bConfirm = new javax.swing.JButton();
-        bComRecogida = new javax.swing.JButton();
-        bComDevolucion = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -102,7 +95,9 @@ public class Recogida extends javax.swing.JInternalFrame {
         jPanel2.add(bBuscarId, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 240, 180, 40));
         jPanel2.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 360, 400, 20));
 
+        bConfirmDev.setBackground(new java.awt.Color(0, 0, 0));
         bConfirmDev.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        bConfirmDev.setForeground(new java.awt.Color(255, 255, 255));
         bConfirmDev.setText("Confirmar devolución");
         bConfirmDev.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -127,23 +122,14 @@ public class Recogida extends javax.swing.JInternalFrame {
         jPanel2.add(BuscarIsbn, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 300, 180, 40));
         jPanel2.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 180, 400, 20));
 
-        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel5.setText("ID reserva :");
-        jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 440, 90, -1));
-        jPanel2.add(txtIdReservaCom, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 440, 80, -1));
-
-        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel6.setText("Comprobar recogidas y devoluciones");
-        jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 380, 360, 30));
-
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel7.setText("Buscar reserva");
         jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 190, 360, 30));
 
+        bConfirm.setBackground(new java.awt.Color(0, 0, 0));
         bConfirm.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        bConfirm.setForeground(new java.awt.Color(255, 255, 255));
         bConfirm.setText("Confirmar recogida");
         bConfirm.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -151,24 +137,6 @@ public class Recogida extends javax.swing.JInternalFrame {
             }
         });
         jPanel2.add(bConfirm, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, 150, 30));
-
-        bComRecogida.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        bComRecogida.setText("Comprobar recogida");
-        bComRecogida.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bComRecogidaActionPerformed(evt);
-            }
-        });
-        jPanel2.add(bComRecogida, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 520, 160, 30));
-
-        bComDevolucion.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        bComDevolucion.setText("Comprobar devolución");
-        bComDevolucion.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bComDevolucionActionPerformed(evt);
-            }
-        });
-        jPanel2.add(bComDevolucion, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 520, 170, 30));
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 450, 630));
 
@@ -225,15 +193,19 @@ public class Recogida extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void bUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bUsuariosActionPerformed
-       clean = (DefaultTableModel) jTable1.getModel();
+        clean = (DefaultTableModel) jTable1.getModel();
         while (clean.getRowCount() > 0) {
             clean.removeRow(0);
         }
-        usuarios.listarUsuarios(jTable1);
+        try {
+            usuarios.listarUsuarios(jTable1);
+        } catch (IOException | InterruptedException ex) {
+            ex.getMessage();
+        }
     }//GEN-LAST:event_bUsuariosActionPerformed
 
     private void bReservasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bReservasActionPerformed
-       
+
         clean = (DefaultTableModel) jTable1.getModel();
         while (clean.getRowCount() > 0) {
             clean.removeRow(0);
@@ -249,9 +221,12 @@ public class Recogida extends javax.swing.JInternalFrame {
             clean.removeRow(0);
         }
         try {
-            idReserva = Integer.parseInt(txtIdUsuario.getText());
-            reservas.confirmarRecogida(idReserva);
-        } catch (IOException |InterruptedException  ex) {
+            idUsuario = Integer.parseInt(txtIdUsuario.getText());
+            code = reservas.ObtenerReservaUsuario(jTable1, idUsuario);
+            if(code!=200){
+                Utils.OptionPaneInfo("Reserva no registrada", this);
+            }
+        } catch (IOException | InterruptedException ex) {
             ex.getMessage();
         }
     }//GEN-LAST:event_bBuscarIdActionPerformed
@@ -259,14 +234,17 @@ public class Recogida extends javax.swing.JInternalFrame {
     private void bConfirmDevActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bConfirmDevActionPerformed
         try {
             idReserva = Integer.parseInt(txtIdReserva.getText());
-            reservas.confirmarDevolucion(idReserva);
-        } catch (IOException |InterruptedException  ex) {
+            code = reservas.confirmarDevolucion(idReserva);
+            if(code!=200){
+                Utils.OptionPaneInfo("No se ha podido confirmar la devolución", this);
+            }
+        } catch (IOException | InterruptedException ex) {
             ex.getMessage();
         }
     }//GEN-LAST:event_bConfirmDevActionPerformed
 
     private void BuscarIsbnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BuscarIsbnActionPerformed
-        
+
         clean = (DefaultTableModel) jTable1.getModel();
         while (clean.getRowCount() > 0) {
             clean.removeRow(0);
@@ -274,44 +252,32 @@ public class Recogida extends javax.swing.JInternalFrame {
         try {
             isbn = txtIsbn.getText();
             idUsuario = Integer.parseInt(txtIdUsuario.getText());
-            reservas.ObtenerReservadeLibroPorUsuario(jTable1, isbn, idUsuario);
-        } catch (IOException |InterruptedException  ex) {
+            code = reservas.ObtenerReservadeLibroPorUsuario(jTable1, isbn, idUsuario);
+            if(code!=200){
+                Utils.OptionPaneInfo("No se ha podido obtener la reserva", this);
+            }
+        } catch (IOException | InterruptedException ex) {
             ex.getMessage();
         }
     }//GEN-LAST:event_BuscarIsbnActionPerformed
 
     private void bConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bConfirmActionPerformed
-        
+
         try {
             idReserva = Integer.parseInt(txtIdReserva.getText());
-            reservas.confirmarRecogida(idReserva);
-        } catch (IOException |InterruptedException  ex) {
+            code = reservas.confirmarRecogida(idReserva);
+            if(code!=200){
+                Utils.OptionPaneInfo("No se ha podido confirmar la recogida", this);
+            }
+        } catch (IOException | InterruptedException ex) {
             ex.getMessage();
         }
     }//GEN-LAST:event_bConfirmActionPerformed
-
-    private void bComRecogidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bComRecogidaActionPerformed
-        try {
-            reservas.comprobarReservaRecogida(idReserva);
-        } catch (IOException |InterruptedException  ex) {
-            ex.getMessage();
-        }
-    }//GEN-LAST:event_bComRecogidaActionPerformed
-
-    private void bComDevolucionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bComDevolucionActionPerformed
-        try {
-            reservas.comprobarReservaDevuelta(idReserva);
-        } catch (IOException |InterruptedException  ex) {
-            ex.getMessage();
-        }
-    }//GEN-LAST:event_bComDevolucionActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BuscarIsbn;
     private javax.swing.JButton bBuscarId;
-    private javax.swing.JButton bComDevolucion;
-    private javax.swing.JButton bComRecogida;
     private javax.swing.JButton bConfirm;
     private javax.swing.JButton bConfirmDev;
     private javax.swing.JButton bReservas;
@@ -320,8 +286,6 @@ public class Recogida extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -330,7 +294,6 @@ public class Recogida extends javax.swing.JInternalFrame {
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField txtIdReserva;
-    private javax.swing.JTextField txtIdReservaCom;
     private javax.swing.JTextField txtIdUsuario;
     private javax.swing.JTextField txtIsbn;
     // End of variables declaration//GEN-END:variables

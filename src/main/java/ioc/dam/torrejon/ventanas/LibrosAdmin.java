@@ -10,8 +10,6 @@ import ioc.dam.torrejon.controladores.Utils;
 import ioc.dam.torrejon.modelos.Escritor;
 import ioc.dam.torrejon.modelos.Libro;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -31,7 +29,7 @@ public class LibrosAdmin extends javax.swing.JInternalFrame {
     DefaultTableModel clean = new DefaultTableModel();
 
     String isbn, titulo, autor, genero, sinopsis, idAuto;
-    int idAutor;
+    int idAutor, code;
 
     String book = "Faltan datos por rellenar, desea continuar?";
     String autorG = "Falta el nombre del autor, desea continuar?";
@@ -70,7 +68,6 @@ public class LibrosAdmin extends javax.swing.JInternalFrame {
         txtAutor = new javax.swing.JTextField();
         txtGenero = new javax.swing.JTextField();
         bGuardar = new javax.swing.JButton();
-        bEliminar = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
         txtIdAutor = new javax.swing.JTextField();
         jSeparator1 = new javax.swing.JSeparator();
@@ -120,7 +117,7 @@ public class LibrosAdmin extends javax.swing.JInternalFrame {
         jPanel1.add(bLibros, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 550, 180, -1));
 
         jPanel2.setBackground(new java.awt.Color(51, 204, 255));
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Añadir/Eliminar libro", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 24))); // NOI18N
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Añadir autores y libros", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 24))); // NOI18N
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -157,15 +154,6 @@ public class LibrosAdmin extends javax.swing.JInternalFrame {
         });
         jPanel2.add(bGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 520, -1, -1));
 
-        bEliminar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        bEliminar.setText("Eliminar autor");
-        bEliminar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bEliminarActionPerformed(evt);
-            }
-        });
-        jPanel2.add(bEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 130, -1, 30));
-
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel7.setText("Id autor");
         jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 230, -1, -1));
@@ -179,7 +167,7 @@ public class LibrosAdmin extends javax.swing.JInternalFrame {
                 bGAutorActionPerformed(evt);
             }
         });
-        jPanel2.add(bGAutor, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 130, -1, 30));
+        jPanel2.add(bGAutor, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 130, -1, 30));
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 460, 580));
 
@@ -248,7 +236,10 @@ public class LibrosAdmin extends javax.swing.JInternalFrame {
                 libro.setSinopsis(sinopsis);
                 libro.setDisponible(true);
 
-                libros.guardarLibro(libro);
+                code = libros.guardarLibro(libro);
+                if(code!=200){
+                    Utils.OptionPaneInfo("El libro no se ha podido guardar.", rootPane);
+                }
             }
         } catch (IOException | InterruptedException ex) {
             ex.getMessage();
@@ -266,7 +257,10 @@ public class LibrosAdmin extends javax.swing.JInternalFrame {
             } else {
                 escritor.setNombre(autor);
 
-                escritores.guardarEscritor(escritor);
+                code = escritores.guardarEscritor(escritor);
+                if(code!=200){
+                    Utils.OptionPaneInfo("El escritor no se ha podido guardar. ", this);
+                }
             }
         } catch (IOException | InterruptedException ex) {
             ex.getMessage();
@@ -285,28 +279,9 @@ public class LibrosAdmin extends javax.swing.JInternalFrame {
 
     }//GEN-LAST:event_bAutoresActionPerformed
 
-    private void bEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEliminarActionPerformed
-
-        idAuto = txtIdAutor.getText();
-        if (idAuto.isEmpty()) {
-            Utils.OptionPane(eliminar, this);
-
-        } else {
-            idAutor = Integer.parseInt(idAuto);
-
-            try {
-                escritores.eliminarEscritor(idAutor);
-            } catch (IOException | InterruptedException ex) {
-                ex.getMessage();
-            }
-        }
-
-    }//GEN-LAST:event_bEliminarActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bAutores;
-    private javax.swing.JButton bEliminar;
     private javax.swing.JButton bGAutor;
     private javax.swing.JButton bGuardar;
     private javax.swing.JButton bLibros;

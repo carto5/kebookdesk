@@ -11,8 +11,6 @@ import ioc.dam.torrejon.ventanas.Login;
 import java.awt.Component;
 import java.io.IOException;
 import java.util.Base64;
-import java.util.Calendar;
-import java.util.Date;
 import javax.swing.JOptionPane;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,8 +19,9 @@ import org.json.JSONObject;
  *
  * @author Carlos Torrejón
  */
-public class Utils {
+public class OptionPane {
     
+    Usuario usuario = new Usuario();
     
     /**
      * Método para mapear los datos en formato json.
@@ -58,14 +57,8 @@ public class Utils {
     }
     
     public static void OptionPaneInfo (String mensaje, Component componente){
-        JOptionPane.showMessageDialog(componente, mensaje, "Advertencia", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showConfirmDialog(componente, mensaje, "Advertencia", JOptionPane.INFORMATION_MESSAGE);
         
-    }
-    
-    public static void OptionPaneSalir (String mensaje, Component componente){
-        int salir = JOptionPane.showConfirmDialog(componente, mensaje, "Advertencia", JOptionPane.YES_NO_OPTION);
-        if (salir == JOptionPane.YES_OPTION) {
-                            System.exit(0);                       }
     }
     
     /**
@@ -84,16 +77,5 @@ public class Utils {
 
         return info;
     }
-    
-    public Date SumarDias(Date fecha, int dias){
-        
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(fecha);
-        calendar.add(Calendar.DAY_OF_YEAR, dias);
-        
-        return calendar.getTime();
-    }
-    
-    
     
 }

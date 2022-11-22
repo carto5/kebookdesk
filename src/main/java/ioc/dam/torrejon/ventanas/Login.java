@@ -5,6 +5,7 @@
 package ioc.dam.torrejon.ventanas;
 
 import ioc.dam.torrejon.controladores.AuthController;
+import ioc.dam.torrejon.controladores.Utils;
 import java.io.IOException;
 import javax.swing.JOptionPane;
 
@@ -17,7 +18,9 @@ public class Login extends javax.swing.JFrame {
     public static String token;
 
     AuthController autenticar = new AuthController();
-
+    
+    
+    
     DashboardAdmin dAdmin = new DashboardAdmin();
     DashboardUser dUser = new DashboardUser();
 
@@ -44,16 +47,17 @@ public class Login extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         txtPass = new javax.swing.JPasswordField();
         chAdmin = new javax.swing.JCheckBox();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        bLogin = new javax.swing.JButton();
+        bNuevoUsuario = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setLocation(new java.awt.Point(0, 0));
         setResizable(false);
         setSize(new java.awt.Dimension(600, 800));
 
         jPanel1.setBackground(new java.awt.Color(51, 153, 255));
         jPanel1.setPreferredSize(new java.awt.Dimension(400, 500));
-        jPanel1.setSize(new java.awt.Dimension(600, 800));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setBackground(new java.awt.Color(51, 153, 255));
@@ -70,6 +74,7 @@ public class Login extends javax.swing.JFrame {
         jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 200, 110, -1));
         jPanel1.add(txtPass, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 240, 180, -1));
 
+        chAdmin.setBackground(new java.awt.Color(51, 153, 255));
         chAdmin.setText("Administrador");
         chAdmin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -78,16 +83,32 @@ public class Login extends javax.swing.JFrame {
         });
         jPanel1.add(chAdmin, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 290, -1, -1));
 
-        jButton1.setText("Iniciar sesion");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        bLogin.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        bLogin.setText("Iniciar sesion");
+        bLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                bLoginActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 370, 140, -1));
+        jPanel1.add(bLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 370, 140, -1));
 
-        jButton2.setText("Nuevo usuario");
-        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 430, 140, -1));
+        bNuevoUsuario.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        bNuevoUsuario.setText("Nuevo usuario");
+        bNuevoUsuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bNuevoUsuarioActionPerformed(evt);
+            }
+        });
+        jPanel1.add(bNuevoUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 430, 140, -1));
+
+        jButton3.setFont(new java.awt.Font("Tahoma", 1, 8)); // NOI18N
+        jButton3.setText("salir");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(305, 473, 50, 20));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -103,9 +124,10 @@ public class Login extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void bLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bLoginActionPerformed
 
         String mail = txtMail.getText();
 
@@ -157,11 +179,21 @@ public class Login extends javax.swing.JFrame {
                 }
             }
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_bLoginActionPerformed
 
     private void chAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chAdminActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_chAdminActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        Utils.OptionPaneSalir("Seguro que quiere salir?", this);
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void bNuevoUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bNuevoUsuarioActionPerformed
+        RegistrarUsuarios registro = new RegistrarUsuarios();
+        this.setVisible(false);
+        registro.setVisible(true);
+    }//GEN-LAST:event_bNuevoUsuarioActionPerformed
 
     /**
      * @param args the command line arguments
@@ -199,9 +231,10 @@ public class Login extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton bLogin;
+    private javax.swing.JButton bNuevoUsuario;
     private javax.swing.JCheckBox chAdmin;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;

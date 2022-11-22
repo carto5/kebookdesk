@@ -29,7 +29,7 @@ public class CambiarContrasena extends javax.swing.JInternalFrame {
 
     String mensaje = "Es necesario rellenar las dos casillas, quiere continuar?";
 
-    int id;
+    int id, code;
     String pass, newPass;
 
     /**
@@ -142,7 +142,10 @@ public class CambiarContrasena extends javax.swing.JInternalFrame {
 
             try {
                 id = perfil.getInt("jti");
-                user.cambiarContrasena(pass, newPass, id);
+                code = user.cambiarContrasena(pass, newPass, id);
+                if(code!=200){
+                    Utils.OptionPaneInfo("No se ha podido cambiar la contraseña", this);
+                }
             } catch (IOException | InterruptedException ex) {
                 ex.getMessage();
             } catch (JSONException ex) {

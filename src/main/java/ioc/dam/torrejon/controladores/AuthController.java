@@ -47,10 +47,11 @@ public class AuthController {
     /**
      * Método para insertar usuarios en la base de datos.
      * @param usuario objeto de la clase usuario.
+     * @return 
      * @throws IOException
      * @throws InterruptedException 
      */
-    public void registrarUsuario(Usuario usuario) throws IOException, InterruptedException {
+    public int registrarUsuario(Usuario usuario) throws IOException, InterruptedException {
 
         var objectMapper = new ObjectMapper();
         String requestBody = objectMapper
@@ -63,9 +64,12 @@ public class AuthController {
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
 
-        HttpResponse<String> respuesta = cliente.send(request, HttpResponse.BodyHandlers.ofString());
         
-        respuesta.statusCode();
+        HttpResponse<String> respuesta = cliente.send(request, HttpResponse.BodyHandlers.ofString());
+        System.out.println(respuesta.statusCode());
+        System.out.println(respuesta.body());
+        
+        return respuesta.statusCode();
 
     }
     

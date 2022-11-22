@@ -22,11 +22,12 @@ public class RegistrarUsuarios extends javax.swing.JFrame {
 
     AuthController registro = new AuthController();
     Usuario usuario = new Usuario();
-    Login login = new Login();
+    
     SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
     Date fechaRegistro;
 
     String nombre, mail, contrasena, contrasenaRe, date;
+    int code;
 
     final String empty = "Faltan datos por rellenar, desea continuar?";
     final String passIguales = "Las contraseñas deben ser coincidir, desea continuar?";
@@ -60,6 +61,7 @@ public class RegistrarUsuarios extends javax.swing.JFrame {
         txtRePass = new javax.swing.JPasswordField();
         txtPass = new javax.swing.JPasswordField();
         txtFecha = new javax.swing.JFormattedTextField();
+        bSalir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(500, 650));
@@ -104,12 +106,21 @@ public class RegistrarUsuarios extends javax.swing.JFrame {
                 bRegistrarActionPerformed(evt);
             }
         });
-        jPanel1.add(bRegistrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 550, 190, 40));
+        jPanel1.add(bRegistrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 520, 190, 40));
         jPanel1.add(txtRePass, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 370, 240, -1));
         jPanel1.add(txtPass, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 300, 240, -1));
 
         txtFecha.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("yyy-MM-dd"))));
         jPanel1.add(txtFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 440, 240, -1));
+
+        bSalir.setFont(new java.awt.Font("Tahoma", 1, 8)); // NOI18N
+        bSalir.setText("salir");
+        bSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bSalirActionPerformed(evt);
+            }
+        });
+        jPanel1.add(bSalir, new org.netbeans.lib.awtextra.AbsoluteConstraints(435, 583, 50, 20));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -123,6 +134,7 @@ public class RegistrarUsuarios extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void bRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bRegistrarActionPerformed
@@ -150,11 +162,14 @@ public class RegistrarUsuarios extends javax.swing.JFrame {
                 usuario.setFecha_creacion(fechaRegistro);
 
                 try {
-                    registro.registrarUsuario(usuario);
-
-                    this.setVisible(false);
-                    login.setVisible(true);
-
+                    code = registro.registrarUsuario(usuario);
+                    if (code != 200) {
+                        Utils.OptionPaneInfo("El usuario no se ha podido guardar", this);
+                    } else {
+                        Login login = new Login();
+                        this.setVisible(false);
+                        login.setVisible(true);
+                    }
                 } catch (IOException | InterruptedException e) {
                     e.getMessage();
                 }
@@ -163,6 +178,10 @@ public class RegistrarUsuarios extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_bRegistrarActionPerformed
+
+    private void bSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSalirActionPerformed
+        Utils.OptionPaneSalir("Seguro que quiere salir?", this);
+    }//GEN-LAST:event_bSalirActionPerformed
 
     /**
      * @param args the command line arguments
@@ -201,6 +220,7 @@ public class RegistrarUsuarios extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bRegistrar;
+    private javax.swing.JButton bSalir;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

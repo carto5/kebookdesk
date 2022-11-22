@@ -25,7 +25,7 @@ public class EliminarCuenta extends javax.swing.JInternalFrame {
 
     String mensaje = "Si acepta la cuenta sera eliminada y se cerrara la aplicación, quiere aceptar?";
 
-    int id;
+    int id, code;
 
     /**
      * Creates new form EliminarCuenta
@@ -119,9 +119,13 @@ public class EliminarCuenta extends javax.swing.JInternalFrame {
             try {
                 id = perfil.getInt("jti");
 
-                usuario.eliminarUsuario(id);
+                code = usuario.eliminarUsuario(id);
+                if (code != 200) {
+                    Utils.OptionPaneInfo("No se ha podido eliminar la cuenta.", this);
+                } else {
 
-                System.exit(0);
+                    System.exit(0);
+                }
 
             } catch (JSONException | IOException | InterruptedException ex) {
                 ex.getMessage();

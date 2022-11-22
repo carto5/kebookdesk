@@ -29,6 +29,10 @@ public class EscritorController {
 
     private final DefaultTableModel modelo = new DefaultTableModel(columnas, 0);
     
+     private final Object[] columnError = new Object[]{"Error"};
+
+    private final DefaultTableModel modeloError = new DefaultTableModel(columnError, 0);
+    
     /**
      * Método para mapear los datos en formato json.
      *
@@ -54,11 +58,12 @@ public class EscritorController {
     /**
      * Método para guardar escritor en la base de datos.
      * @param escritor objeto de la clase escritor.
+     * @return codigo de conexión
      * @throws IOException
      * @throws InterruptedException 
      */
 
-    public void guardarEscritor(Escritor escritor) throws IOException, InterruptedException {
+    public int guardarEscritor(Escritor escritor) throws IOException, InterruptedException {
 
         var objectMapper = new ObjectMapper();
         String requestBody = objectMapper
@@ -73,18 +78,19 @@ public class EscritorController {
 
         HttpResponse<String> respuesta = cliente.send(request, HttpResponse.BodyHandlers.ofString());
 
-        respuesta.statusCode();
+        return respuesta.statusCode();
 
     }
     
     /**
      * Método para buscar un escritor por su nombre.
      * @param nombre String con el nombre del usuario.
+     * @return codigo de conexión.
      * @throws IOException
      * @throws InterruptedException 
      */
 
-    public void obtenerEscritorNombre(String nombre) throws IOException, InterruptedException {
+    public int obtenerEscritorNombre(String nombre) throws IOException, InterruptedException {
 
         HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/escritor/nombre?nombre=" + nombre))
                 .header("token", Login.token)
@@ -94,7 +100,7 @@ public class EscritorController {
 
         HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
 
-        respuesta.statusCode();;
+        return respuesta.statusCode();
 
     }
 
@@ -113,6 +119,10 @@ public class EscritorController {
 
         try {
             HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
+            if(respuesta.statusCode()!=200){
+                modeloError.addRow(new Object[]{"Error al listar escritores"});
+                tabla.setModel(modeloError);
+            }else{
             /**
              * Usamos una List para almacenar la información de los usuarios que
              * nos envia el servidor
@@ -126,6 +136,7 @@ public class EscritorController {
 
             tabla.setModel(modelo);
             respuesta.statusCode();
+            }
 
         } catch (IOException | InterruptedException e) {
             e.getMessage();
@@ -140,7 +151,7 @@ public class EscritorController {
      * @throws InterruptedException 
      */
 
-    public void eliminarEscritor(int id) throws IOException, InterruptedException {
+    /*public void eliminarEscritor(int id) throws IOException, InterruptedException {
 
         HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/escritor/" + id))
                 .header("token", Login.token)
@@ -151,5 +162,5 @@ public class EscritorController {
         HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
         respuesta.statusCode();
 
-    }
+    }*/
 }
