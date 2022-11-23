@@ -7,7 +7,9 @@ package ioc.dam.torrejon.ventanas;
 import ioc.dam.torrejon.controladores.ReservasController;
 import ioc.dam.torrejon.controladores.UsuariosController;
 import ioc.dam.torrejon.controladores.Utils;
+import ioc.dam.torrejon.modelos.Usuario;
 import java.io.IOException;
+import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -18,7 +20,11 @@ public class ReservasAdmin extends javax.swing.JInternalFrame {
 
     UsuariosController usuarios = new UsuariosController();
     ReservasController reservas = new ReservasController();
-
+    
+    private final Object[] columnas = new Object[]{"Id", "Nombre", "Correo", "Fecha de creación", "Administrador"};
+    private final DefaultTableModel modelo = new DefaultTableModel(columnas, 0);
+    
+    List<Usuario> user;
     DefaultTableModel clean = new DefaultTableModel();
     Utils util = new Utils();
 
@@ -198,7 +204,12 @@ public class ReservasAdmin extends javax.swing.JInternalFrame {
             clean.removeRow(0);
         }
         try {
-            usuarios.listarUsuarios(jTable1);
+           user = usuarios.listarUsuarios();
+            user.stream().forEach(item -> {
+                modelo.addRow(new Object[]{item.getId(), item.getNombre(), item.getCorreo(), item.getContrasena(), item.getFecha_creacion(), item.isAdmin()});
+            });
+
+            jTable1.setModel(modelo);
         } catch (IOException | InterruptedException ex) {
             ex.getMessage();
         }

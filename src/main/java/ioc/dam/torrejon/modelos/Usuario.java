@@ -19,17 +19,6 @@ public class Usuario implements Serializable{
     private String correo;
     private String contrasena;
     private Date fecha_creacion;
-
-    //private String fecha_creacion;
-    public Usuario(String nombre, String correo, String contrasena, Date fecha_creacion) {
-        this.nombre = nombre;
-        this.correo = correo;
-        this.contrasena = contrasena;
-        this.fecha_creacion = fecha_creacion;
-    }
-
-    public Usuario() {
-    }
     private boolean admin;
 
     public Long getId() {

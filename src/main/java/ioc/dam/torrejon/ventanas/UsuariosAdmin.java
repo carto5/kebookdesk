@@ -6,7 +6,9 @@ package ioc.dam.torrejon.ventanas;
 
 import ioc.dam.torrejon.controladores.Utils;
 import ioc.dam.torrejon.controladores.UsuariosController;
+import ioc.dam.torrejon.modelos.Usuario;
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
@@ -16,6 +18,13 @@ import javax.swing.table.DefaultTableModel;
  * @author carlostorrejongaragallo
  */
 public class UsuariosAdmin extends javax.swing.JInternalFrame {
+    
+    private final Object[] columnas = new Object[]{"Id", "Nombre", "Correo", "Fecha de creación", "Administrador"};
+    private final DefaultTableModel modelo = new DefaultTableModel(columnas, 0);
+    
+    Usuario user;
+    
+    List<Usuario> userL;
 
     UsuariosController usuario = new UsuariosController();
 
@@ -94,7 +103,7 @@ public class UsuariosAdmin extends javax.swing.JInternalFrame {
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel2.setText("Introducir id del usuario a eliminar");
+        jLabel2.setText("Introducir correo del usuario a eliminar");
         jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 90, 270, 20));
         jPanel2.add(txtId, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 150, 170, -1));
 
@@ -139,7 +148,13 @@ public class UsuariosAdmin extends javax.swing.JInternalFrame {
             clean.removeRow(0);
         }
         try {
-            usuario.listarUsuarios(userTable);
+            userL = usuario.listarUsuarios();
+            userL.stream().forEach(item -> {
+                modelo.addRow(new Object[]{item.getId(), item.getNombre(), item.getCorreo(), item.getContrasena(), item.getFecha_creacion(), item.isAdmin()});
+            });
+
+            userTable.setModel(modelo);
+            
         } catch (IOException | InterruptedException ex) {
             ex.getMessage();
         }
@@ -180,7 +195,8 @@ public class UsuariosAdmin extends javax.swing.JInternalFrame {
         } else {
             //id = Integer.valueOf(idDelete);
             try {
-                usuario.obtenerUsuarioPorCorreo(userTable, mail);
+                user = usuario.obtenerUsuarioPorCorreo(mail);
+                modelo.addRow(new Object[]{user.getId(), user.getNombre(), user.getCorreo(), user.getFecha_creacion(), user.isAdmin()});
                 //usuario.obtenerUsuarioPorId(userTable, id);
             } catch (IOException | InterruptedException ex) {
                 ex.getMessage();

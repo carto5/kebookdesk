@@ -5,7 +5,6 @@
 package ioc.dam.torrejon.controladores;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import ioc.dam.torrejon.modelos.Usuario;
 import ioc.dam.torrejon.ventanas.Login;
 import java.io.IOException;
@@ -14,7 +13,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -24,6 +22,9 @@ import javax.swing.table.DefaultTableModel;
 public class UsuariosController {
 
     final HttpClient cliente = HttpClient.newHttpClient();
+    
+    Utils util = new Utils();
+    List<Usuario> user;
 
     private final Object[] columnas = new Object[]{"Id", "Nombre", "Correo", "Fecha de creación", "Administrador"};
 
@@ -33,36 +34,15 @@ public class UsuariosController {
 
     private final DefaultTableModel modeloError = new DefaultTableModel(columnError, 0);
 
-    /**
-     * Método para mapear los datos en formato json.
-     *
-     * @param <T>
-     * @param json String con los datos en formato json.
-     * @param referencia TypeReference para referenciar al objeto.
-     * @return los datos json mapeados a objetos.
-     */
-    public <T> T transObjeto(final String json, final TypeReference<T> referencia) {
-
-        try {
-
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, referencia);
-
-        } catch (IOException ex) {
-            ex.getMessage();
-        }
-        return null;
-    }
 
     /**
      * Método para listar los usuarios de la base de datos en una jTable.
      *
-     * @param tabla donde se listaran los usuarios.
      * @return codigo de conexión.
      * @throws java.io.IOException
      * @throws java.lang.InterruptedException
      */
-    public int listarUsuarios(JTable tabla) throws IOException, InterruptedException {
+    public List<Usuario> listarUsuarios() throws IOException, InterruptedException {
 
         HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/usuario"))
                 .header("token", Login.token)
@@ -71,24 +51,16 @@ public class UsuariosController {
 
         HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
         if (respuesta.statusCode() != 200) {
-            modeloError.addRow(new Object[]{"Esta reseña con este identificador no está"});
-            tabla.setModel(modeloError);
-            return respuesta.statusCode();
+            return null;
         } else {
             /**
              * Usamos una List para almacenar la información de los usuarios que
              * nos envia el servidor
              */
-            List<Usuario> user = transObjeto(respuesta.body(), new TypeReference< List<Usuario>>() {
+            user = util.transObjeto(respuesta.body(), new TypeReference< List<Usuario>>() {
             });
+            return user;
 
-            user.stream().forEach(item -> {
-                modelo.addRow(new Object[]{item.getId(), item.getNombre(), item.getCorreo(), item.getContrasena(), item.getFecha_creacion(), item.isAdmin()});
-            });
-
-            tabla.setModel(modelo);
-
-            return respuesta.statusCode();
 
         }
         
@@ -99,10 +71,11 @@ public class UsuariosController {
      *
      * @param tabla donde se listara el resultado.
      * @param id del usuario que se quiere buscar.
+     * @return objeto usuario.
      * @throws java.io.IOException
      * @throws InterruptedException .
      */
-    public void obtenerUsuarioPorId(JTable tabla, int id) throws IOException, InterruptedException {
+    public Usuario obtenerUsuarioPorId( int id) throws IOException, InterruptedException {
 
         HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/usuario/" + id))
                 .header("token", Login.token)
@@ -111,73 +84,81 @@ public class UsuariosController {
 
         HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
         if (respuesta.statusCode() != 200) {
-            modeloError.addRow(new Object[]{"Este usuario no está registrado"});
-            tabla.setModel(modeloError);
+//            modeloError.addRow(new Object[]{"Este usuario no está registrado"});
+//            tabla.setModel(modeloError);
+            return null;
         } else {
 
-        Usuario user = transObjeto(respuesta.body(), new TypeReference<Usuario>() {
-        });
-
-        modelo.addRow(new Object[]{user.getId(), user.getNombre(), user.getCorreo(), user.getFecha_creacion(), user.isAdmin()});
-
-        tabla.setModel(modelo);
-        respuesta.statusCode();
-        //System.out.println(user.getId());
-        }
-    }
-
-    /**
-     * Método para buscar un usuario por su correo.
-     *
-     * @param tabla donde se listara el resultado.
-     * @param correo del usuario que buscamos.
-     * @throws IOException
-     * @throws InterruptedException
-     */
-    public void obtenerUsuarioPorCorreo(JTable tabla, String correo) throws IOException, InterruptedException {
-
-        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/usuario/correo?correo=" + correo))
-                .header("token", Login.token)
-                .GET()
-                .build();
-
-        HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
-
-        Usuario user = transObjeto(respuesta.body(), new TypeReference<Usuario>() {
-        });
-
-        modelo.addRow(new Object[]{user.getId(), user.getNombre(), user.getCorreo(), user.getFecha_creacion(), user.isAdmin()});
-
-        tabla.setModel(modelo);
-        respuesta.statusCode();
-        //System.out.println(user.getId());
-
-    }
-
-    /**
-     * Método para buscar un usuario por su correo.
-     *
-     * @param correo del usuario que buscamos.
-     * @return objeto Usuario.
-     * @throws IOException
-     * @throws InterruptedException
-     */
-    public Usuario obtenerUsuarioPorCorreo(String correo) throws IOException, InterruptedException {
-
-        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/usuario/correo?correo=" + correo))
-                .header("token", Login.token)
-                .GET()
-                .build();
-
-        HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
-        if (respuesta.statusCode() != 200) {
-            return null;
-        }
-        Usuario user = transObjeto(respuesta.body(), new TypeReference<Usuario>() {
+        Usuario user = util.transObjeto(respuesta.body(), new TypeReference<Usuario>() {
         });
         return user;
 
+//        modelo.addRow(new Object[]{user.getId(), user.getNombre(), user.getCorreo(), user.getFecha_creacion(), user.isAdmin()});
+//
+//        tabla.setModel(modelo);
+//        respuesta.statusCode();
+        //System.out.println(user.getId());
+        }
     }
+
+    /**
+     * Método para buscar un usuario por su correo.
+     *
+     * @param correo del usuario que buscamos.
+     * @return objeto usuario.
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public Usuario obtenerUsuarioPorCorreo( String correo) throws IOException, InterruptedException {
+
+        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/usuario/correo?correo=" + correo))
+                .header("token", Login.token)
+                .GET()
+                .build();
+
+        HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
+        
+        if(respuesta.statusCode()!=200){
+            return null;
+        }else{
+
+        Usuario user = util.transObjeto(respuesta.body(), new TypeReference<Usuario>() {
+        });
+        return user;
+        }
+
+//        modelo.addRow(new Object[]{user.getId(), user.getNombre(), user.getCorreo(), user.getFecha_creacion(), user.isAdmin()});
+//
+//        tabla.setModel(modelo);
+//        respuesta.statusCode();
+//        //System.out.println(user.getId());
+
+    }
+
+//    /**
+//     * Método para buscar un usuario por su correo.
+//     *
+//     * @param correo del usuario que buscamos.
+//     * @return objeto Usuario.
+//     * @throws IOException
+//     * @throws InterruptedException
+//     */
+//    public Usuario obtenerUsuarioPorCorreo(String correo) throws IOException, InterruptedException {
+//
+//        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/usuario/correo?correo=" + correo))
+//                .header("token", Login.token)
+//                .GET()
+//                .build();
+//
+//        HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
+//        if (respuesta.statusCode() != 200) {
+//            return null;
+//        }
+//        Usuario user = util.transObjeto(respuesta.body(), new TypeReference<Usuario>() {
+//        });
+//        return user;
+//
+//    }
 
     /**
      * Método para eliminar un usuario mediante su id.
