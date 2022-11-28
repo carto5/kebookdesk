@@ -10,6 +10,7 @@ import ioc.dam.torrejon.controladores.Utils;
 import ioc.dam.torrejon.modelos.Escritor;
 import ioc.dam.torrejon.modelos.Libro;
 import java.io.IOException;
+import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -19,13 +20,22 @@ import javax.swing.table.DefaultTableModel;
 public class LibrosAdmin extends javax.swing.JInternalFrame {
 
     EscritorController escritores = new EscritorController();
-
     LibrosController libros = new LibrosController();
 
     Libro libro = new Libro();
-
+    List<Libro> books;
+    List<Escritor> autores;
     Escritor escritor = new Escritor();
-
+    
+    private final Object[] columnas = new Object[]{"Isbn", "Título", "Autor", "Sinopsis", "Genero", "Disponible"};
+    private final DefaultTableModel modelo = new DefaultTableModel(columnas, 0);
+    
+    private final Object[] columnaEscritor = new Object[]{"Id", "Nombre"};
+    private final DefaultTableModel modeloEscritor = new DefaultTableModel(columnaEscritor, 0);
+    
+    private final Object[] columnaResena = new Object[]{"Libro", "Reseña"};
+    private final DefaultTableModel modeloResena = new DefaultTableModel(columnaResena, 0);
+    
     DefaultTableModel clean = new DefaultTableModel();
 
     String isbn, titulo, autor, genero, sinopsis, idAuto;
@@ -201,7 +211,16 @@ public class LibrosAdmin extends javax.swing.JInternalFrame {
             clean.removeRow(0);
         }
         try {
-            libros.ListarLibros(librosTable);
+            books = libros.ListarLibros();
+            if (books != null) {
+                books.stream().forEach(item -> {
+                    modelo.addRow(new Object[]{item.getIsbn(), item.getTitulo(), item.getAutor().getNombre(), item.getSinopsis(), item.getGenero(), item.isDisponible()});
+                });
+
+                librosTable.setModel(modelo);
+            } else {
+                Utils.OptionPaneInfo("Error al cargar lista de libros", this);
+            }
         } catch (IOException | InterruptedException ex) {
             ex.getMessage();
         }
@@ -270,12 +289,27 @@ public class LibrosAdmin extends javax.swing.JInternalFrame {
 
     private void bAutoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bAutoresActionPerformed
 
-        clean = (DefaultTableModel) librosTable.getModel();
-        while (clean.getRowCount() > 0) {
-            clean.removeRow(0);
+        try {
+            clean = (DefaultTableModel) librosTable.getModel();
+            while (clean.getRowCount() > 0) {
+                clean.removeRow(0);
+            }
+            
+            autores = escritores.listarEscritores();
+            
+            if(autores!=null){
+                autores.stream().forEach(item -> {
+                    modeloEscritor.addRow(new Object[]{item.getId(), item.getNombre()});
+                });
+                
+                librosTable.setModel(modelo);
+            }else{
+                Utils.OptionPaneInfo("Error al listar escritores", this);
+            }
+        } catch (IOException |InterruptedException ex) {
+            ex.getMessage();
         }
-
-        escritores.listarEscritores(librosTable);
+        
 
     }//GEN-LAST:event_bAutoresActionPerformed
 

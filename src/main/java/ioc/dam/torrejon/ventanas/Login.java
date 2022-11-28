@@ -14,12 +14,10 @@ import javax.swing.JOptionPane;
  * @author Carlos Torrejón
  */
 public class Login extends javax.swing.JFrame {
-
+    
     public static String token;
-
+    
     AuthController autenticar = new AuthController();
-    
-    
     
     DashboardAdmin dAdmin = new DashboardAdmin();
     DashboardUser dUser = new DashboardUser();
@@ -72,6 +70,12 @@ public class Login extends javax.swing.JFrame {
 
         jLabel4.setText("Contraseña");
         jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 200, 110, -1));
+
+        txtPass.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtPassMouseClicked(evt);
+            }
+        });
         jPanel1.add(txtPass, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 240, 180, -1));
 
         chAdmin.setBackground(new java.awt.Color(51, 153, 255));
@@ -128,21 +132,22 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void bLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bLoginActionPerformed
-
+        
         String mail = txtMail.getText();
-
+        
         String password = new String(txtPass.getPassword());
-
+        
         String urlAdmin = "http://localhost:8080/login/admin/" + mail + "/" + password;
-
+        
         String url = "http://localhost:8080/login/" + mail + "/" + password;
-
+        
         if (mail.isEmpty() || password.isEmpty()) {
             
             int salir = JOptionPane.showConfirmDialog(this, "Faltan datos por insertar, quiere volver ha intentarlo ?", "Advertencia", JOptionPane.YES_NO_OPTION);
-                        if (salir == JOptionPane.NO_OPTION) {
-                            System.exit(0);                       }
-
+            if (salir == JOptionPane.NO_OPTION) {
+                System.exit(0);
+            }
+            
         } else {
             if (chAdmin.isSelected()) {
                 try {
@@ -154,7 +159,7 @@ public class Login extends javax.swing.JFrame {
                             System.exit(0);
                         }
                     } else {
-
+                        
                         dAdmin.setVisible(true);
                         this.setVisible(false);
                     }
@@ -169,7 +174,7 @@ public class Login extends javax.swing.JFrame {
                         if (salir == JOptionPane.NO_OPTION) {
                             System.exit(0);
                         }
-
+                        
                     } else {
                         dUser.setVisible(true);
                         this.setVisible(false);
@@ -194,6 +199,10 @@ public class Login extends javax.swing.JFrame {
         this.setVisible(false);
         registro.setVisible(true);
     }//GEN-LAST:event_bNuevoUsuarioActionPerformed
+
+    private void txtPassMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtPassMouseClicked
+        txtPass.setText("");
+    }//GEN-LAST:event_txtPassMouseClicked
 
     /**
      * @param args the command line arguments

@@ -9,14 +9,14 @@ import ioc.dam.torrejon.controladores.ResenaController;
 import ioc.dam.torrejon.controladores.ReservasController;
 import ioc.dam.torrejon.controladores.Utils;
 import ioc.dam.torrejon.modelos.Libro;
+import ioc.dam.torrejon.modelos.Resena;
 import ioc.dam.torrejon.modelos.Reserva;
 import ioc.dam.torrejon.modelos.Usuario;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,6 +27,12 @@ import org.json.JSONObject;
  */
 public class LibrosUsuario extends javax.swing.JInternalFrame {
 
+    private final Object[] columnas = new Object[]{"Isbn", "Título", "Autor", "Sinopsis", "Genero", "Disponible"};
+    private final DefaultTableModel modelo = new DefaultTableModel(columnas, 0);
+
+    private final Object[] columnaResena = new Object[]{"Libro", "Reseña"};
+    private final DefaultTableModel modeloResena = new DefaultTableModel(columnaResena, 0);
+
     JSONObject perfil = new JSONObject();
     Utils util = new Utils();
     ReservasController guardarReserva = new ReservasController();
@@ -34,6 +40,8 @@ public class LibrosUsuario extends javax.swing.JInternalFrame {
 
     Usuario usuario = new Usuario();
     Libro libro = new Libro();
+    List<Libro> books;
+    List<Resena> resena;
     Reserva reserva = new Reserva();
     LibrosController libros = new LibrosController();
     DefaultTableModel clean = new DefaultTableModel();
@@ -47,7 +55,6 @@ public class LibrosUsuario extends javax.swing.JInternalFrame {
     int dias = 10;
     Date fecha;
     LocalDate localDate;
-    boolean disponible;
 
     /**
      * Creates new form LibrosUsuario
@@ -240,8 +247,17 @@ public class LibrosUsuario extends javax.swing.JInternalFrame {
             clean.removeRow(0);
         }
         try {
-            code = libros.ListarLibros(tListarLibros);
-            System.out.println(code);
+            books = libros.ListarLibros();
+            if (books != null) {
+                books.stream().forEach(item -> {
+                    modelo.addRow(new Object[]{item.getIsbn(), item.getTitulo(), item.getAutor().getNombre(), item.getSinopsis(), item.getGenero(), item.isDisponible()});
+                });
+
+                tListarLibros.setModel(modelo);
+            } else {
+                Utils.OptionPaneInfo("Error al cargar lista de libros", this);
+            }
+
         } catch (IOException | InterruptedException ex) {
             ex.getMessage();
         }
@@ -254,45 +270,73 @@ public class LibrosUsuario extends javax.swing.JInternalFrame {
         genero = txtGenero.getText();
         isbn = txtIsbn.getText();
         titulo = txtTitulo.getText();
+
+        clean = (DefaultTableModel) tListarLibros.getModel();
+        while (clean.getRowCount() > 0) {
+            clean.removeRow(0);
+        }
         try {
             if (autor.isEmpty() && genero.isEmpty() && titulo.isEmpty() && isbn.isEmpty() && !chDisponible.isSelected()) {
                 Utils.OptionPane(mensaje, this);
             } else if (!autor.isEmpty() && genero.isEmpty() && titulo.isEmpty() && isbn.isEmpty() && !chDisponible.isSelected()) {
-                clean = (DefaultTableModel) tListarLibros.getModel();
-                while (clean.getRowCount() > 0) {
-                    clean.removeRow(0);
+
+                books = libros.ObtenerLibroEscritor(autor);
+
+                if (books != null) {
+                    books.stream().forEach(item -> {
+                        modelo.addRow(new Object[]{item.getIsbn(), item.getTitulo(), item.getAutor().getNombre(), item.getSinopsis(), item.getGenero(), item.isDisponible()});
+                    });
+
+                    tListarLibros.setModel(modelo);
+                } else {
+                    Utils.OptionPaneInfo("No hay libros de este escritor", this);
                 }
-                libros.ObtenerLibroEscritor(tListarLibros, autor);
             } else if (!genero.isEmpty() && autor.isEmpty() && titulo.isEmpty() && isbn.isEmpty() && !chDisponible.isSelected()) {
-                clean = (DefaultTableModel) tListarLibros.getModel();
-                while (clean.getRowCount() > 0) {
-                    clean.removeRow(0);
+
+                books = libros.ObtenerLibroGenero(genero);
+                if (books != null) {
+                    books.stream().forEach(item -> {
+                        modelo.addRow(new Object[]{item.getIsbn(), item.getTitulo(), item.getAutor().getNombre(), item.getSinopsis(), item.getGenero(), item.isDisponible()});
+                    });
+
+                    tListarLibros.setModel(modelo);
+                } else {
+                    Utils.OptionPaneInfo("No hay libros de este genero", this);
                 }
-                libros.ObtenerLibroGenero(tListarLibros, genero);
-            } /*else if (!isbn.isEmpty() && genero.isEmpty() && titulo.isEmpty() && autor.isEmpty() && chDisponible.isSelected()) {
-                clean = (DefaultTableModel) tListarLibros.getModel();
-                while (clean.getRowCount() > 0) {
-                    clean.removeRow(0);
+            } else if (isbn.isEmpty() && titulo.isEmpty() && genero.isEmpty() && autor.isEmpty() && chDisponible.isSelected()) {
+
+                books = libros.ObtenerLibroDisponible();
+                if (books != null) {
+                    books.stream().forEach(item -> {
+                        modelo.addRow(new Object[]{item.getIsbn(), item.getTitulo(), item.getAutor().getNombre(), item.getSinopsis(), item.getGenero(), item.isDisponible()});
+                    });
+
+                    tListarLibros.setModel(modelo);
+                } else {
+                    Utils.OptionPaneInfo("No hay libros disponibles", this);
                 }
-                libros.ObtenerLibroDispIsbn(tListarLibros, isbn);
-            }*/ else if (isbn.isEmpty() && titulo.isEmpty() && genero.isEmpty() && autor.isEmpty() && chDisponible.isSelected()) {
-                clean = (DefaultTableModel) tListarLibros.getModel();
-                while (clean.getRowCount() > 0) {
-                    clean.removeRow(0);
-                }
-                libros.ObtenerLibroDisponible(tListarLibros);
             } else if (!isbn.isEmpty() && genero.isEmpty() && titulo.isEmpty() && autor.isEmpty() && !chDisponible.isSelected()) {
-                clean = (DefaultTableModel) tListarLibros.getModel();
-                while (clean.getRowCount() > 0) {
-                    clean.removeRow(0);
+
+                libro = libros.ObtenerLibroIsbn(isbn);
+                if (libro != null) {
+                    modelo.addRow(new Object[]{libro.getIsbn(), libro.getTitulo(), libro.getAutor().getNombre(), libro.getSinopsis(), libro.getGenero(), libro.isDisponible()});
+                    tListarLibros.setModel(modelo);
+                } else {
+                    Utils.OptionPaneInfo("No hay libro con ese número de Isbn.", this);
                 }
-                libros.ObtenerLibroIsbn(tListarLibros, isbn);
             } else if (autor.isEmpty() && !titulo.isEmpty() && genero.isEmpty() && isbn.isEmpty() && !chDisponible.isSelected()) {
                 clean = (DefaultTableModel) tListarLibros.getModel();
                 while (clean.getRowCount() > 0) {
                     clean.removeRow(0);
                 }
-                libros.ObtenerLibroTitulo(tListarLibros, titulo);
+                libro = libros.ObtenerLibroTitulo(titulo);
+                if (libro != null) {
+                    modelo.addRow(new Object[]{libro.getIsbn(), libro.getTitulo(), libro.getAutor().getNombre(), libro.getSinopsis(), libro.getGenero(), libro.isDisponible()});
+                    tListarLibros.setModel(modelo);
+                } else {
+                    Utils.OptionPaneInfo("No hay libro con ese título.", this);
+                }
+
             } else {
                 Utils.OptionPane(mensaje2, this);
             }
@@ -317,7 +361,7 @@ public class LibrosUsuario extends javax.swing.JInternalFrame {
             reserva.setFecha_fin(util.SumarDias(fecha, dias));
 
             code = guardarReserva.guardarReserva(reserva);
-            if(code!=200){
+            if (code != 200) {
                 Utils.OptionPaneInfo("Falta seleccionr libro", rootPane);
             }
 
@@ -346,7 +390,16 @@ public class LibrosUsuario extends javax.swing.JInternalFrame {
         isbn = lblIsbn.getText();
 
         try {
-            resenas.obtenerResenaPorLibro(tListarLibros, isbn);
+            resena = resenas.obtenerResenaPorLibro(isbn);
+            if (resena != null) {
+                resena.stream().forEach(item -> {
+                    modeloResena.addRow(new Object[]{item.getLibro().getTitulo(), item.getResena()});
+                });
+
+                tListarLibros.setModel(modeloResena);
+
+            }
+
         } catch (IOException | InterruptedException ex) {
             ex.getMessage();
         }

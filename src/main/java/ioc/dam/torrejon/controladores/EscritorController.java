@@ -10,12 +10,11 @@ import ioc.dam.torrejon.modelos.Escritor;
 import ioc.dam.torrejon.ventanas.Login;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -25,43 +24,7 @@ public class EscritorController {
 
     final HttpClient cliente = HttpClient.newHttpClient();
 
-    private final Object[] columnas = new Object[]{"Id", "Nombre"};
-
-    private final DefaultTableModel modelo = new DefaultTableModel(columnas, 0);
-    
-     private final Object[] columnError = new Object[]{"Error"};
-
-    private final DefaultTableModel modeloError = new DefaultTableModel(columnError, 0);
-    
-    /**
-     * Método para mapear los datos en formato json.
-     *
-     * @param <T>
-     * @param json String con los datos en formato json.
-     * @param referencia TypeReference para referenciar al objeto.
-     * @return los datos json mapeados a objetos.
-     */
-
-    public <T> T transObjeto(final String json, final TypeReference<T> referencia) {
-
-        try {
-
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, referencia);
-
-        } catch (IOException ex) {
-            ex.getMessage();
-        }
-        return null;
-    }
-    
-    /**
-     * Método para guardar escritor en la base de datos.
-     * @param escritor objeto de la clase escritor.
-     * @return codigo de conexión
-     * @throws IOException
-     * @throws InterruptedException 
-     */
+    Utils util = new Utils();
 
     public int guardarEscritor(Escritor escritor) throws IOException, InterruptedException {
 
@@ -81,18 +44,18 @@ public class EscritorController {
         return respuesta.statusCode();
 
     }
-    
+
     /**
      * Método para buscar un escritor por su nombre.
+     *
      * @param nombre String con el nombre del usuario.
      * @return codigo de conexión.
      * @throws IOException
-     * @throws InterruptedException 
+     * @throws InterruptedException
      */
-
     public int obtenerEscritorNombre(String nombre) throws IOException, InterruptedException {
 
-        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/escritor/nombre?nombre=" + nombre))
+        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/escritor/nombre?nombre=" + URLEncoder.encode(nombre, "UTF-8")))
                 .header("token", Login.token)
                 .header("Content-Type", "application/json")
                 .GET()
@@ -104,12 +67,14 @@ public class EscritorController {
 
     }
 
-    
     /**
      * Método para listar todos los escritores.
-     * @param tabla donde se listaran los escritores.
+     *
+     * @return lista de escritores.
+     * @throws java.io.IOException
+     * @throws java.lang.InterruptedException
      */
-    public void listarEscritores(JTable tabla) {
+    public List<Escritor> listarEscritores() throws IOException, InterruptedException {
 
         HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/escritor"))
                 .header("token", Login.token)
@@ -117,50 +82,20 @@ public class EscritorController {
                 .GET()
                 .build();
 
-        try {
+
             HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
-            if(respuesta.statusCode()!=200){
-                modeloError.addRow(new Object[]{"Error al listar escritores"});
-                tabla.setModel(modeloError);
-            }else{
-            /**
-             * Usamos una List para almacenar la información de los usuarios que
-             * nos envia el servidor
-             */
-            List<Escritor> escritor = transObjeto(respuesta.body(), new TypeReference< List<Escritor>>() {
-            });
-
-            escritor.stream().forEach(item -> {
-                modelo.addRow(new Object[]{item.getId(), item.getNombre()});
-            });
-
-            tabla.setModel(modelo);
-            respuesta.statusCode();
+            if (respuesta.statusCode() != 200) {
+                return null;
+            } else {
+                /**
+                 * Usamos una List para almacenar la información de los usuarios
+                 * que nos envia el servidor
+                 */
+                List<Escritor> escritor = util.transObjeto(respuesta.body(), new TypeReference< List<Escritor>>() {
+                });
+                return escritor;
             }
 
-        } catch (IOException | InterruptedException e) {
-            e.getMessage();
-        }
-
     }
-    
-    /**
-     * Método para eliminar escritores de la base de datos.
-     * @param id del escritor.
-     * @throws IOException
-     * @throws InterruptedException 
-     */
 
-    /*public void eliminarEscritor(int id) throws IOException, InterruptedException {
-
-        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/escritor/" + id))
-                .header("token", Login.token)
-                .header("Content-Type", "application/json")
-                .DELETE()
-                .build();
-
-        HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
-        respuesta.statusCode();
-
-    }*/
 }

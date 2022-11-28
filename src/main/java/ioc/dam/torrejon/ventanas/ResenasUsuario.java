@@ -11,9 +11,12 @@ import ioc.dam.torrejon.controladores.UsuariosController;
 import ioc.dam.torrejon.controladores.Utils;
 import ioc.dam.torrejon.modelos.Libro;
 import ioc.dam.torrejon.modelos.Resena;
+import ioc.dam.torrejon.modelos.Reserva;
 import ioc.dam.torrejon.modelos.Usuario;
 import java.io.IOException;
+import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -23,12 +26,19 @@ import org.json.JSONObject;
  */
 public class ResenasUsuario extends javax.swing.JInternalFrame {
 
+    Object[] columUser = new Object[]{"Id_usuario", "Reseña"};
+    DefaultTableModel modelUser = new DefaultTableModel(columUser, 0);
+
+    private final Object[] columnaReserva = new Object[]{"ID", "id_usuario", "Isbn_libro", "Fecha_inició", "Fecha_final", "Recogido", "Devuelto"};
+    private final DefaultTableModel modeloReserva = new DefaultTableModel(columnaReserva, 0);
+
     UsuariosController usuarios = new UsuariosController();
-    ReservasController reserva = new ReservasController();
+    ReservasController reservas = new ReservasController();
     LibrosController libros = new LibrosController();
     ResenaController resenas = new ResenaController();
     Usuario usuario = new Usuario();
     Libro libro = new Libro();
+    List<Reserva> reserva;
     JSONObject perfil = new JSONObject();
     Utils util = new Utils();
     Resena resena = new Resena();
@@ -217,7 +227,7 @@ public class ResenasUsuario extends javax.swing.JInternalFrame {
         titulo = lblTitulo.getText();
         rese = txtResena.getText();
 
-        if (correo.isEmpty() || titulo.isEmpty()||rese.isEmpty()) {
+        if (correo.isEmpty() || titulo.isEmpty() || rese.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Faltan datos para enviar la reseña");
         } else {
 
@@ -229,10 +239,14 @@ public class ResenasUsuario extends javax.swing.JInternalFrame {
                 resena.setUsuario(usuario);
                 resena.setLibro(libro);
                 resena.setResena(rese);
-                
-                resenas.guardarResena(resena);
-                
-                
+
+                code = resenas.guardarResena(resena);
+                if (code != 200) {
+                    Utils.OptionPaneInfo("Error al guardar la reseña.", this);
+                } else {
+                    Utils.OptionPaneInfo("Reseña guardada", this);
+                }
+
             } catch (IOException | InterruptedException ex) {
                 ex.getMessage();
             }
@@ -244,22 +258,29 @@ public class ResenasUsuario extends javax.swing.JInternalFrame {
             correo = lblUsuario.getText();
             titulo = lblTitulo.getText();
             if (correo.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Faltan datos del usuario para enviar la reseña");
-        } else {
-            
-            usuario = usuarios.obtenerUsuarioPorCorreo(correo);
-            id = usuario.getId();
-            
-            idUsuario = Math.toIntExact(id);
-            
-            reserva.ObtenerReservaUsuario(tReservas, idUsuario);
+                JOptionPane.showMessageDialog(this, "Faltan datos del usuario para enviar la reseña");
+            } else {
+
+                usuario = usuarios.obtenerUsuarioPorCorreo(correo);
+                id = usuario.getId();
+
+                idUsuario = Math.toIntExact(id);
+
+                reserva = reservas.ObtenerReservaUsuario(idUsuario);
+                if (reserva != null) {
+                    reserva.stream().forEach(item -> {
+                        modeloReserva.addRow(new Object[]{item.getId(), item.getUsuario().getId(), item.getLibro().getIsbn(), item.getFecha_inicio(), item.getFecha_fin(), item.isRecogido(), item.isDevuelto()});
+                    });
+                    tReservas.setModel(modeloReserva);
+                } else {
+                    Utils.OptionPaneInfo("El usuario no tiene reservas.", this);
+                }
             }
         } catch (IOException | InterruptedException ex) {
             ex.getMessage();
         }
-        
-        
-        
+
+
     }//GEN-LAST:event_bReservasActionPerformed
 
 

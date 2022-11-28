@@ -5,7 +5,10 @@
 package ioc.dam.torrejon.ventanas;
 
 import ioc.dam.torrejon.controladores.ResenaController;
+import ioc.dam.torrejon.controladores.Utils;
+import ioc.dam.torrejon.modelos.Resena;
 import java.io.IOException;
+import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -15,10 +18,22 @@ import javax.swing.table.DefaultTableModel;
 public class ResenasAdmin extends javax.swing.JInternalFrame {
 
     ResenaController resenas = new ResenaController();
-
     DefaultTableModel clean = new DefaultTableModel();
 
-    int id;
+    Object[] columBookUser = new Object[]{"Id_usuario", "Isbn_libro", "Reseña"};
+    DefaultTableModel modelBookUser = new DefaultTableModel(columBookUser, 0);
+
+    Object[] columId = new Object[]{"Id_reseña", "Reseña"};
+    DefaultTableModel modelId = new DefaultTableModel(columId, 0);
+
+    Object[] columUser = new Object[]{"Correo", "Reseña"};
+    DefaultTableModel modelUser = new DefaultTableModel(columUser, 0);
+
+    private final Object[] columnas = new Object[]{"Id", "Id_usuario", "Isbn_libro", "Reseña"};
+    private final DefaultTableModel modelo = new DefaultTableModel(columnas, 0);
+
+    List<Resena> resena;
+    int id, code;
     String isbn;
 
     /**
@@ -223,7 +238,16 @@ public class ResenasAdmin extends javax.swing.JInternalFrame {
         id = Integer.parseInt(txtId.getText());
 
         try {
-            resenas.obtenerResenaPorId(jTable1, id);
+            resena = resenas.obtenerResenaPorId(id);
+            if (resena != null) {
+                resena.stream().forEach(item -> {
+                    modelId.addRow(new Object[]{item.getId(), item.getResena()});
+                });
+
+                jTable1.setModel(modelId);
+            } else {
+                Utils.OptionPaneInfo("Este usuario no tiene reseñas.", this);
+            }
         } catch (IOException | InterruptedException ex) {
             ex.getMessage();
         }
@@ -233,7 +257,10 @@ public class ResenasAdmin extends javax.swing.JInternalFrame {
         id = Integer.parseInt(txtId.getText());
 
         try {
-            resenas.eliminarResena(id);
+            code = resenas.eliminarResena(id);
+            if(code!=200){
+                Utils.OptionPaneInfo("La reseña no ha podido ser eliminada.", this);
+            }
         } catch (IOException | InterruptedException ex) {
             ex.getMessage();
         }
@@ -249,7 +276,16 @@ public class ResenasAdmin extends javax.swing.JInternalFrame {
         id = Integer.parseInt(txtIdUsuario.getText());
 
         try {
-            resenas.obtenerResenasUsuario(jTable1, id);
+            resena = resenas.obtenerResenasUsuario(id);
+            if (resena != null) {
+                resena.stream().forEach(item -> {
+                    modelId.addRow(new Object[]{item.getUsuario().getCorreo(), item.getResena()});
+                });
+
+                jTable1.setModel(modelId);
+            } else {
+Utils.OptionPaneInfo("Este usuario no tiene reseñas.", this);
+            }
         } catch (IOException | InterruptedException ex) {
             ex.getMessage();
         }
@@ -260,12 +296,21 @@ public class ResenasAdmin extends javax.swing.JInternalFrame {
         while (clean.getRowCount() > 0) {
             clean.removeRow(0);
         }
-        
+
         isbn = txtIsbn.getText();
         id = Integer.parseInt(txtidUsuarios.getText());
 
         try {
-            resenas.obtenerResenasDeLibroPorUsuario(jTable1, isbn, id);
+            resena = resenas.obtenerResenasDeLibroPorUsuario(isbn, id);
+            if (resena != null) {
+                resena.stream().forEach(item -> {
+                    modelBookUser.addRow(new Object[]{item.getUsuario().getId(), item.getLibro().getIsbn(), item.getResena()});
+                });
+
+                jTable1.setModel(modelBookUser);
+            } else {
+                Utils.OptionPaneInfo("Este libro no tiene reseñas de este usuario.", this);
+            }
         } catch (IOException | InterruptedException ex) {
             ex.getMessage();
         }
@@ -276,9 +321,17 @@ public class ResenasAdmin extends javax.swing.JInternalFrame {
         while (clean.getRowCount() > 0) {
             clean.removeRow(0);
         }
-        
+
         try {
-            resenas.obtenerResenas(jTable1);
+            resena = resenas.obtenerResenas();
+            if (resena != null) {
+                resena.stream().forEach(item -> {
+                    modelo.addRow(new Object[]{item.getId(), item.getUsuario().getId(), item.getLibro().getIsbn(), item.getResena()});
+                });
+                jTable1.setModel(modelo);
+            } else {
+                Utils.OptionPaneInfo("Error al consultar las reseñas.", this);
+            }
         } catch (IOException | InterruptedException ex) {
             ex.getMessage();
         }

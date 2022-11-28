@@ -11,6 +11,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
 
 /**
  *
@@ -19,6 +20,8 @@ import java.net.http.HttpResponse;
 public class AuthController {
     
     final HttpClient cliente = HttpClient.newHttpClient();
+    HttpRequest solicitud;
+    HttpResponse<String> respuesta;
     
     /**
      * Método para autenticarse
@@ -31,12 +34,16 @@ public class AuthController {
     public String userLogin(String url) throws IOException, InterruptedException {
 
 
-        HttpRequest solicitud = HttpRequest.newBuilder(URI.create(url)).GET()
+        solicitud = HttpRequest.newBuilder(URI.create(url))
+                .GET()
+                .timeout(Duration.ofSeconds(5))
                 .build();
 
-        HttpResponse respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
-
-                            System.out.println(respuesta.body().toString());   
+        respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
+        if(respuesta.statusCode()!=200){
+            return respuesta.body().toString();
+        }
+        System.out.println(respuesta.statusCode());   
 
         return respuesta.body().toString();
         
@@ -58,14 +65,14 @@ public class AuthController {
                 .writeValueAsString(usuario);
 
 
-        HttpRequest request = HttpRequest.newBuilder()
+        solicitud = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:8080/usuario"))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
 
         
-        HttpResponse<String> respuesta = cliente.send(request, HttpResponse.BodyHandlers.ofString());
+        respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
         System.out.println(respuesta.statusCode());
         System.out.println(respuesta.body());
         

@@ -102,9 +102,9 @@ public class UsuariosAdmin extends javax.swing.JInternalFrame {
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Eliminar usuario", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 24))); // NOI18N
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel2.setText("Introducir correo del usuario a eliminar");
-        jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 90, 270, 20));
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel2.setText("Introducir correo del usuario para buscarlo o Id para eliminarlo");
+        jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(4, 60, -1, 40));
         jPanel2.add(txtId, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 150, 170, -1));
 
         bEliminarUsuario.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -149,12 +149,14 @@ public class UsuariosAdmin extends javax.swing.JInternalFrame {
         }
         try {
             userL = usuario.listarUsuarios();
+            if(userL!= null){
             userL.stream().forEach(item -> {
                 modelo.addRow(new Object[]{item.getId(), item.getNombre(), item.getCorreo(), item.getContrasena(), item.getFecha_creacion(), item.isAdmin()});
             });
-
             userTable.setModel(modelo);
-            
+            }else{
+                Utils.OptionPaneInfo("Error al listar usuarios.", rootPane);
+            }
         } catch (IOException | InterruptedException ex) {
             ex.getMessage();
         }
@@ -196,8 +198,11 @@ public class UsuariosAdmin extends javax.swing.JInternalFrame {
             //id = Integer.valueOf(idDelete);
             try {
                 user = usuario.obtenerUsuarioPorCorreo(mail);
+                if(user!=null){
                 modelo.addRow(new Object[]{user.getId(), user.getNombre(), user.getCorreo(), user.getFecha_creacion(), user.isAdmin()});
-                //usuario.obtenerUsuarioPorId(userTable, id);
+                }else{
+                    Utils.OptionPaneInfo("Correo no registrado", this);
+                }
             } catch (IOException | InterruptedException ex) {
                 ex.getMessage();
             }

@@ -69,7 +69,6 @@ public class UsuariosController {
     /**
      * Método para buscar usuario por id.
      *
-     * @param tabla donde se listara el resultado.
      * @param id del usuario que se quiere buscar.
      * @return objeto usuario.
      * @throws java.io.IOException
@@ -84,8 +83,7 @@ public class UsuariosController {
 
         HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
         if (respuesta.statusCode() != 200) {
-//            modeloError.addRow(new Object[]{"Este usuario no está registrado"});
-//            tabla.setModel(modeloError);
+
             return null;
         } else {
 
@@ -93,11 +91,6 @@ public class UsuariosController {
         });
         return user;
 
-//        modelo.addRow(new Object[]{user.getId(), user.getNombre(), user.getCorreo(), user.getFecha_creacion(), user.isAdmin()});
-//
-//        tabla.setModel(modelo);
-//        respuesta.statusCode();
-        //System.out.println(user.getId());
         }
     }
 
@@ -127,38 +120,8 @@ public class UsuariosController {
         return user;
         }
 
-//        modelo.addRow(new Object[]{user.getId(), user.getNombre(), user.getCorreo(), user.getFecha_creacion(), user.isAdmin()});
-//
-//        tabla.setModel(modelo);
-//        respuesta.statusCode();
-//        //System.out.println(user.getId());
-
     }
 
-//    /**
-//     * Método para buscar un usuario por su correo.
-//     *
-//     * @param correo del usuario que buscamos.
-//     * @return objeto Usuario.
-//     * @throws IOException
-//     * @throws InterruptedException
-//     */
-//    public Usuario obtenerUsuarioPorCorreo(String correo) throws IOException, InterruptedException {
-//
-//        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/usuario/correo?correo=" + correo))
-//                .header("token", Login.token)
-//                .GET()
-//                .build();
-//
-//        HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
-//        if (respuesta.statusCode() != 200) {
-//            return null;
-//        }
-//        Usuario user = util.transObjeto(respuesta.body(), new TypeReference<Usuario>() {
-//        });
-//        return user;
-//
-//    }
 
     /**
      * Método para eliminar un usuario mediante su id.

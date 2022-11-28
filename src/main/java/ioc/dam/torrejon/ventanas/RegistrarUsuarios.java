@@ -23,7 +23,8 @@ public class RegistrarUsuarios extends javax.swing.JFrame {
     AuthController registro = new AuthController();
     Usuario usuario = new Usuario();
     
-    SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+    //SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+    Long miliSeconds = System.currentTimeMillis();
     Date fechaRegistro;
 
     String nombre, mail, contrasena, contrasenaRe, date;
@@ -56,11 +57,9 @@ public class RegistrarUsuarios extends javax.swing.JFrame {
         txtMail = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
         bRegistrar = new javax.swing.JButton();
         txtRePass = new javax.swing.JPasswordField();
         txtPass = new javax.swing.JPasswordField();
-        txtFecha = new javax.swing.JFormattedTextField();
         bSalir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -94,11 +93,6 @@ public class RegistrarUsuarios extends javax.swing.JFrame {
         jLabel5.setText("Repetir contraseña");
         jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 340, 140, 20));
 
-        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel6.setText("Fecha");
-        jLabel6.setAutoscrolls(true);
-        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 410, 80, 20));
-
         bRegistrar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         bRegistrar.setText("Registrar usuario");
         bRegistrar.addActionListener(new java.awt.event.ActionListener() {
@@ -106,12 +100,9 @@ public class RegistrarUsuarios extends javax.swing.JFrame {
                 bRegistrarActionPerformed(evt);
             }
         });
-        jPanel1.add(bRegistrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 520, 190, 40));
+        jPanel1.add(bRegistrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 480, 190, 40));
         jPanel1.add(txtRePass, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 370, 240, -1));
         jPanel1.add(txtPass, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 300, 240, -1));
-
-        txtFecha.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("yyy-MM-dd"))));
-        jPanel1.add(txtFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 440, 240, -1));
 
         bSalir.setFont(new java.awt.Font("Tahoma", 1, 8)); // NOI18N
         bSalir.setText("salir");
@@ -143,22 +134,23 @@ public class RegistrarUsuarios extends javax.swing.JFrame {
         mail = txtMail.getText();
         contrasena = new String(txtPass.getPassword());
         contrasenaRe = new String(txtRePass.getPassword());
-        date = txtFecha.getText();
+        //date = txtFecha.getText();
 
-        if (nombre.isEmpty() || mail.isEmpty() || contrasena.isEmpty() || contrasenaRe.isEmpty() || date.isEmpty()) {
+        if (nombre.isEmpty() || mail.isEmpty() || contrasena.isEmpty() || contrasenaRe.isEmpty() /*|| date.isEmpty()*/) {
             Utils.OptionPane(empty, this);
         } else {
             if (contrasena.equals(contrasenaRe)) {
 
-                try {
-
-                    fechaRegistro = formato.parse(date);
-                } catch (ParseException ex) {
-                    Logger.getLogger(RegistrarUsuarios.class.getName()).log(Level.SEVERE, null, ex);
-                }
+//                try {
+//
+//                    fechaRegistro = formato.parse(date);
+//                } catch (ParseException ex) {
+//                    Logger.getLogger(RegistrarUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+//                }
                 usuario.setNombre(nombre);
                 usuario.setCorreo(mail);
                 usuario.setContrasena(contrasena);
+                fechaRegistro = new Date(miliSeconds);
                 usuario.setFecha_creacion(fechaRegistro);
 
                 try {
@@ -226,9 +218,7 @@ public class RegistrarUsuarios extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JFormattedTextField txtFecha;
     private javax.swing.JTextField txtMail;
     private javax.swing.JTextField txtNombre;
     private javax.swing.JPasswordField txtPass;

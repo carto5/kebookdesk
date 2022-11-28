@@ -16,7 +16,6 @@ import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -25,14 +24,6 @@ import javax.swing.table.DefaultTableModel;
 public class ReservasController {
 
     final HttpClient cliente = HttpClient.newHttpClient();
-
-    private final Object[] columnas = new Object[]{"ID", "id_usuario", "Isbn_libro", "Fecha_inició", "Fecha_final", "Recogido", "Devuelto"};
-
-    private final DefaultTableModel modelo = new DefaultTableModel(columnas, 0);
-
-    private final Object[] columnError = new Object[]{"Error"};
-
-    private final DefaultTableModel modeloError = new DefaultTableModel(columnError, 0);
 
     /**
      * Método para mapear los datos en formato json.
@@ -58,52 +49,51 @@ public class ReservasController {
     /**
      * Método para listar libros
      *
-     * @param tabla donde se listaran los libros
+     * @return lista de resevas.
+     * @throws java.io.IOException
+     * @throws java.lang.InterruptedException
      */
-    public void ListarReservas(JTable tabla) {
+    public List<Reserva> ListarReservas() throws IOException, InterruptedException {
 
         HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/reserva"))
                 .header("token", Login.token)
                 .GET()
                 .build();
 
-        try {
-            HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
-            System.out.println(respuesta.body());
-            if (respuesta.statusCode() != 200) {
-                modeloError.addRow(new Object[]{"Error al recibir las reservas"});
-                tabla.setModel(modeloError);
-            } else {
-                /**
-                 * Usamos una List para almacenar la información de las reservas
-                 * que nos envia el servidor
-                 */
-                ArrayList<Reserva> reserva = transObjeto(respuesta.body(), new TypeReference< ArrayList<Reserva>>() {
-                });
+        HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
+        System.out.println(respuesta.body());
+        if (respuesta.statusCode() != 200) {
+            return null;
+        } else {
+            /**
+             * Usamos una ArrayList para almacenar la información de las
+             * reservas que nos envia el servidor
+             */
+            List<Reserva> reserva = transObjeto(respuesta.body(), new TypeReference< ArrayList<Reserva>>() {
+            });
 
-                reserva.stream().forEach(item -> {
-                    modelo.addRow(new Object[]{item.getId(), item.getUsuario().getId(), item.getLibro().getIsbn(), item.getFecha_inicio(), item.getFecha_fin(), item.isRecogido(), item.isDevuelto()});
-                });
+            return reserva;
 
-                tabla.setModel(modelo);
-                System.out.println(respuesta.statusCode());
-            }
-            //return respuesta.statusCode();
-        } catch (IOException | InterruptedException e) {
-            e.getMessage();
         }
-
     }
 
     /**
      * Método para buscar reservas por usuario.
      *
-     * @param tabla donde se listara la busqueda.
      * @param usuario int con el id del usuario.
      * @throws IOException
      * @throws InterruptedException
      */
-    public int ObtenerReservaUsuario(JTable tabla, int usuario) throws IOException, InterruptedException {
+
+    /**
+     * Método para buscar reservas por usuario.
+     *
+     * @param usuario int con el id del usuario.
+     * @return
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public List<Reserva> ObtenerReservaUsuario(int usuario) throws IOException, InterruptedException {
 
         HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/reserva/usuario?idUsuario=" + usuario))
                 .header("token", Login.token)
@@ -113,31 +103,26 @@ public class ReservasController {
         HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
         System.out.println(respuesta.body());
         if (respuesta.statusCode() != 200) {
-            modeloError.addRow(new Object[]{"Este usuario no tiene reserva"});
-            tabla.setModel(modeloError);
+            return null;
         } else {
-            ArrayList<Reserva> reserva = transObjeto(respuesta.body(), new TypeReference< ArrayList<Reserva>>() {
+            List<Reserva> reserva = transObjeto(respuesta.body(), new TypeReference< ArrayList<Reserva>>() {
             });
 
-            reserva.stream().forEach(item -> {
-                modelo.addRow(new Object[]{item.getId(), item.getUsuario().getId(), item.getLibro().getIsbn(), item.getFecha_inicio(), item.getFecha_fin(), item.isRecogido(), item.isDevuelto()});
-            });
-            tabla.setModel(modelo);
-            return respuesta.statusCode();
+            return reserva;
         }
-        return respuesta.statusCode();
+
     }
 
     /**
      * Método para buscar reservas del libro por usuario.
      *
-     * @param tabla donde se listara la busqueda.
      * @param isbn del libro
      * @param usuario int con el id del usuario.
+     * @return list de reservas.
      * @throws IOException
      * @throws InterruptedException
      */
-    public int ObtenerReservadeLibroPorUsuario(JTable tabla, String isbn, int usuario) throws IOException, InterruptedException {
+    public List<Reserva> ObtenerReservadeLibroPorUsuario( String isbn, int usuario) throws IOException, InterruptedException {
 
         HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/reserva/" + isbn + "/usuario?idUsuario=" + usuario))
                 .header("token", Login.token)
@@ -148,20 +133,15 @@ public class ReservasController {
 
         System.out.println(respuesta.body());
         if (respuesta.statusCode() != 200) {
-            modeloError.addRow(new Object[]{"Error al recibir las reseñas"});
-            tabla.setModel(modeloError);
+            return null;
         } else {
 
             List<Reserva> reserva = transObjeto(respuesta.body(), new TypeReference< List<Reserva>>() {
             });
+            return reserva;
 
-            reserva.stream().forEach(item -> {
-                modelo.addRow(new Object[]{item.getId(), item.getUsuario().getId(), item.getLibro().getIsbn(), item.getFecha_inicio(), item.getFecha_fin(), item.isRecogido(), item.isDevuelto()});
-            });
-            tabla.setModel(modelo);
-            return respuesta.statusCode();
         }
-        return respuesta.statusCode();
+
     }
 
     /**
@@ -182,7 +162,7 @@ public class ReservasController {
         HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
 
         System.out.println(respuesta.body());
-        
+
         return respuesta.statusCode();
     }
 

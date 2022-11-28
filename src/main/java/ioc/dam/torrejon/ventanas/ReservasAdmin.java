@@ -7,6 +7,7 @@ package ioc.dam.torrejon.ventanas;
 import ioc.dam.torrejon.controladores.ReservasController;
 import ioc.dam.torrejon.controladores.UsuariosController;
 import ioc.dam.torrejon.controladores.Utils;
+import ioc.dam.torrejon.modelos.Reserva;
 import ioc.dam.torrejon.modelos.Usuario;
 import java.io.IOException;
 import java.util.List;
@@ -20,11 +21,15 @@ public class ReservasAdmin extends javax.swing.JInternalFrame {
 
     UsuariosController usuarios = new UsuariosController();
     ReservasController reservas = new ReservasController();
-    
+
     private final Object[] columnas = new Object[]{"Id", "Nombre", "Correo", "Fecha de creación", "Administrador"};
     private final DefaultTableModel modelo = new DefaultTableModel(columnas, 0);
-    
+
+    private final Object[] columnaReserva = new Object[]{"ID", "id_usuario", "Isbn_libro", "Fecha_inició", "Fecha_final", "Recogido", "Devuelto"};
+    private final DefaultTableModel modeloReserva = new DefaultTableModel(columnaReserva, 0);
+
     List<Usuario> user;
+    List<Reserva> reserva;
     DefaultTableModel clean = new DefaultTableModel();
     Utils util = new Utils();
 
@@ -204,7 +209,7 @@ public class ReservasAdmin extends javax.swing.JInternalFrame {
             clean.removeRow(0);
         }
         try {
-           user = usuarios.listarUsuarios();
+            user = usuarios.listarUsuarios();
             user.stream().forEach(item -> {
                 modelo.addRow(new Object[]{item.getId(), item.getNombre(), item.getCorreo(), item.getContrasena(), item.getFecha_creacion(), item.isAdmin()});
             });
@@ -217,11 +222,23 @@ public class ReservasAdmin extends javax.swing.JInternalFrame {
 
     private void bReservasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bReservasActionPerformed
 
-        clean = (DefaultTableModel) jTable1.getModel();
-        while (clean.getRowCount() > 0) {
-            clean.removeRow(0);
+        try {
+            clean = (DefaultTableModel) jTable1.getModel();
+            while (clean.getRowCount() > 0) {
+                clean.removeRow(0);
+            }
+            reserva = reservas.ListarReservas();
+            if (reserva != null) {
+                reserva.stream().forEach(item -> {
+                    modeloReserva.addRow(new Object[]{item.getId(), item.getUsuario().getId(), item.getLibro().getIsbn(), item.getFecha_inicio(), item.getFecha_fin(), item.isRecogido(), item.isDevuelto()});
+                });
+                jTable1.setModel(modeloReserva);
+            } else {
+                Utils.OptionPaneInfo("Error al listar las reservas.", this);
+            }
+        } catch (IOException | InterruptedException ex) {
+            ex.getMessage();
         }
-        reservas.ListarReservas(jTable1);
 
     }//GEN-LAST:event_bReservasActionPerformed
 
@@ -233,9 +250,14 @@ public class ReservasAdmin extends javax.swing.JInternalFrame {
         }
         try {
             idUsuario = Integer.parseInt(txtIdUsuario.getText());
-            code = reservas.ObtenerReservaUsuario(jTable1, idUsuario);
-            if(code!=200){
-                Utils.OptionPaneInfo("Reserva no registrada", this);
+            reserva = reservas.ObtenerReservaUsuario(idUsuario);
+            if (reserva != null) {
+                reserva.stream().forEach(item -> {
+                    modeloReserva.addRow(new Object[]{item.getId(), item.getUsuario().getId(), item.getLibro().getIsbn(), item.getFecha_inicio(), item.getFecha_fin(), item.isRecogido(), item.isDevuelto()});
+                });
+                jTable1.setModel(modeloReserva);
+            } else {
+                Utils.OptionPaneInfo("El usuario no tiene reservas.", this);
             }
         } catch (IOException | InterruptedException ex) {
             ex.getMessage();
@@ -246,7 +268,7 @@ public class ReservasAdmin extends javax.swing.JInternalFrame {
         try {
             idReserva = Integer.parseInt(txtIdReserva.getText());
             code = reservas.confirmarDevolucion(idReserva);
-            if(code!=200){
+            if (code != 200) {
                 Utils.OptionPaneInfo("No se ha podido confirmar la devolución", this);
             }
         } catch (IOException | InterruptedException ex) {
@@ -263,9 +285,14 @@ public class ReservasAdmin extends javax.swing.JInternalFrame {
         try {
             isbn = txtIsbn.getText();
             idUsuario = Integer.parseInt(txtIdUsuario.getText());
-            code = reservas.ObtenerReservadeLibroPorUsuario(jTable1, isbn, idUsuario);
-            if(code!=200){
-                Utils.OptionPaneInfo("No se ha podido obtener la reserva", this);
+            reserva = reservas.ObtenerReservadeLibroPorUsuario( isbn, idUsuario);
+            if (reserva != null) {
+                reserva.stream().forEach(item -> {
+                    modeloReserva.addRow(new Object[]{item.getId(), item.getUsuario().getId(), item.getLibro().getIsbn(), item.getFecha_inicio(), item.getFecha_fin(), item.isRecogido(), item.isDevuelto()});
+                });
+                jTable1.setModel(modeloReserva);
+            }else{
+                Utils.OptionPaneInfo("El usuario seleccionado no tiene reservas", this);
             }
         } catch (IOException | InterruptedException ex) {
             ex.getMessage();
@@ -277,7 +304,7 @@ public class ReservasAdmin extends javax.swing.JInternalFrame {
         try {
             idReserva = Integer.parseInt(txtIdReserva.getText());
             code = reservas.confirmarRecogida(idReserva);
-            if(code!=200){
+            if (code != 200) {
                 Utils.OptionPaneInfo("No se ha podido confirmar la recogida", this);
             }
         } catch (IOException | InterruptedException ex) {
