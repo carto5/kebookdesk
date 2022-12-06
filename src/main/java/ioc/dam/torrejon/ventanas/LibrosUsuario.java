@@ -13,6 +13,8 @@ import ioc.dam.torrejon.modelos.Resena;
 import ioc.dam.torrejon.modelos.Reserva;
 import ioc.dam.torrejon.modelos.Usuario;
 import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -260,6 +262,8 @@ public class LibrosUsuario extends javax.swing.JInternalFrame {
 
         } catch (IOException | InterruptedException ex) {
             ex.getMessage();
+        } catch (NoSuchAlgorithmException |KeyManagementException ex) {
+            ex.getMessage();
         }
 
     }//GEN-LAST:event_bListarLibrosActionPerformed
@@ -342,6 +346,8 @@ public class LibrosUsuario extends javax.swing.JInternalFrame {
             }
         } catch (IOException | InterruptedException ex) {
             ex.getMessage();
+        } catch (NoSuchAlgorithmException |KeyManagementException ex) {
+            ex.getMessage();
         }
     }//GEN-LAST:event_bBuscarActionPerformed
 
@@ -366,6 +372,8 @@ public class LibrosUsuario extends javax.swing.JInternalFrame {
             }
 
         } catch (JSONException | IOException | InterruptedException ex) {
+            ex.getMessage();
+        } catch (NoSuchAlgorithmException |KeyManagementException ex) {
             ex.getMessage();
         }
     }//GEN-LAST:event_bResevaActionPerformed
@@ -401,6 +409,8 @@ public class LibrosUsuario extends javax.swing.JInternalFrame {
             }
 
         } catch (IOException | InterruptedException ex) {
+            ex.getMessage();
+        } catch (NoSuchAlgorithmException |KeyManagementException ex) {
             ex.getMessage();
         }
     }//GEN-LAST:event_jButton1ActionPerformed

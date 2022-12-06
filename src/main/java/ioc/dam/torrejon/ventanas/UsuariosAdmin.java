@@ -8,6 +8,8 @@ import ioc.dam.torrejon.controladores.Utils;
 import ioc.dam.torrejon.controladores.UsuariosController;
 import ioc.dam.torrejon.modelos.Usuario;
 import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -159,6 +161,8 @@ public class UsuariosAdmin extends javax.swing.JInternalFrame {
             }
         } catch (IOException | InterruptedException ex) {
             ex.getMessage();
+        } catch (NoSuchAlgorithmException |KeyManagementException ex) {
+            ex.getMessage();
         }
 
     }//GEN-LAST:event_bListarUsuariosActionPerformed
@@ -178,7 +182,9 @@ public class UsuariosAdmin extends javax.swing.JInternalFrame {
             }
             } catch (IOException | InterruptedException ex) {
                 ex.getMessage();
-            }
+            } catch (NoSuchAlgorithmException |KeyManagementException ex) {
+            ex.getMessage();
+        }
         }
     }//GEN-LAST:event_bEliminarUsuarioActionPerformed
 
@@ -205,7 +211,9 @@ public class UsuariosAdmin extends javax.swing.JInternalFrame {
                 }
             } catch (IOException | InterruptedException ex) {
                 ex.getMessage();
-            }
+            } catch (NoSuchAlgorithmException |KeyManagementException ex) {
+            ex.getMessage();
+        }
         }
     }//GEN-LAST:event_bBuscarUsuarioActionPerformed
 

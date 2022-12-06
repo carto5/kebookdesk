@@ -8,11 +8,14 @@ import ioc.dam.torrejon.controladores.AuthController;
 import ioc.dam.torrejon.controladores.Utils;
 import ioc.dam.torrejon.modelos.Usuario;
 import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.json.JSONException;
 
 /**
  *
@@ -164,6 +167,12 @@ public class RegistrarUsuarios extends javax.swing.JFrame {
                     }
                 } catch (IOException | InterruptedException e) {
                     e.getMessage();
+                } catch (KeyManagementException ex) {
+                    Logger.getLogger(RegistrarUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (NoSuchAlgorithmException ex) {
+                    Logger.getLogger(RegistrarUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (JSONException ex) {
+                    Logger.getLogger(RegistrarUsuarios.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } else {
                 Utils.OptionPane(passIguales, this);

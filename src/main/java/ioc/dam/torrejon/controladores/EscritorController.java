@@ -9,12 +9,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ioc.dam.torrejon.modelos.Escritor;
 import ioc.dam.torrejon.ventanas.Login;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URLEncoder;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import okhttp3.Call;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 /**
  *
@@ -22,27 +27,54 @@ import java.util.List;
  */
 public class EscritorController {
 
-    final HttpClient cliente = HttpClient.newHttpClient();
-
+    OkHttpClient cliente;
+    RequestBody body;
     Utils util = new Utils();
+    
+    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+    String urlBase = "https://localhost:8080/escritor";
 
-    public int guardarEscritor(Escritor escritor) throws IOException, InterruptedException {
+    
+    /**
+     * Método para guardar escritores en la base de datos.
+     * @param escritor
+     * @return
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws NoSuchAlgorithmException
+     * @throws KeyManagementException 
+     */
+    public int guardarEscritor(Escritor escritor) throws IOException, InterruptedException, NoSuchAlgorithmException, KeyManagementException {
 
         var objectMapper = new ObjectMapper();
         String requestBody = objectMapper
                 .writeValueAsString(escritor);
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8080/escritor"))
+//        HttpRequest request = HttpRequest.newBuilder()
+//                .uri(URI.create(urlBase))
+//                .header("token", Login.token)
+//                .header("Content-Type", "application/json")
+//                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+//                .build();
+//
+//        HttpResponse<String> respuesta = cliente.send(request, HttpResponse.BodyHandlers.ofString());
+//
+//        return respuesta.statusCode();
+        body = RequestBody.create(requestBody, JSON);
+        cliente = Utils.getTrustAllCertsClient();
+
+        Request request = new Request.Builder()
+                .url(urlBase)
                 .header("token", Login.token)
                 .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .post(body)
                 .build();
 
-        HttpResponse<String> respuesta = cliente.send(request, HttpResponse.BodyHandlers.ofString());
+        Call call = cliente.newCall(request);
+        Response response = call.execute();
+        System.out.println(response.code());
 
-        return respuesta.statusCode();
-
+        return response.code();
     }
 
     /**
@@ -52,19 +84,39 @@ public class EscritorController {
      * @return codigo de conexión.
      * @throws IOException
      * @throws InterruptedException
+     * @throws java.security.NoSuchAlgorithmException
+     * @throws java.security.KeyManagementException
      */
-    public int obtenerEscritorNombre(String nombre) throws IOException, InterruptedException {
+    public int obtenerEscritorNombre(String nombre) throws IOException, InterruptedException, NoSuchAlgorithmException, KeyManagementException {
 
-        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/escritor/nombre?nombre=" + URLEncoder.encode(nombre, "UTF-8")))
+//        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/escritor/nombre?nombre=" + URLEncoder.encode(nombre, "UTF-8")))
+//                .header("token", Login.token)
+//                .header("Content-Type", "application/json")
+//                .GET()
+//                .build();
+//
+//        HttpResponse<String> respuesta = clientes.send(solicitud, HttpResponse.BodyHandlers.ofString());
+//
+//        return respuesta.statusCode();
+        cliente = Utils.getTrustAllCertsClient();
+
+        Request request = new Request.Builder()
+                .url(urlBase + "/nombre?nombre=" + URLEncoder.encode(nombre, "UTF-8"))
                 .header("token", Login.token)
-                .header("Content-Type", "application/json")
-                .GET()
+                .get()
                 .build();
 
-        HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
+        Call call = cliente.newCall(request);
+        Response response = call.execute();
+//        ResponseBody respuesta = cliente.newCall(request).execute().body();
 
-        return respuesta.statusCode();
-
+        if (response.code() != 200) {
+            return response.code();
+        } else {
+//            Libro libro = util.transObjeto(respuesta.string(), new TypeReference<Libro>() {
+//            });
+            return response.code();
+        }
     }
 
     /**
@@ -73,28 +125,32 @@ public class EscritorController {
      * @return lista de escritores.
      * @throws java.io.IOException
      * @throws java.lang.InterruptedException
+     * @throws java.security.NoSuchAlgorithmException
+     * @throws java.security.KeyManagementException
      */
-    public List<Escritor> listarEscritores() throws IOException, InterruptedException {
+    public List<Escritor> listarEscritores() throws IOException, InterruptedException, NoSuchAlgorithmException, KeyManagementException {
 
-        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/escritor"))
+        cliente = Utils.getTrustAllCertsClient();
+
+        Request request = new Request.Builder()
+                .url(urlBase)
                 .header("token", Login.token)
                 .header("Content-Type", "application/json")
-                .GET()
+                .get()
                 .build();
 
+        Call call = cliente.newCall(request);
+        Response response = call.execute();
+        ResponseBody respuesta = cliente.newCall(request).execute().body();
 
-            HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
-            if (respuesta.statusCode() != 200) {
-                return null;
-            } else {
-                /**
-                 * Usamos una List para almacenar la información de los usuarios
-                 * que nos envia el servidor
-                 */
-                List<Escritor> escritor = util.transObjeto(respuesta.body(), new TypeReference< List<Escritor>>() {
-                });
-                return escritor;
-            }
+        if (response.code() != 200) {
+            return null;
+        } else {
+            List<Escritor> escritores = util.transObjeto(respuesta.string(), new TypeReference< List<Escritor>>() {
+            });
+
+            return escritores;
+        }
 
     }
 

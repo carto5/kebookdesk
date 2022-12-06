@@ -4,12 +4,11 @@
  */
 package ioc.dam.torrejon.ventanas;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import ioc.dam.torrejon.controladores.Utils;
 import ioc.dam.torrejon.controladores.UsuariosController;
-import ioc.dam.torrejon.modelos.Usuario;
 import java.io.IOException;
-import java.util.Base64;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.JSONException;
@@ -148,9 +147,9 @@ public class CambiarContrasena extends javax.swing.JInternalFrame {
                 }
             } catch (IOException | InterruptedException ex) {
                 ex.getMessage();
-            } catch (JSONException ex) {
-                Logger.getLogger(CambiarContrasena.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            } catch (NoSuchAlgorithmException |KeyManagementException |JSONException ex) {
+            ex.getMessage();
+        }
         }
     }//GEN-LAST:event_bCambiarPassActionPerformed
 

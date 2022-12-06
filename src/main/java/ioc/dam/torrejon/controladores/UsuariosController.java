@@ -8,12 +8,16 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import ioc.dam.torrejon.modelos.Usuario;
 import ioc.dam.torrejon.ventanas.Login;
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
-import javax.swing.table.DefaultTableModel;
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
+import static okhttp3.internal.Util.EMPTY_REQUEST;
+//192.168.2.108
 
 /**
  *
@@ -21,18 +25,9 @@ import javax.swing.table.DefaultTableModel;
  */
 public class UsuariosController {
 
-    final HttpClient cliente = HttpClient.newHttpClient();
-    
     Utils util = new Utils();
-    List<Usuario> user;
-
-    private final Object[] columnas = new Object[]{"Id", "Nombre", "Correo", "Fecha de creación", "Administrador"};
-
-    private final DefaultTableModel modelo = new DefaultTableModel(columnas, 0);
-
-    private final Object[] columnError = new Object[]{"Error"};
-
-    private final DefaultTableModel modeloError = new DefaultTableModel(columnError, 0);
+    String urlBase = "https://192.168.2.108:8080/usuario";
+    OkHttpClient cliente;
 
 
     /**
@@ -41,29 +36,49 @@ public class UsuariosController {
      * @return codigo de conexión.
      * @throws java.io.IOException
      * @throws java.lang.InterruptedException
+     * @throws java.security.NoSuchAlgorithmException
+     * @throws java.security.KeyManagementException
      */
-    public List<Usuario> listarUsuarios() throws IOException, InterruptedException {
+    public List<Usuario> listarUsuarios() throws IOException, InterruptedException, NoSuchAlgorithmException, KeyManagementException {
 
-        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/usuario"))
+//        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://192.168.2.108:8080/usuario"))
+//                .header("token", Login.token)
+//                .GET()
+//                .build();
+//
+//        HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
+//        if (respuesta.statusCode() != 200) {
+//            return null;
+//        } else {
+//            /**
+//             * Usamos una List para almacenar la información de los usuarios que
+//             * nos envia el servidor
+//             */
+//            user = util.transObjeto(respuesta.body(), new TypeReference< List<Usuario>>() {
+//            });
+//            return user;
+//
+//        }
+        cliente = Utils.getTrustAllCertsClient();
+
+        Request request = new Request.Builder()
+                .url(urlBase)
                 .header("token", Login.token)
-                .GET()
+                .get()
                 .build();
 
-        HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
-        if (respuesta.statusCode() != 200) {
+        Call call = cliente.newCall(request);
+        Response response = call.execute();
+        ResponseBody respuesta = cliente.newCall(request).execute().body();
+
+        if (response.code() != 200) {
             return null;
         } else {
-            /**
-             * Usamos una List para almacenar la información de los usuarios que
-             * nos envia el servidor
-             */
-            user = util.transObjeto(respuesta.body(), new TypeReference< List<Usuario>>() {
+            List<Usuario> usuarios = util.transObjeto(respuesta.string(), new TypeReference< List<Usuario>>() {
             });
-            return user;
 
-
+            return usuarios;
         }
-        
     }
 
     /**
@@ -73,24 +88,47 @@ public class UsuariosController {
      * @return objeto usuario.
      * @throws java.io.IOException
      * @throws InterruptedException .
+     * @throws java.security.NoSuchAlgorithmException
+     * @throws java.security.KeyManagementException
      */
-    public Usuario obtenerUsuarioPorId( int id) throws IOException, InterruptedException {
+    public Usuario obtenerUsuarioPorId(int id) throws IOException, InterruptedException, NoSuchAlgorithmException, KeyManagementException {
 
-        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/usuario/" + id))
+//        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/usuario/" + id))
+//                .header("token", Login.token)
+//                .GET()
+//                .build();
+//
+//        HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
+//        if (respuesta.statusCode() != 200) {
+//
+//            return null;
+//        } else {
+//
+//        Usuario user = util.transObjeto(respuesta.body(), new TypeReference<Usuario>() {
+//        });
+//        return user;
+//
+//        }
+        cliente = Utils.getTrustAllCertsClient();
+
+        Request request = new Request.Builder()
+                .url(urlBase + "/" + id)
                 .header("token", Login.token)
-                .GET()
+                .header("Content-Type", "application/json")
+                .get()
                 .build();
 
-        HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
-        if (respuesta.statusCode() != 200) {
+        Call call = cliente.newCall(request);
+        Response response = call.execute();
+        ResponseBody respuesta = cliente.newCall(request).execute().body();
 
+        if (response.code() != 200) {
             return null;
         } else {
+            Usuario user = util.transObjeto(respuesta.string(), new TypeReference<Usuario>() {
+            });
 
-        Usuario user = util.transObjeto(respuesta.body(), new TypeReference<Usuario>() {
-        });
-        return user;
-
+            return user;
         }
     }
 
@@ -101,27 +139,49 @@ public class UsuariosController {
      * @return objeto usuario.
      * @throws IOException
      * @throws InterruptedException
+     * @throws java.security.NoSuchAlgorithmException
+     * @throws java.security.KeyManagementException
      */
-    public Usuario obtenerUsuarioPorCorreo( String correo) throws IOException, InterruptedException {
+    public Usuario obtenerUsuarioPorCorreo(String correo) throws IOException, InterruptedException, NoSuchAlgorithmException, KeyManagementException {
 
-        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/usuario/correo?correo=" + correo))
+//        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/usuario/correo?correo=" + correo))
+//                .header("token", Login.token)
+//                .GET()
+//                .build();
+//
+//        HttpResponse<String> respuesta = clientes.send(solicitud, HttpResponse.BodyHandlers.ofString());
+//
+//        if (respuesta.statusCode() != 200) {
+//            return null;
+//        } else {
+//
+//            Usuario user = util.transObjeto(respuesta.body(), new TypeReference<Usuario>() {
+//            });
+//            return user;
+//        }
+        cliente = Utils.getTrustAllCertsClient();
+
+        Request request = new Request.Builder()
+                .url(urlBase + "/correo?correo=" + correo)
                 .header("token", Login.token)
-                .GET()
+                .header("Content-Type", "application/json")
+                .get()
                 .build();
 
-        HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
-        
-        if(respuesta.statusCode()!=200){
-            return null;
-        }else{
+        Call call = cliente.newCall(request);
+        Response response = call.execute();
+        ResponseBody respuesta = cliente.newCall(request).execute().body();
 
-        Usuario user = util.transObjeto(respuesta.body(), new TypeReference<Usuario>() {
-        });
-        return user;
+        if (response.code() != 200) {
+            return null;
+        } else {
+            Usuario user = util.transObjeto(respuesta.string(), new TypeReference<Usuario>() {
+            });
+
+            return user;
         }
 
     }
-
 
     /**
      * Método para eliminar un usuario mediante su id.
@@ -130,16 +190,32 @@ public class UsuariosController {
      * @return codigo de respuesta.
      * @throws IOException
      * @throws InterruptedException
+     * @throws java.security.NoSuchAlgorithmException
+     * @throws java.security.KeyManagementException
      */
-    public int eliminarUsuario(int id) throws IOException, InterruptedException {
+    public int eliminarUsuario(int id) throws IOException, InterruptedException, NoSuchAlgorithmException, KeyManagementException {
 
-        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/usuario/" + id))
+//        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/usuario/" + id))
+//                .header("token", Login.token)
+//                .DELETE()
+//                .build();
+//
+//        HttpResponse respuesta = clientes.send(solicitud, HttpResponse.BodyHandlers.ofString());
+//        return respuesta.statusCode();
+        cliente = Utils.getTrustAllCertsClient();
+
+        Request request = new Request.Builder()
+                .url(urlBase + "/" + id)
                 .header("token", Login.token)
-                .DELETE()
+                .header("Content-Type", "application/json")
+                .delete()
                 .build();
 
-        HttpResponse respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
-        return respuesta.statusCode();
+        Call call = cliente.newCall(request);
+        Response response = call.execute();
+
+        return response.code();
+
     }
 
     /**
@@ -151,18 +227,33 @@ public class UsuariosController {
      * @return codigo de respuesta.
      * @throws IOException
      * @throws InterruptedException
+     * @throws java.security.NoSuchAlgorithmException
+     * @throws java.security.KeyManagementException
      */
-    public int cambiarContrasena(String contrasena, String ncontrasena, int id) throws IOException, InterruptedException {
+    public int cambiarContrasena(String contrasena, String ncontrasena, int id) throws IOException, InterruptedException, NoSuchAlgorithmException, KeyManagementException {
 
-        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/usuario/contrasena/cambiar?id=" + id + "&contrasenaAntigua=" + contrasena + "&contrasenaNueva=" + ncontrasena))
+//        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/usuario/contrasena/cambiar?id=" + id + "&contrasenaAntigua=" + contrasena + "&contrasenaNueva=" + ncontrasena))
+//                .header("token", Login.token)
+//                .header("Content-Type", "application/json")
+//                .POST(HttpRequest.BodyPublishers.noBody())
+//                .build();
+//
+//        HttpResponse<String> respuesta = clientes.send(solicitud, HttpResponse.BodyHandlers.ofString());
+//
+//        return respuesta.statusCode();
+        cliente = Utils.getTrustAllCertsClient();
+
+        Request request = new Request.Builder()
+                .url(urlBase + "/contrasena/cambiar?id=" + id + "&contrasenaAntigua=" + contrasena + "&contrasenaNueva=" + ncontrasena)
                 .header("token", Login.token)
                 .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.noBody())
+                .post(EMPTY_REQUEST)
                 .build();
 
-        HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
+        Call call = cliente.newCall(request);
+        Response response = call.execute();
 
-        return respuesta.statusCode();
+        return response.code();
 
     }
 

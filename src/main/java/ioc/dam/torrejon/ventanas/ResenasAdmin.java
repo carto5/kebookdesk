@@ -8,6 +8,8 @@ import ioc.dam.torrejon.controladores.ResenaController;
 import ioc.dam.torrejon.controladores.Utils;
 import ioc.dam.torrejon.modelos.Resena;
 import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
@@ -250,6 +252,8 @@ public class ResenasAdmin extends javax.swing.JInternalFrame {
             }
         } catch (IOException | InterruptedException ex) {
             ex.getMessage();
+        } catch (NoSuchAlgorithmException | KeyManagementException ex) {
+            ex.getMessage();
         }
     }//GEN-LAST:event_bBuscarResenaActionPerformed
 
@@ -258,10 +262,12 @@ public class ResenasAdmin extends javax.swing.JInternalFrame {
 
         try {
             code = resenas.eliminarResena(id);
-            if(code!=200){
+            if (code != 200) {
                 Utils.OptionPaneInfo("La reseña no ha podido ser eliminada.", this);
             }
         } catch (IOException | InterruptedException ex) {
+            ex.getMessage();
+        } catch (NoSuchAlgorithmException | KeyManagementException ex) {
             ex.getMessage();
         }
     }//GEN-LAST:event_bEliminarActionPerformed
@@ -284,9 +290,11 @@ public class ResenasAdmin extends javax.swing.JInternalFrame {
 
                 jTable1.setModel(modelId);
             } else {
-Utils.OptionPaneInfo("Este usuario no tiene reseñas.", this);
+                Utils.OptionPaneInfo("Este usuario no tiene reseñas.", this);
             }
         } catch (IOException | InterruptedException ex) {
+            ex.getMessage();
+        } catch (NoSuchAlgorithmException | KeyManagementException ex) {
             ex.getMessage();
         }
     }//GEN-LAST:event_bResenaUsuarioActionPerformed
@@ -313,6 +321,8 @@ Utils.OptionPaneInfo("Este usuario no tiene reseñas.", this);
             }
         } catch (IOException | InterruptedException ex) {
             ex.getMessage();
+        } catch (NoSuchAlgorithmException |KeyManagementException ex) {
+            ex.getMessage();
         }
     }//GEN-LAST:event_bLibroUsuarioActionPerformed
 
@@ -333,6 +343,8 @@ Utils.OptionPaneInfo("Este usuario no tiene reseñas.", this);
                 Utils.OptionPaneInfo("Error al consultar las reseñas.", this);
             }
         } catch (IOException | InterruptedException ex) {
+            ex.getMessage();
+        } catch (NoSuchAlgorithmException |KeyManagementException ex) {
             ex.getMessage();
         }
     }//GEN-LAST:event_bResenasActionPerformed

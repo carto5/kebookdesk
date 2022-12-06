@@ -6,14 +6,19 @@ package ioc.dam.torrejon.controladores;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import ioc.dam.torrejon.modelos.Usuario;
 import ioc.dam.torrejon.ventanas.Login;
 import java.awt.Component;
 import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.Calendar;
 import java.util.Date;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import javax.swing.JOptionPane;
+import okhttp3.OkHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -92,6 +97,36 @@ public class Utils {
         calendar.add(Calendar.DAY_OF_YEAR, dias);
         
         return calendar.getTime();
+    }
+    
+    public static OkHttpClient getTrustAllCertsClient() throws NoSuchAlgorithmException, KeyManagementException {
+        TrustManager[] trustAllCerts = new TrustManager[]{
+            new X509TrustManager() {
+                @Override
+                public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) {
+                }
+
+                @Override
+                public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) {
+                }
+
+                @Override
+                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                    return new java.security.cert.X509Certificate[]{};
+                }
+            }
+        };
+
+        SSLContext sslContext = SSLContext.getInstance("SSL");
+        sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+
+//        HttpClient client = HttpClient.newBuilder().sslContext(sslContext).build();
+//        return client;
+
+        OkHttpClient.Builder newBuilder = new OkHttpClient.Builder();
+        newBuilder.sslSocketFactory(sslContext.getSocketFactory(), (X509TrustManager) trustAllCerts[0]);
+        newBuilder.hostnameVerifier((hostname, session) -> true);
+        return newBuilder.build();
     }
     
     

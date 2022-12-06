@@ -14,6 +14,8 @@ import ioc.dam.torrejon.modelos.Resena;
 import ioc.dam.torrejon.modelos.Reserva;
 import ioc.dam.torrejon.modelos.Usuario;
 import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -205,6 +207,8 @@ public class ResenasUsuario extends javax.swing.JInternalFrame {
             lblTitulo.setText(libros.ObtenerLibroIsbn(isbn).getTitulo());
         } catch (IOException | InterruptedException ex) {
             ex.getMessage();
+        } catch (NoSuchAlgorithmException |KeyManagementException ex) {
+            ex.getMessage();
         }
     }//GEN-LAST:event_tReservasMouseClicked
 
@@ -249,7 +253,9 @@ public class ResenasUsuario extends javax.swing.JInternalFrame {
 
             } catch (IOException | InterruptedException ex) {
                 ex.getMessage();
-            }
+            } catch (NoSuchAlgorithmException |KeyManagementException ex) {
+            ex.getMessage();
+        }
         }
     }//GEN-LAST:event_bResenaActionPerformed
 
@@ -277,6 +283,8 @@ public class ResenasUsuario extends javax.swing.JInternalFrame {
                 }
             }
         } catch (IOException | InterruptedException ex) {
+            ex.getMessage();
+        } catch (NoSuchAlgorithmException |KeyManagementException ex) {
             ex.getMessage();
         }
 

@@ -7,6 +7,10 @@ package ioc.dam.torrejon.ventanas;
 import ioc.dam.torrejon.controladores.AuthController;
 import ioc.dam.torrejon.controladores.Utils;
 import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -14,11 +18,11 @@ import javax.swing.JOptionPane;
  * @author Carlos Torrejón
  */
 public class Login extends javax.swing.JFrame {
-    
+
     public static String token;
-    
+
     AuthController autenticar = new AuthController();
-    
+
     DashboardAdmin dAdmin = new DashboardAdmin();
     DashboardUser dUser = new DashboardUser();
 
@@ -62,7 +66,7 @@ public class Login extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 48)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("KeBook");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 400, 80));
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 360, 70));
 
         jLabel2.setText("Correo");
         jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 120, 80, -1));
@@ -132,22 +136,22 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void bLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bLoginActionPerformed
-        
+
         String mail = txtMail.getText();
-        
+
         String password = new String(txtPass.getPassword());
-        
-        String urlAdmin = "http://localhost:8080/login/admin/" + mail + "/" + password;
-        
-        String url = "http://localhost:8080/login/" + mail + "/" + password;
-        
+
+        String urlAdmin = "https://192.168.2.108:8080/login/admin/" + mail + "/" + password;
+
+        String url = "https://192.168.2.108:8080/login/" + mail + "/" + password;
+
         if (mail.isEmpty() || password.isEmpty()) {
-            
+
             int salir = JOptionPane.showConfirmDialog(this, "Faltan datos por insertar, quiere volver ha intentarlo ?", "Advertencia", JOptionPane.YES_NO_OPTION);
             if (salir == JOptionPane.NO_OPTION) {
                 System.exit(0);
             }
-            
+
         } else {
             if (chAdmin.isSelected()) {
                 try {
@@ -159,12 +163,16 @@ public class Login extends javax.swing.JFrame {
                             System.exit(0);
                         }
                     } else {
-                        
+
                         dAdmin.setVisible(true);
                         this.setVisible(false);
                     }
                 } catch (IOException | InterruptedException ex) {
                     ex.getMessage();
+                } catch (NoSuchAlgorithmException ex) {
+                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (KeyManagementException ex) {
+                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } else {
                 try {
@@ -174,13 +182,17 @@ public class Login extends javax.swing.JFrame {
                         if (salir == JOptionPane.NO_OPTION) {
                             System.exit(0);
                         }
-                        
+
                     } else {
                         dUser.setVisible(true);
                         this.setVisible(false);
                     }
                 } catch (IOException | InterruptedException ex) {
                     ex.getMessage();
+                } catch (NoSuchAlgorithmException ex) {
+                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (KeyManagementException ex) {
+                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }

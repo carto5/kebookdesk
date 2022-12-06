@@ -10,6 +10,8 @@ import ioc.dam.torrejon.controladores.Utils;
 import ioc.dam.torrejon.modelos.Escritor;
 import ioc.dam.torrejon.modelos.Libro;
 import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
@@ -223,6 +225,8 @@ public class LibrosAdmin extends javax.swing.JInternalFrame {
             }
         } catch (IOException | InterruptedException ex) {
             ex.getMessage();
+        } catch (NoSuchAlgorithmException |KeyManagementException ex) {
+            ex.getMessage();
         }
 
     }//GEN-LAST:event_bLibrosActionPerformed
@@ -262,6 +266,8 @@ public class LibrosAdmin extends javax.swing.JInternalFrame {
             }
         } catch (IOException | InterruptedException ex) {
             ex.getMessage();
+        } catch (NoSuchAlgorithmException |KeyManagementException ex) {
+            ex.getMessage();
         }
     }//GEN-LAST:event_bGuardarActionPerformed
 
@@ -283,6 +289,8 @@ public class LibrosAdmin extends javax.swing.JInternalFrame {
             }
         } catch (IOException | InterruptedException ex) {
             ex.getMessage();
+        } catch (NoSuchAlgorithmException |KeyManagementException ex) {
+            ex.getMessage();
         }
 
     }//GEN-LAST:event_bGAutorActionPerformed
@@ -302,11 +310,13 @@ public class LibrosAdmin extends javax.swing.JInternalFrame {
                     modeloEscritor.addRow(new Object[]{item.getId(), item.getNombre()});
                 });
                 
-                librosTable.setModel(modelo);
+                librosTable.setModel(modeloEscritor);
             }else{
                 Utils.OptionPaneInfo("Error al listar escritores", this);
             }
         } catch (IOException |InterruptedException ex) {
+            ex.getMessage();
+        } catch (NoSuchAlgorithmException |KeyManagementException ex) {
             ex.getMessage();
         }
         

@@ -91,7 +91,7 @@ public class DashboardAdmin extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem3);
 
-        jCheckBoxMenuItem1.setText("Gestión reservas");
+        jCheckBoxMenuItem1.setText("Gestión reseñas");
         jCheckBoxMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCheckBoxMenuItem1ActionPerformed(evt);

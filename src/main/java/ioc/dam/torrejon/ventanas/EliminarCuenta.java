@@ -7,6 +7,8 @@ package ioc.dam.torrejon.ventanas;
 import ioc.dam.torrejon.controladores.Utils;
 import ioc.dam.torrejon.controladores.UsuariosController;
 import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import javax.swing.JOptionPane;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -128,6 +130,8 @@ public class EliminarCuenta extends javax.swing.JInternalFrame {
                 }
 
             } catch (JSONException | IOException | InterruptedException ex) {
+                ex.getMessage();
+            } catch (NoSuchAlgorithmException | KeyManagementException ex) {
                 ex.getMessage();
             }
         }

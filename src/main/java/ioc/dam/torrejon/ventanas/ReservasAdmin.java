@@ -10,6 +10,8 @@ import ioc.dam.torrejon.controladores.Utils;
 import ioc.dam.torrejon.modelos.Reserva;
 import ioc.dam.torrejon.modelos.Usuario;
 import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
@@ -106,9 +108,7 @@ public class ReservasAdmin extends javax.swing.JInternalFrame {
         jPanel2.add(bBuscarId, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 240, 180, 40));
         jPanel2.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 360, 400, 20));
 
-        bConfirmDev.setBackground(new java.awt.Color(0, 0, 0));
         bConfirmDev.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        bConfirmDev.setForeground(new java.awt.Color(255, 255, 255));
         bConfirmDev.setText("Confirmar devolución");
         bConfirmDev.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -138,9 +138,7 @@ public class ReservasAdmin extends javax.swing.JInternalFrame {
         jLabel7.setText("Buscar reserva");
         jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 190, 360, 30));
 
-        bConfirm.setBackground(new java.awt.Color(0, 0, 0));
         bConfirm.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        bConfirm.setForeground(new java.awt.Color(255, 255, 255));
         bConfirm.setText("Confirmar recogida");
         bConfirm.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -217,6 +215,8 @@ public class ReservasAdmin extends javax.swing.JInternalFrame {
             jTable1.setModel(modelo);
         } catch (IOException | InterruptedException ex) {
             ex.getMessage();
+        } catch (NoSuchAlgorithmException |KeyManagementException ex) {
+            ex.getMessage();
         }
     }//GEN-LAST:event_bUsuariosActionPerformed
 
@@ -237,6 +237,8 @@ public class ReservasAdmin extends javax.swing.JInternalFrame {
                 Utils.OptionPaneInfo("Error al listar las reservas.", this);
             }
         } catch (IOException | InterruptedException ex) {
+            ex.getMessage();
+        } catch (NoSuchAlgorithmException |KeyManagementException ex) {
             ex.getMessage();
         }
 
@@ -261,6 +263,8 @@ public class ReservasAdmin extends javax.swing.JInternalFrame {
             }
         } catch (IOException | InterruptedException ex) {
             ex.getMessage();
+        } catch (NoSuchAlgorithmException |KeyManagementException ex) {
+            ex.getMessage();
         }
     }//GEN-LAST:event_bBuscarIdActionPerformed
 
@@ -272,6 +276,8 @@ public class ReservasAdmin extends javax.swing.JInternalFrame {
                 Utils.OptionPaneInfo("No se ha podido confirmar la devolución", this);
             }
         } catch (IOException | InterruptedException ex) {
+            ex.getMessage();
+        } catch (NoSuchAlgorithmException |KeyManagementException ex) {
             ex.getMessage();
         }
     }//GEN-LAST:event_bConfirmDevActionPerformed
@@ -296,6 +302,8 @@ public class ReservasAdmin extends javax.swing.JInternalFrame {
             }
         } catch (IOException | InterruptedException ex) {
             ex.getMessage();
+        } catch (NoSuchAlgorithmException |KeyManagementException ex) {
+            ex.getMessage();
         }
     }//GEN-LAST:event_BuscarIsbnActionPerformed
 
@@ -308,6 +316,8 @@ public class ReservasAdmin extends javax.swing.JInternalFrame {
                 Utils.OptionPaneInfo("No se ha podido confirmar la recogida", this);
             }
         } catch (IOException | InterruptedException ex) {
+            ex.getMessage();
+        } catch (NoSuchAlgorithmException |KeyManagementException ex) {
             ex.getMessage();
         }
     }//GEN-LAST:event_bConfirmActionPerformed
