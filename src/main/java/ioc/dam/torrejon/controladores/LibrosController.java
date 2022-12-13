@@ -10,7 +10,6 @@ import ioc.dam.torrejon.modelos.Libro;
 import ioc.dam.torrejon.ventanas.Login;
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.net.http.HttpClient;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;

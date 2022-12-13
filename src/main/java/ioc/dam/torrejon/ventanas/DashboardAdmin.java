@@ -16,6 +16,7 @@ public class DashboardAdmin extends javax.swing.JFrame {
     LibrosAdmin la = new LibrosAdmin();
     ReservasAdmin devo = new ReservasAdmin();
     ResenasAdmin readmin = new ResenasAdmin();
+    EventosAdmin events = new EventosAdmin();
 
     String mensaje = "Seguro que quiere abandonar la aplicación?";
 
@@ -43,6 +44,7 @@ public class DashboardAdmin extends javax.swing.JFrame {
         mLibros = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
         jCheckBoxMenuItem1 = new javax.swing.JCheckBoxMenuItem();
+        jCheckBoxMenuItem2 = new javax.swing.JCheckBoxMenuItem();
         Salir = new javax.swing.JMenuItem();
 
         jMenuItem4.setText("jMenuItem4");
@@ -99,6 +101,15 @@ public class DashboardAdmin extends javax.swing.JFrame {
         });
         jMenu1.add(jCheckBoxMenuItem1);
 
+        jCheckBoxMenuItem2.setSelected(true);
+        jCheckBoxMenuItem2.setText("Gestión eventos");
+        jCheckBoxMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jCheckBoxMenuItem2);
+
         Salir.setText("Salir");
         Salir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -150,6 +161,11 @@ public class DashboardAdmin extends javax.swing.JFrame {
         readmin.show();
     }//GEN-LAST:event_jCheckBoxMenuItem1ActionPerformed
 
+    private void jCheckBoxMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItem2ActionPerformed
+        jDesktopPane1.add(events);
+        events.show();
+    }//GEN-LAST:event_jCheckBoxMenuItem2ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -188,6 +204,7 @@ public class DashboardAdmin extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem Salir;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
+    private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem2;
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;

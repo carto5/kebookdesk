@@ -28,6 +28,7 @@ public class AuthController {
     OkHttpClient cliente;
     RequestBody body;
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+    public OkHttpClient client;
 
     /**
      * Método para autenticarse

@@ -4,6 +4,7 @@
  */
 package ioc.dam.torrejon.ventanas;
 
+import ioc.dam.torrejon.controladores.CorreosController;
 import ioc.dam.torrejon.controladores.LibrosController;
 import ioc.dam.torrejon.controladores.ResenaController;
 import ioc.dam.torrejon.controladores.ReservasController;
@@ -19,6 +20,9 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.mail.MessagingException;
 import javax.swing.table.DefaultTableModel;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,6 +43,7 @@ public class LibrosUsuario extends javax.swing.JInternalFrame {
     Utils util = new Utils();
     ReservasController guardarReserva = new ReservasController();
     ResenaController resenas = new ResenaController();
+    CorreosController correoReserva = new CorreosController();
 
     Usuario usuario = new Usuario();
     Libro libro = new Libro();
@@ -49,7 +54,7 @@ public class LibrosUsuario extends javax.swing.JInternalFrame {
     DefaultTableModel clean = new DefaultTableModel();
     ZoneId zonaHoraria = ZoneId.systemDefault();
 
-    String autor, genero, isbn, titulo;
+    String autor, genero, isbn, titulo, correo;
     String mensaje = "Para realizar una busqueda es necesario rellenar alguno de los campos, desea continuar?";
     String mensaje2 = "busquedas disponibles por : Isbn, autor, género, disponibilidad o isbn + disponibilidad, desea continuar?";
     Long id;
@@ -358,6 +363,9 @@ public class LibrosUsuario extends javax.swing.JInternalFrame {
             fecha = Date.from(localDate.atStartOfDay(zonaHoraria).toInstant());
             perfil = util.DatosUsuario(Login.token);
             id = perfil.getLong("jti");
+            correo = perfil.getString("sub");
+            
+            
 
             usuario.setId(id);
             libro.setIsbn(lblIsbn.getText());
@@ -365,15 +373,22 @@ public class LibrosUsuario extends javax.swing.JInternalFrame {
             reserva.setLibro(libro);
             reserva.setFecha_inicio(fecha);
             reserva.setFecha_fin(util.SumarDias(fecha, dias));
+            titulo = lblTitulo.getText();
+            
+            correoReserva.enviarMailReserva(correo, titulo);
 
             code = guardarReserva.guardarReserva(reserva);
             if (code != 200) {
-                Utils.OptionPaneInfo("Falta seleccionr libro", rootPane);
+                Utils.OptionPaneInfo("Falta seleccionr libro", this);
+            }else{
+                Utils.OptionPaneInfo("Reserva realizada", this);
             }
 
         } catch (JSONException | IOException | InterruptedException ex) {
             ex.getMessage();
         } catch (NoSuchAlgorithmException |KeyManagementException ex) {
+            ex.getMessage();
+        } catch (MessagingException ex) {
             ex.getMessage();
         }
     }//GEN-LAST:event_bResevaActionPerformed

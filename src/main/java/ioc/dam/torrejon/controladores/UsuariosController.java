@@ -26,7 +26,7 @@ import static okhttp3.internal.Util.EMPTY_REQUEST;
 public class UsuariosController {
 
     Utils util = new Utils();
-    String urlBase = "https://192.168.2.108:8080/usuario";
+    String urlBase = "https://localhost:8080/usuario";
     OkHttpClient cliente;
 
 
@@ -41,24 +41,6 @@ public class UsuariosController {
      */
     public List<Usuario> listarUsuarios() throws IOException, InterruptedException, NoSuchAlgorithmException, KeyManagementException {
 
-//        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://192.168.2.108:8080/usuario"))
-//                .header("token", Login.token)
-//                .GET()
-//                .build();
-//
-//        HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
-//        if (respuesta.statusCode() != 200) {
-//            return null;
-//        } else {
-//            /**
-//             * Usamos una List para almacenar la información de los usuarios que
-//             * nos envia el servidor
-//             */
-//            user = util.transObjeto(respuesta.body(), new TypeReference< List<Usuario>>() {
-//            });
-//            return user;
-//
-//        }
         cliente = Utils.getTrustAllCertsClient();
 
         Request request = new Request.Builder()
@@ -93,22 +75,7 @@ public class UsuariosController {
      */
     public Usuario obtenerUsuarioPorId(int id) throws IOException, InterruptedException, NoSuchAlgorithmException, KeyManagementException {
 
-//        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/usuario/" + id))
-//                .header("token", Login.token)
-//                .GET()
-//                .build();
-//
-//        HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
-//        if (respuesta.statusCode() != 200) {
-//
-//            return null;
-//        } else {
-//
-//        Usuario user = util.transObjeto(respuesta.body(), new TypeReference<Usuario>() {
-//        });
-//        return user;
-//
-//        }
+
         cliente = Utils.getTrustAllCertsClient();
 
         Request request = new Request.Builder()
@@ -144,21 +111,7 @@ public class UsuariosController {
      */
     public Usuario obtenerUsuarioPorCorreo(String correo) throws IOException, InterruptedException, NoSuchAlgorithmException, KeyManagementException {
 
-//        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/usuario/correo?correo=" + correo))
-//                .header("token", Login.token)
-//                .GET()
-//                .build();
-//
-//        HttpResponse<String> respuesta = clientes.send(solicitud, HttpResponse.BodyHandlers.ofString());
-//
-//        if (respuesta.statusCode() != 200) {
-//            return null;
-//        } else {
-//
-//            Usuario user = util.transObjeto(respuesta.body(), new TypeReference<Usuario>() {
-//            });
-//            return user;
-//        }
+
         cliente = Utils.getTrustAllCertsClient();
 
         Request request = new Request.Builder()
@@ -195,13 +148,6 @@ public class UsuariosController {
      */
     public int eliminarUsuario(int id) throws IOException, InterruptedException, NoSuchAlgorithmException, KeyManagementException {
 
-//        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/usuario/" + id))
-//                .header("token", Login.token)
-//                .DELETE()
-//                .build();
-//
-//        HttpResponse respuesta = clientes.send(solicitud, HttpResponse.BodyHandlers.ofString());
-//        return respuesta.statusCode();
         cliente = Utils.getTrustAllCertsClient();
 
         Request request = new Request.Builder()
@@ -232,15 +178,6 @@ public class UsuariosController {
      */
     public int cambiarContrasena(String contrasena, String ncontrasena, int id) throws IOException, InterruptedException, NoSuchAlgorithmException, KeyManagementException {
 
-//        HttpRequest solicitud = HttpRequest.newBuilder(URI.create("http://localhost:8080/usuario/contrasena/cambiar?id=" + id + "&contrasenaAntigua=" + contrasena + "&contrasenaNueva=" + ncontrasena))
-//                .header("token", Login.token)
-//                .header("Content-Type", "application/json")
-//                .POST(HttpRequest.BodyPublishers.noBody())
-//                .build();
-//
-//        HttpResponse<String> respuesta = clientes.send(solicitud, HttpResponse.BodyHandlers.ofString());
-//
-//        return respuesta.statusCode();
         cliente = Utils.getTrustAllCertsClient();
 
         Request request = new Request.Builder()

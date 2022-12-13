@@ -261,7 +261,7 @@ public class LibrosAdmin extends javax.swing.JInternalFrame {
 
                 code = libros.guardarLibro(libro);
                 if(code!=200){
-                    Utils.OptionPaneInfo("El libro no se ha podido guardar.", rootPane);
+                    Utils.OptionPaneInfo("El libro no se ha podido guardar.", this);
                 }
             }
         } catch (IOException | InterruptedException ex) {

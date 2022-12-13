@@ -4,11 +4,13 @@
  */
 package ioc.dam.torrejon.ventanas;
 
+import ioc.dam.torrejon.controladores.EventosController;
 import ioc.dam.torrejon.controladores.LibrosController;
 import ioc.dam.torrejon.controladores.ResenaController;
 import ioc.dam.torrejon.controladores.ReservasController;
 import ioc.dam.torrejon.controladores.UsuariosController;
 import ioc.dam.torrejon.controladores.Utils;
+import ioc.dam.torrejon.modelos.Eventos;
 import ioc.dam.torrejon.modelos.Libro;
 import ioc.dam.torrejon.modelos.Resena;
 import ioc.dam.torrejon.modelos.Reserva;
@@ -16,6 +18,9 @@ import ioc.dam.torrejon.modelos.Usuario;
 import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -38,7 +43,9 @@ public class ResenasUsuario extends javax.swing.JInternalFrame {
     ReservasController reservas = new ReservasController();
     LibrosController libros = new LibrosController();
     ResenaController resenas = new ResenaController();
+    EventosController evento = new EventosController();
     Usuario usuario = new Usuario();
+    Eventos eventos = new Eventos();
     Libro libro = new Libro();
     List<Reserva> reserva;
     JSONObject perfil = new JSONObject();
@@ -48,6 +55,7 @@ public class ResenasUsuario extends javax.swing.JInternalFrame {
     int fila, idUsuario, code;
     Long id;
     String titulo, idUser, isbn, correo, rese;
+    Date fecha;
 
     /**
      * Creates new form Devoluciones
@@ -78,6 +86,14 @@ public class ResenasUsuario extends javax.swing.JInternalFrame {
         bUsuario = new javax.swing.JButton();
         lblTitulo = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        lblTituloEvento = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        bEvento = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JSeparator();
+        jSeparator2 = new javax.swing.JSeparator();
+        fFecha = new javax.swing.JFormattedTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         tReservas = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
@@ -97,40 +113,40 @@ public class ResenasUsuario extends javax.swing.JInternalFrame {
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel2.setText("Id :");
-        jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, 70, 20));
+        jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 70, 20));
 
         lblUsuario.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         lblUsuario.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jPanel2.add(lblUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 70, 240, 20));
+        jPanel2.add(lblUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 40, 240, 20));
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel3.setText("Libro :");
-        jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 260, 50, 20));
+        jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 190, 50, 20));
 
         lblId.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         lblId.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jPanel2.add(lblId, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 110, 130, 20));
+        jPanel2.add(lblId, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 80, 130, 20));
 
-        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel4.setText("Añadir reseña");
-        jPanel2.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 200, 350, 40));
+        jLabel4.setText("Crear evento");
+        jPanel2.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 440, 350, 40));
 
         txtResena.setColumns(20);
         txtResena.setRows(5);
         jScrollPane2.setViewportView(txtResena);
 
-        jPanel2.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 320, 290, 150));
+        jPanel2.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 220, 290, 150));
 
         bResena.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        bResena.setText("subir reseña");
+        bResena.setText("Añadir reseña");
         bResena.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bResenaActionPerformed(evt);
             }
         });
-        jPanel2.add(bResena, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 500, 140, 30));
+        jPanel2.add(bResena, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 380, 140, 30));
 
         bUsuario.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         bUsuario.setText("Usuario");
@@ -139,16 +155,49 @@ public class ResenasUsuario extends javax.swing.JInternalFrame {
                 bUsuarioActionPerformed(evt);
             }
         });
-        jPanel2.add(bUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 160, -1, -1));
+        jPanel2.add(bUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 90, -1, -1));
 
         lblTitulo.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         lblTitulo.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jPanel2.add(lblTitulo, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 260, 300, 20));
+        jPanel2.add(lblTitulo, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 190, 300, 20));
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel5.setText("Correo :");
-        jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 70, 20));
+        jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 70, 20));
+
+        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel6.setText("Añadir reseña");
+        jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 140, 350, 40));
+
+        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel7.setText("Fecha del evento :");
+        jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 530, 140, 20));
+
+        lblTituloEvento.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        lblTituloEvento.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jPanel2.add(lblTituloEvento, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 490, 200, 20));
+
+        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel8.setText("Libro :");
+        jPanel2.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 490, 50, 20));
+
+        bEvento.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        bEvento.setText("Crear evento");
+        bEvento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bEventoActionPerformed(evt);
+            }
+        });
+        jPanel2.add(bEvento, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 580, 140, 30));
+        jPanel2.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 420, 380, 10));
+        jPanel2.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, 380, 10));
+
+        fFecha.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("yyyy-MM-dd"))));
+        jPanel2.add(fFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 530, 130, -1));
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 420, 640));
 
@@ -184,7 +233,7 @@ public class ResenasUsuario extends javax.swing.JInternalFrame {
                 bReservasActionPerformed(evt);
             }
         });
-        jPanel1.add(bReservas, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 490, 130, 30));
+        jPanel1.add(bReservas, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 490, 130, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -205,9 +254,10 @@ public class ResenasUsuario extends javax.swing.JInternalFrame {
             fila = tReservas.rowAtPoint(evt.getPoint());
             isbn = String.valueOf(tReservas.getValueAt(fila, 2));
             lblTitulo.setText(libros.ObtenerLibroIsbn(isbn).getTitulo());
+            lblTituloEvento.setText(libros.ObtenerLibroIsbn(isbn).getTitulo());
         } catch (IOException | InterruptedException ex) {
             ex.getMessage();
-        } catch (NoSuchAlgorithmException |KeyManagementException ex) {
+        } catch (NoSuchAlgorithmException | KeyManagementException ex) {
             ex.getMessage();
         }
     }//GEN-LAST:event_tReservasMouseClicked
@@ -253,9 +303,9 @@ public class ResenasUsuario extends javax.swing.JInternalFrame {
 
             } catch (IOException | InterruptedException ex) {
                 ex.getMessage();
-            } catch (NoSuchAlgorithmException |KeyManagementException ex) {
-            ex.getMessage();
-        }
+            } catch (NoSuchAlgorithmException | KeyManagementException ex) {
+                ex.getMessage();
+            }
         }
     }//GEN-LAST:event_bResenaActionPerformed
 
@@ -284,29 +334,78 @@ public class ResenasUsuario extends javax.swing.JInternalFrame {
             }
         } catch (IOException | InterruptedException ex) {
             ex.getMessage();
-        } catch (NoSuchAlgorithmException |KeyManagementException ex) {
+        } catch (NoSuchAlgorithmException | KeyManagementException ex) {
             ex.getMessage();
         }
 
 
     }//GEN-LAST:event_bReservasActionPerformed
 
+    private void bEventoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEventoActionPerformed
+
+        try {
+            SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+            idUsuario = Integer.parseInt(lblId.getText());
+            titulo = lblTitulo.getText();
+
+            libro = libros.ObtenerLibroTitulo(titulo);
+            usuario = usuarios.obtenerUsuarioPorId(idUsuario);
+            fecha = formato.parse(fFecha.getText());
+            
+            eventos.setFecha(fecha);
+            eventos.setLibro(libro);
+            eventos.setProponente(usuario);
+
+            if ((lblId == null) || titulo.isEmpty() || (fecha == null)) {
+                Utils.OptionPaneInfo("Faltan datos", this);
+            } else {
+
+                code =evento.guardarEvento(eventos);
+                
+                if(code!=200){
+                    Utils.OptionPaneInfo("Error al enviar el evento", this);
+                }else{
+                
+                Utils.OptionPaneInfo("Evento enviado", this);
+                }
+            }
+
+        } catch (ParseException ex) {
+            ex.getMessage();
+        } catch (IOException | InterruptedException ex) {
+            ex.getMessage();
+        } catch (NoSuchAlgorithmException ex) {
+            ex.getMessage();
+        } catch (KeyManagementException ex) {
+            ex.getMessage();
+        }
+
+    }//GEN-LAST:event_bEventoActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton bEvento;
     private javax.swing.JButton bResena;
     private javax.swing.JButton bReservas;
     private javax.swing.JButton bUsuario;
+    private javax.swing.JFormattedTextField fFecha;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
     private javax.swing.JLabel lblId;
     private javax.swing.JLabel lblTitulo;
+    private javax.swing.JLabel lblTituloEvento;
     private javax.swing.JLabel lblUsuario;
     private javax.swing.JTable tReservas;
     private javax.swing.JTextArea txtResena;

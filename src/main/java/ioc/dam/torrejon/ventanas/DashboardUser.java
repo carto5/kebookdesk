@@ -16,6 +16,8 @@ public class DashboardUser extends javax.swing.JFrame {
     EliminarCuenta eliminar = new EliminarCuenta();
     LibrosUsuario libros = new LibrosUsuario();
     ResenasUsuario resenas = new ResenasUsuario();
+    EventosUsuario eventos = new EventosUsuario();
+    
 
     String mensaje = "Seguro que quiere abandonar la aplicación?";
 
@@ -43,6 +45,7 @@ public class DashboardUser extends javax.swing.JFrame {
         mPass = new javax.swing.JMenuItem();
         mEliminar = new javax.swing.JMenuItem();
         mResena = new javax.swing.JMenuItem();
+        mEventos = new javax.swing.JCheckBoxMenuItem();
         msalir = new javax.swing.JMenuItem();
 
         jMenuItem1.setText("jMenuItem1");
@@ -97,6 +100,14 @@ public class DashboardUser extends javax.swing.JFrame {
         });
         jMenu1.add(mResena);
 
+        mEventos.setText("Eventos");
+        mEventos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mEventosActionPerformed(evt);
+            }
+        });
+        jMenu1.add(mEventos);
+
         msalir.setText("Salir");
         msalir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -147,6 +158,11 @@ public class DashboardUser extends javax.swing.JFrame {
         jDesktopPane1.add(resenas);
         resenas.show();    }//GEN-LAST:event_mResenaActionPerformed
 
+    private void mEventosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mEventosActionPerformed
+        jDesktopPane1.add(eventos);
+        eventos.show();
+    }//GEN-LAST:event_mEventosActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -188,6 +204,7 @@ public class DashboardUser extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem mEliminar;
+    private javax.swing.JCheckBoxMenuItem mEventos;
     private javax.swing.JMenuItem mLibros;
     private javax.swing.JMenuItem mPass;
     private javax.swing.JMenuItem mResena;

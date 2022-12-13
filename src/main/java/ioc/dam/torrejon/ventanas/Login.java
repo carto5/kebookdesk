@@ -141,9 +141,9 @@ public class Login extends javax.swing.JFrame {
 
         String password = new String(txtPass.getPassword());
 
-        String urlAdmin = "https://192.168.2.108:8080/login/admin/" + mail + "/" + password;
+        String urlAdmin = "https://localhost:8080/login/admin/" + mail + "/" + password;
 
-        String url = "https://192.168.2.108:8080/login/" + mail + "/" + password;
+        String url = "https://localhost:8080/login/" + mail + "/" + password;
 
         if (mail.isEmpty() || password.isEmpty()) {
 
