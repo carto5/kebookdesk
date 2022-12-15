@@ -159,9 +159,7 @@ public class UsuariosAdmin extends javax.swing.JInternalFrame {
             }else{
                 Utils.OptionPaneInfo("Error al listar usuarios.", rootPane);
             }
-        } catch (IOException | InterruptedException ex) {
-            ex.getMessage();
-        } catch (NoSuchAlgorithmException |KeyManagementException ex) {
+        } catch (IOException | InterruptedException | NoSuchAlgorithmException | KeyManagementException ex) {
             ex.getMessage();
         }
 
@@ -180,11 +178,9 @@ public class UsuariosAdmin extends javax.swing.JInternalFrame {
                 if(code!=200){
                 Utils.OptionPaneInfo("El usuario no pudo ser eliminado", rootPane);
             }
-            } catch (IOException | InterruptedException ex) {
+            } catch (IOException | InterruptedException | NoSuchAlgorithmException | KeyManagementException ex) {
                 ex.getMessage();
-            } catch (NoSuchAlgorithmException |KeyManagementException ex) {
-            ex.getMessage();
-        }
+            }
         }
     }//GEN-LAST:event_bEliminarUsuarioActionPerformed
 
@@ -209,11 +205,9 @@ public class UsuariosAdmin extends javax.swing.JInternalFrame {
                 }else{
                     Utils.OptionPaneInfo("Correo no registrado", this);
                 }
-            } catch (IOException | InterruptedException ex) {
+            } catch (IOException | InterruptedException | NoSuchAlgorithmException | KeyManagementException ex) {
                 ex.getMessage();
-            } catch (NoSuchAlgorithmException |KeyManagementException ex) {
-            ex.getMessage();
-        }
+            }
         }
     }//GEN-LAST:event_bBuscarUsuarioActionPerformed
 

@@ -43,8 +43,8 @@ public class DashboardAdmin extends javax.swing.JFrame {
         mUsuarios = new javax.swing.JMenuItem();
         mLibros = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
-        jCheckBoxMenuItem1 = new javax.swing.JCheckBoxMenuItem();
-        jCheckBoxMenuItem2 = new javax.swing.JCheckBoxMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
         Salir = new javax.swing.JMenuItem();
 
         jMenuItem4.setText("jMenuItem4");
@@ -93,22 +93,21 @@ public class DashboardAdmin extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem3);
 
-        jCheckBoxMenuItem1.setText("Gestión reseñas");
-        jCheckBoxMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItem1.setText("Gestión reseñas");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBoxMenuItem1ActionPerformed(evt);
+                jMenuItem1ActionPerformed(evt);
             }
         });
-        jMenu1.add(jCheckBoxMenuItem1);
+        jMenu1.add(jMenuItem1);
 
-        jCheckBoxMenuItem2.setSelected(true);
-        jCheckBoxMenuItem2.setText("Gestión eventos");
-        jCheckBoxMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItem2.setText("Gestión eventos");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBoxMenuItem2ActionPerformed(evt);
+                jMenuItem2ActionPerformed(evt);
             }
         });
-        jMenu1.add(jCheckBoxMenuItem2);
+        jMenu1.add(jMenuItem2);
 
         Salir.setText("Salir");
         Salir.addActionListener(new java.awt.event.ActionListener() {
@@ -141,6 +140,11 @@ public class DashboardAdmin extends javax.swing.JFrame {
         Utils.OptionPaneSalir(mensaje, this);
     }//GEN-LAST:event_SalirActionPerformed
 
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        jDesktopPane1.add(devo);
+        devo.show();
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
     private void mLibrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mLibrosActionPerformed
         jDesktopPane1.add(la);
         la.show();
@@ -151,20 +155,15 @@ public class DashboardAdmin extends javax.swing.JFrame {
         ou.show();
     }//GEN-LAST:event_mUsuariosActionPerformed
 
-    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-        jDesktopPane1.add(devo);
-        devo.show();
-    }//GEN-LAST:event_jMenuItem3ActionPerformed
-
-    private void jCheckBoxMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItem1ActionPerformed
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         jDesktopPane1.add(readmin);
         readmin.show();
-    }//GEN-LAST:event_jCheckBoxMenuItem1ActionPerformed
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
-    private void jCheckBoxMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItem2ActionPerformed
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         jDesktopPane1.add(events);
         events.show();
-    }//GEN-LAST:event_jCheckBoxMenuItem2ActionPerformed
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -203,11 +202,11 @@ public class DashboardAdmin extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem Salir;
-    private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
-    private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem2;
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem mLibros;

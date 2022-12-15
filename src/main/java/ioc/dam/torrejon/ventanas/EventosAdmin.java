@@ -13,7 +13,11 @@ import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  *
@@ -28,9 +32,15 @@ public class EventosAdmin extends javax.swing.JInternalFrame {
     Usuario usuario = new Usuario();
     Libro libros = new Libro();
     List<Eventos> events;
+    Eventos evento;
     private final Object[] columEvents = new Object[]{"Id", "Usuario", "Libro", "fecha evento", "Autorizado", "Administrador"};
     private final DefaultTableModel modelEvents = new DefaultTableModel(columEvents, 0);
     DefaultTableModel clean = new DefaultTableModel();
+    Utils util = new Utils();
+    JSONObject perfil = new JSONObject();
+    long idA;
+    int idAdmin, idEvento, code;
+    String id, isbn;
 
     public EventosAdmin() {
         initComponents();
@@ -51,13 +61,22 @@ public class EventosAdmin extends javax.swing.JInternalFrame {
         tEventos = new javax.swing.JTable();
         bEventos = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
+        tValor = new javax.swing.JTextField();
+        bIsbn = new javax.swing.JButton();
+        bId = new javax.swing.JButton();
+        bEvPendientes = new javax.swing.JButton();
+        bEvAprobados = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        tValor1 = new javax.swing.JTextField();
+        jSeparator2 = new javax.swing.JSeparator();
         jSeparator1 = new javax.swing.JSeparator();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        tId = new javax.swing.JTextField();
+        bAprobar = new javax.swing.JButton();
+        bEliminar = new javax.swing.JButton();
 
         setClosable(true);
         setMaximizable(true);
@@ -97,29 +116,90 @@ public class EventosAdmin extends javax.swing.JInternalFrame {
         jPanel2.setBackground(new java.awt.Color(51, 204, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Filtro busqueda de eventos", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 18))); // NOI18N
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanel2.add(tValor, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 80, 190, 20));
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        bIsbn.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        bIsbn.setText("por ISBN del libro");
+        bIsbn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bIsbnActionPerformed(evt);
+            }
+        });
+        jPanel2.add(bIsbn, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 160, 160, -1));
+
+        bId.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        bId.setText("por ID");
+        bId.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bIdActionPerformed(evt);
+            }
+        });
+        jPanel2.add(bId, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 120, 160, -1));
+
+        bEvPendientes.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        bEvPendientes.setText("Eventos pendientes");
+        bEvPendientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bEvPendientesActionPerformed(evt);
+            }
+        });
+        jPanel2.add(bEvPendientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 270, 160, -1));
+
+        bEvAprobados.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        bEvAprobados.setText("Eventos aprobados");
+        bEvAprobados.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bEvAprobadosActionPerformed(evt);
+            }
+        });
+        jPanel2.add(bEvAprobados, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 230, 160, -1));
+
+        jPanel3.setBackground(new java.awt.Color(51, 204, 255));
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Filtro busqueda de eventos", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 18))); // NOI18N
+        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setText("Añadir valor de la busqueda");
+        jPanel3.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 40, 190, 20));
+        jPanel3.add(tValor1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 80, 190, 20));
+        jPanel3.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 200, 230, 10));
+        jPanel3.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 310, 230, 10));
+
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel4.setText("Añadir valor de la busqueda");
+        jPanel3.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 40, 190, 20));
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("Añadir valor de la busqueda");
-        jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 40, 190, 20));
-        jPanel2.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 80, 190, 20));
+        jLabel2.setText("Aprobar o eliminar evento");
+        jPanel3.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 330, 250, 20));
 
-        jButton2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jButton2.setText("por ISBN del libro");
-        jPanel2.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 160, 160, -1));
+        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel5.setText("Id del evento:");
+        jPanel3.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 370, -1, 20));
+        jPanel3.add(tId, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 370, 80, -1));
 
-        jButton4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jButton4.setText("por ID");
-        jPanel2.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 120, 160, -1));
+        bAprobar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        bAprobar.setText("Aprobar");
+        bAprobar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bAprobarActionPerformed(evt);
+            }
+        });
+        jPanel3.add(bAprobar, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 420, -1, -1));
 
-        jButton5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jButton5.setText("Eventos pendientes");
-        jPanel2.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 270, 160, -1));
+        bEliminar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        bEliminar.setText("Eliminar");
+        bEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bEliminarActionPerformed(evt);
+            }
+        });
+        jPanel3.add(bEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 460, -1, -1));
 
-        jButton6.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jButton6.setText("Eventos aprobados");
-        jPanel2.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 230, 160, -1));
-        jPanel2.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 200, 230, 10));
+        jPanel2.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 280, 500));
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 280, 500));
 
@@ -143,37 +223,162 @@ public class EventosAdmin extends javax.swing.JInternalFrame {
         while (clean.getRowCount() > 0) {
             clean.removeRow(0);
         }
-            try {
-                events = eventos.listarEventos();
-                if (events != null) {
-                    events.stream().forEach(item -> {
-                        modelEvents.addRow(new Object[]{item.getId(), item.getProponente().getNombre(), item.getLibro().getTitulo(), item.getFecha(), item.isIsAproved(), item.getProponente().getId()});
-                    });
+        try {
+            events = eventos.listarEventos();
+            if (events != null) {
+                events.stream().forEach(item -> {
+                    modelEvents.addRow(new Object[]{item.getId(), item.getProponente().getId(), item.getLibro().getIsbn(), item.getFecha(), item.isIsAproved(), item.getAprobador()});
+                });
 
-                    tEventos.setModel(modelEvents);
-                } else {
-                    Utils.OptionPaneInfo("Error de comunicación", this);
-                }
-            } catch (NoSuchAlgorithmException | KeyManagementException | IOException ex) {
-                ex.getMessage();
+                tEventos.setModel(modelEvents);
+            } else {
+                Utils.OptionPaneInfo("No hay eventos disponibles", this);
             }
+        } catch (NoSuchAlgorithmException | KeyManagementException | IOException ex) {
+            ex.getMessage();
+        }
 
     }//GEN-LAST:event_bEventosActionPerformed
 
+    private void bIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bIdActionPerformed
+        id = tValor.getText();
+        clean = (DefaultTableModel) tEventos.getModel();
+        while (clean.getRowCount() > 0) {
+            clean.removeRow(0);
+        }
+        try {
+            evento = eventos.obtenerEventoPorId(id);
+            if (evento != null) {
+
+                modelEvents.addRow(new Object[]{evento.getId(), evento.getProponente().getNombre(), evento.getLibro().getTitulo(), evento.getFecha(), evento.isIsAproved(), evento.getAprobador().getId()});
+
+                tEventos.setModel(modelEvents);
+            } else {
+                Utils.OptionPaneInfo("No hay eventos disponibles", this);
+            }
+        } catch (IOException | InterruptedException | NoSuchAlgorithmException | KeyManagementException ex) {
+            Logger.getLogger(EventosAdmin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_bIdActionPerformed
+
+    private void bIsbnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bIsbnActionPerformed
+        isbn = tValor.getText();
+        clean = (DefaultTableModel) tEventos.getModel();
+        while (clean.getRowCount() > 0) {
+            clean.removeRow(0);
+        }
+        try {
+            events = eventos.obtenerEventosPorLibro(isbn);
+            if (events != null) {
+                events.stream().forEach(item -> {
+                    modelEvents.addRow(new Object[]{item.getId(), item.getProponente().getNombre(), item.getLibro().getTitulo(), item.getFecha(), item.isIsAproved(), item.getAprobador().getId()});
+                });
+
+                tEventos.setModel(modelEvents);
+            } else {
+                Utils.OptionPaneInfo("No hay eventos disponibles", this);
+            }
+        } catch (IOException | InterruptedException | NoSuchAlgorithmException | KeyManagementException ex) {
+            Logger.getLogger(EventosAdmin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_bIsbnActionPerformed
+
+    private void bEvPendientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEvPendientesActionPerformed
+        clean = (DefaultTableModel) tEventos.getModel();
+        while (clean.getRowCount() > 0) {
+            clean.removeRow(0);
+        }
+        try {
+            events = eventos.obtenerEventosPendientes();
+            if (events != null) {
+                events.stream().forEach(item -> {
+                    modelEvents.addRow(new Object[]{item.getId(), item.getProponente().getNombre(), item.getLibro().getTitulo(), item.getFecha(), item.isIsAproved(), item.getAprobador().getId()});
+                });
+
+                tEventos.setModel(modelEvents);
+            } else {
+                Utils.OptionPaneInfo("No hay eventos disponibles", this);
+            }
+        } catch (IOException | NoSuchAlgorithmException | KeyManagementException ex) {
+            Logger.getLogger(EventosAdmin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_bEvPendientesActionPerformed
+
+    private void bEvAprobadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEvAprobadosActionPerformed
+        clean = (DefaultTableModel) tEventos.getModel();
+        while (clean.getRowCount() > 0) {
+            clean.removeRow(0);
+        }
+        try {
+            events = eventos.obtenerEventosAprobados();
+            if (events != null) {
+                events.stream().forEach(item -> {
+                    modelEvents.addRow(new Object[]{item.getId(), item.getProponente().getNombre(), item.getLibro().getTitulo(), item.getFecha(), item.isIsAproved(), item.getAprobador().getId()});
+                });
+
+                tEventos.setModel(modelEvents);
+            } else {
+                Utils.OptionPaneInfo("No hay eventos disponibles", this);
+            }
+        } catch (IOException | NoSuchAlgorithmException | KeyManagementException ex) {
+            Logger.getLogger(EventosAdmin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_bEvAprobadosActionPerformed
+
+    private void bAprobarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bAprobarActionPerformed
+        try {
+            idEvento = Integer.parseInt(tId.getText());
+            perfil = util.DatosUsuario(Login.token);
+            idA = perfil.getLong("jti");
+            idAdmin = (int)idA;
+            code=eventos.aprobarEvento(idAdmin, idEvento);
+            if(code!=200){
+                Utils.OptionPaneInfo("El evento no se ha podido aprobar", this);
+            }else{
+                Utils.OptionPaneInfo("Evento aprobado", this);
+            }
+        } catch (JSONException | IOException | InterruptedException | NoSuchAlgorithmException | KeyManagementException ex) {
+            Logger.getLogger(EventosAdmin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_bAprobarActionPerformed
+
+    private void bEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEliminarActionPerformed
+        try {
+            idEvento = Integer.parseInt(tId.getText());
+            code=eventos.eliminarEvento(idEvento);
+            if(code!=200){
+                Utils.OptionPaneInfo("El evento no se ha podido eliminar", this);
+            }else{
+                Utils.OptionPaneInfo("Evento eliminado", this);
+            }
+        } catch (IOException | InterruptedException | NoSuchAlgorithmException | KeyManagementException ex) {
+            Logger.getLogger(EventosAdmin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_bEliminarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton bAprobar;
+    private javax.swing.JButton bEliminar;
+    private javax.swing.JButton bEvAprobados;
+    private javax.swing.JButton bEvPendientes;
     private javax.swing.JButton bEventos;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
+    private javax.swing.JButton bId;
+    private javax.swing.JButton bIsbn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JSeparator jSeparator2;
     private javax.swing.JTable tEventos;
+    private javax.swing.JTextField tId;
+    private javax.swing.JTextField tValor;
+    private javax.swing.JTextField tValor1;
     // End of variables declaration//GEN-END:variables
 }

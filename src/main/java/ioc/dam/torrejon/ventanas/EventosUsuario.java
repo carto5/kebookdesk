@@ -22,7 +22,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,9 +42,12 @@ public class EventosUsuario extends javax.swing.JInternalFrame {
     Utils util = new Utils();
     JSONObject perfil = new JSONObject();
     DefaultTableModel clean = new DefaultTableModel();
+        List<Eventos> events;
 
     private final Object[] columnaReserva = new Object[]{"ID", "id_usuario", "Isbn_libro", "Fecha_inició", "Fecha_final", "Recogido", "Devuelto"};
     private final DefaultTableModel modeloReserva = new DefaultTableModel(columnaReserva, 0);
+    private final Object[] columEvents = new Object[]{"Id", "Usuario", "Libro", "fecha evento", "Autorizado", "Administrador"};
+    private final DefaultTableModel modelEvents = new DefaultTableModel(columEvents, 0);
 
     List<Reserva> reserva;
     String isbn, titulo;
@@ -174,6 +176,7 @@ public class EventosUsuario extends javax.swing.JInternalFrame {
         try {
             perfil = util.DatosUsuario(Login.token);
             id = perfil.getLong("jti");
+            perfil = util.DatosUsuario(Login.token);
 //            correo = perfil.getString("sub");
 
 //                usuario = usuarios.obtenerUsuarioPorCorreo(correo);
@@ -190,9 +193,7 @@ public class EventosUsuario extends javax.swing.JInternalFrame {
                 Utils.OptionPaneInfo("El usuario no tiene reservas.", this);
             }
 
-        } catch (IOException | InterruptedException ex) {
-            ex.getMessage();
-        } catch (NoSuchAlgorithmException | KeyManagementException ex) {
+        } catch (IOException | InterruptedException | NoSuchAlgorithmException | KeyManagementException ex) {
             ex.getMessage();
         } catch (JSONException ex) {
             Logger.getLogger(EventosUsuario.class.getName()).log(Level.SEVERE, null, ex);
@@ -205,9 +206,7 @@ public class EventosUsuario extends javax.swing.JInternalFrame {
             isbn = String.valueOf(tReservas.getValueAt(fila, 2));
             lblTitulo.setText(libros.ObtenerLibroIsbn(isbn).getTitulo());
 
-        } catch (IOException | InterruptedException ex) {
-            ex.getMessage();
-        } catch (NoSuchAlgorithmException | KeyManagementException ex) {
+        } catch (IOException | InterruptedException | NoSuchAlgorithmException | KeyManagementException ex) {
             ex.getMessage();
         }
     }//GEN-LAST:event_tReservasMouseClicked
@@ -218,7 +217,7 @@ public class EventosUsuario extends javax.swing.JInternalFrame {
             perfil = util.DatosUsuario(Login.token);
             id = perfil.getLong("jti");
             idUsuario = Math.toIntExact(id);
-            
+
             SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
             //idUsuario = Integer.parseInt(lblId.getText());
             titulo = lblTitulo.getText();
@@ -231,7 +230,7 @@ public class EventosUsuario extends javax.swing.JInternalFrame {
             eventos.setLibro(libro);
             eventos.setProponente(usuario);
 
-            if ( titulo.isEmpty() || (fecha == null)) {
+            if (titulo.isEmpty() || (fecha == null)) {
                 Utils.OptionPaneInfo("Faltan datos", this);
             } else {
 
@@ -245,19 +244,30 @@ public class EventosUsuario extends javax.swing.JInternalFrame {
                 }
             }
 
-        } catch (ParseException ex) {
-            ex.getMessage();
-        } catch (IOException | InterruptedException ex) {
-            ex.getMessage();
-        } catch (NoSuchAlgorithmException ex) {
-            ex.getMessage();
-        } catch (KeyManagementException | JSONException ex) {
+        } catch (ParseException | IOException | InterruptedException | NoSuchAlgorithmException | KeyManagementException | JSONException ex) {
             ex.getMessage();
         }
     }//GEN-LAST:event_bEventoActionPerformed
 
     private void bMostrarEventosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bMostrarEventosActionPerformed
-        // TODO add your handling code here:
+        clean = (DefaultTableModel) tReservas.getModel();
+        while (clean.getRowCount() > 0) {
+            clean.removeRow(0);
+        }
+        try {
+            events = evento.listarEventos();
+            if (events != null) {
+                events.stream().forEach(item -> {
+                    modelEvents.addRow(new Object[]{item.getId(), item.getProponente().getId(), item.getLibro().getIsbn(), item.getFecha(), item.isIsAproved(), item.getAprobador()});
+                });
+
+                tReservas.setModel(modelEvents);
+            } else {
+                Utils.OptionPaneInfo("No hay eventos disponibles", this);
+            }
+        } catch (NoSuchAlgorithmException | KeyManagementException | IOException ex) {
+            ex.getMessage();
+        }
     }//GEN-LAST:event_bMostrarEventosActionPerformed
 
 

@@ -4,19 +4,23 @@
  */
 package ioc.dam.torrejon.modelos;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  *
  * @author Carlos Torrejón
  */
-public class Eventos {
+public class Eventos implements Serializable{
 
     private int id;
     private Usuario proponente;
     private Libro libro;
     private Date fecha;
     private boolean isAproved;
+    private Usuario aprobador;
+
+
 
     public int getId() {
         return id;
@@ -56,6 +60,14 @@ public class Eventos {
 
     public void setIsAproved(boolean isAproved) {
         this.isAproved = isAproved;
+    }
+    
+        public Usuario getAprobador() {
+        return aprobador;
+    }
+
+    public void setAprobador(Usuario aprobador) {
+        this.aprobador = aprobador;
     }
 
 }

@@ -12,12 +12,12 @@ import java.io.Serializable;
  */
 public class Libro implements Serializable{
     
-    String isbn;
-    String titulo;
-    Escritor autor;
-    String sinopsis;
-    String genero;
-    boolean disponible;
+    private String isbn;
+    private String titulo;
+    private Escritor autor;
+    private String sinopsis;
+    private String genero;
+    private boolean disponible;
 
     public String getIsbn() {
         return isbn;

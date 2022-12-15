@@ -118,6 +118,7 @@ public class EventosController {
         Call call = cliente.newCall(request);
         Response response = call.execute();
         ResponseBody respuesta = cliente.newCall(request).execute().body();
+        System.out.println(response.code());
 
         if (response.code() != 200) {
             return null;
@@ -152,6 +153,7 @@ public class EventosController {
         Call call = cliente.newCall(request);
         Response response = call.execute();
         ResponseBody respuesta = cliente.newCall(request).execute().body();
+        System.out.println(response.code());
 
         if (response.code() != 200) {
             return null;

@@ -35,8 +35,6 @@ public class LibrosAdmin extends javax.swing.JInternalFrame {
     private final Object[] columnaEscritor = new Object[]{"Id", "Nombre"};
     private final DefaultTableModel modeloEscritor = new DefaultTableModel(columnaEscritor, 0);
     
-    private final Object[] columnaResena = new Object[]{"Libro", "Reseña"};
-    private final DefaultTableModel modeloResena = new DefaultTableModel(columnaResena, 0);
     
     DefaultTableModel clean = new DefaultTableModel();
 
@@ -45,7 +43,6 @@ public class LibrosAdmin extends javax.swing.JInternalFrame {
 
     String book = "Faltan datos por rellenar, desea continuar?";
     String autorG = "Falta el nombre del autor, desea continuar?";
-    String eliminar = "Se necesita id del autor para poder eliminarlo, desea continuar?";
 
     /**
      * Creates new form LibrosAdmin
@@ -223,9 +220,7 @@ public class LibrosAdmin extends javax.swing.JInternalFrame {
             } else {
                 Utils.OptionPaneInfo("Error al cargar lista de libros", this);
             }
-        } catch (IOException | InterruptedException ex) {
-            ex.getMessage();
-        } catch (NoSuchAlgorithmException |KeyManagementException ex) {
+        } catch (IOException | InterruptedException | NoSuchAlgorithmException | KeyManagementException ex) {
             ex.getMessage();
         }
 
@@ -264,9 +259,7 @@ public class LibrosAdmin extends javax.swing.JInternalFrame {
                     Utils.OptionPaneInfo("El libro no se ha podido guardar.", this);
                 }
             }
-        } catch (IOException | InterruptedException ex) {
-            ex.getMessage();
-        } catch (NoSuchAlgorithmException |KeyManagementException ex) {
+        } catch (IOException | InterruptedException | NoSuchAlgorithmException | KeyManagementException ex) {
             ex.getMessage();
         }
     }//GEN-LAST:event_bGuardarActionPerformed
@@ -287,9 +280,7 @@ public class LibrosAdmin extends javax.swing.JInternalFrame {
                     Utils.OptionPaneInfo("El escritor no se ha podido guardar. ", this);
                 }
             }
-        } catch (IOException | InterruptedException ex) {
-            ex.getMessage();
-        } catch (NoSuchAlgorithmException |KeyManagementException ex) {
+        } catch (IOException | InterruptedException | NoSuchAlgorithmException | KeyManagementException ex) {
             ex.getMessage();
         }
 
@@ -314,9 +305,7 @@ public class LibrosAdmin extends javax.swing.JInternalFrame {
             }else{
                 Utils.OptionPaneInfo("Error al listar escritores", this);
             }
-        } catch (IOException |InterruptedException ex) {
-            ex.getMessage();
-        } catch (NoSuchAlgorithmException |KeyManagementException ex) {
+        } catch (IOException |InterruptedException | NoSuchAlgorithmException | KeyManagementException ex) {
             ex.getMessage();
         }
         
