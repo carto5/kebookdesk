@@ -258,7 +258,7 @@ public class EventosUsuario extends javax.swing.JInternalFrame {
             events = evento.listarEventos();
             if (events != null) {
                 events.stream().forEach(item -> {
-                    modelEvents.addRow(new Object[]{item.getId(), item.getProponente().getId(), item.getLibro().getIsbn(), item.getFecha(), item.isIsAproved(), item.getAprobador()});
+                    modelEvents.addRow(new Object[]{item.getId(), item.getProponente().getId(), item.getLibro().getIsbn(), item.getFecha(), item.isAproved()});
                 });
 
                 tReservas.setModel(modelEvents);

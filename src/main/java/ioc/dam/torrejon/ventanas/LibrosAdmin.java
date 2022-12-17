@@ -84,6 +84,7 @@ public class LibrosAdmin extends javax.swing.JInternalFrame {
         bAutores = new javax.swing.JButton();
 
         setClosable(true);
+        setMaximizable(true);
         setTitle("Libros\n");
         setPreferredSize(new java.awt.Dimension(1190, 640));
         try {

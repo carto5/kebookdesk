@@ -33,8 +33,10 @@ public class EventosAdmin extends javax.swing.JInternalFrame {
     Libro libros = new Libro();
     List<Eventos> events;
     Eventos evento;
-    private final Object[] columEvents = new Object[]{"Id", "Usuario", "Libro", "fecha evento", "Autorizado", "Administrador"};
+    private final Object[] columEvents = new Object[]{"Id", "Usuario", "Libro", "fecha evento", "Autorizado"};
     private final DefaultTableModel modelEvents = new DefaultTableModel(columEvents, 0);
+    private final Object[] columEventAprov = new Object[]{"Id", "Usuario", "Libro", "fecha evento", "Autorizado","Aprobador"};
+    private final DefaultTableModel modelEventAprov = new DefaultTableModel(columEventAprov, 0);
     DefaultTableModel clean = new DefaultTableModel();
     Utils util = new Utils();
     JSONObject perfil = new JSONObject();
@@ -227,7 +229,7 @@ public class EventosAdmin extends javax.swing.JInternalFrame {
             events = eventos.listarEventos();
             if (events != null) {
                 events.stream().forEach(item -> {
-                    modelEvents.addRow(new Object[]{item.getId(), item.getProponente().getId(), item.getLibro().getIsbn(), item.getFecha(), item.isIsAproved(), item.getAprobador()});
+                    modelEvents.addRow(new Object[]{item.getId(), item.getProponente().getId(), item.getLibro().getIsbn(), item.getFecha(), item.isAproved()});
                 });
 
                 tEventos.setModel(modelEvents);
@@ -250,7 +252,7 @@ public class EventosAdmin extends javax.swing.JInternalFrame {
             evento = eventos.obtenerEventoPorId(id);
             if (evento != null) {
 
-                modelEvents.addRow(new Object[]{evento.getId(), evento.getProponente().getNombre(), evento.getLibro().getTitulo(), evento.getFecha(), evento.isIsAproved(), evento.getAprobador().getId()});
+                modelEvents.addRow(new Object[]{evento.getId(), evento.getProponente().getNombre(), evento.getLibro().getTitulo(), evento.getFecha(), evento.isAproved()});
 
                 tEventos.setModel(modelEvents);
             } else {
@@ -271,7 +273,7 @@ public class EventosAdmin extends javax.swing.JInternalFrame {
             events = eventos.obtenerEventosPorLibro(isbn);
             if (events != null) {
                 events.stream().forEach(item -> {
-                    modelEvents.addRow(new Object[]{item.getId(), item.getProponente().getNombre(), item.getLibro().getTitulo(), item.getFecha(), item.isIsAproved(), item.getAprobador().getId()});
+                    modelEvents.addRow(new Object[]{item.getId(), item.getProponente().getNombre(), item.getLibro().getTitulo(), item.getFecha(), item.isAproved()});
                 });
 
                 tEventos.setModel(modelEvents);
@@ -292,7 +294,7 @@ public class EventosAdmin extends javax.swing.JInternalFrame {
             events = eventos.obtenerEventosPendientes();
             if (events != null) {
                 events.stream().forEach(item -> {
-                    modelEvents.addRow(new Object[]{item.getId(), item.getProponente().getNombre(), item.getLibro().getTitulo(), item.getFecha(), item.isIsAproved(), item.getAprobador().getId()});
+                    modelEvents.addRow(new Object[]{item.getId(), item.getProponente().getNombre(), item.getLibro().getTitulo(), item.getFecha(), item.isAproved()});
                 });
 
                 tEventos.setModel(modelEvents);
@@ -313,10 +315,10 @@ public class EventosAdmin extends javax.swing.JInternalFrame {
             events = eventos.obtenerEventosAprobados();
             if (events != null) {
                 events.stream().forEach(item -> {
-                    modelEvents.addRow(new Object[]{item.getId(), item.getProponente().getNombre(), item.getLibro().getTitulo(), item.getFecha(), item.isIsAproved(), item.getAprobador().getId()});
+                    modelEventAprov.addRow(new Object[]{item.getId(), item.getProponente().getNombre(), item.getLibro().getTitulo(), item.getFecha(), item.isAproved(), item.getAprobador().getId()});
                 });
 
-                tEventos.setModel(modelEvents);
+                tEventos.setModel(modelEventAprov);
             } else {
                 Utils.OptionPaneInfo("No hay eventos disponibles", this);
             }

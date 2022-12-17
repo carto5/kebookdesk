@@ -56,6 +56,8 @@ public class LibrosController {
         Call call = cliente.newCall(request);
         Response response = call.execute();
         ResponseBody respuesta = cliente.newCall(request).execute().body();
+        
+        System.out.println(response.body().string());
 
         if (response.code() != 200) {
             return null;

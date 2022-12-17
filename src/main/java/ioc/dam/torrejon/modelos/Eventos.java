@@ -11,16 +11,14 @@ import java.util.Date;
  *
  * @author Carlos Torrejón
  */
-public class Eventos implements Serializable{
+public class Eventos implements Serializable {
 
     private int id;
     private Usuario proponente;
     private Libro libro;
     private Date fecha;
-    private boolean isAproved;
+    private boolean aproved;
     private Usuario aprobador;
-
-
 
     public int getId() {
         return id;
@@ -54,15 +52,15 @@ public class Eventos implements Serializable{
         this.fecha = fecha;
     }
 
-    public boolean isIsAproved() {
-        return isAproved;
+    public boolean isAproved() {
+        return aproved;
     }
 
-    public void setIsAproved(boolean isAproved) {
-        this.isAproved = isAproved;
+    public void setAproved(boolean aproved) {
+        this.aproved = aproved;
     }
-    
-        public Usuario getAprobador() {
+
+    public Usuario getAprobador() {
         return aprobador;
     }
 

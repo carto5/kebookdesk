@@ -35,6 +35,13 @@ public class EventosController {
     String urlBase = "https://localhost:8080/evento";
     static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
+    /**
+     * Método para listar todos los eventos.
+     * @return List de eventos.
+     * @throws NoSuchAlgorithmException
+     * @throws KeyManagementException
+     * @throws IOException 
+     */
     public List<Eventos> listarEventos() throws NoSuchAlgorithmException, KeyManagementException, IOException {
 
         cliente = Utils.getTrustAllCertsClient();
@@ -49,7 +56,6 @@ public class EventosController {
         Response response = call.execute();
         ResponseBody respuesta = cliente.newCall(request).execute().body();
         
-        System.out.println(response.code());
 
         if (response.code() != 200) {
             return null;

@@ -32,7 +32,7 @@ public class CorreosController {
     public void enviarMailReserva(String emailTo, String titulo) throws MessagingException {
 //        emailTo = txtTo.getText().trim();
         subject = "Kebook reserva";
-        content = "<h1>Querido cliente,</h1><br>La reserva del libro <b>" + titulo + "</b> se ha realizado correctamente";
+        content = "<h1>Querido cliente,</h1><br>La reserva del libro:<br> <ul><li>" + titulo + "</li></ul> <br> Se ha realizado correctamente.<br>Gracias.";
 
         // Simple mail transfer protocol
         mProperties.put("mail.smtp.host", "smtp.gmail.com");
